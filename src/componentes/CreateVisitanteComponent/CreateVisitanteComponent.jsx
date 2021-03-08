@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
 import VisitanteService from "../../services/VisitanteService";
 import ApartamentoService from "../../services/ApartamentoService";
-import "./CreateVisitanteComponent.css";//oi
+import "./CreateVisitanteComponent.css";
 
 class CreateVisitanteComponent extends PureComponent {
   constructor(props) {

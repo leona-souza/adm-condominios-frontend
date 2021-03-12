@@ -20,11 +20,26 @@ class ViewApartamentoComponent extends PureComponent {
     ApartamentoService.getMoradorByApartamento(this.state.id).then(res => {
       this.setState({ moradores: res.data });
     });
+    ApartamentoService.getVeiculoByApartamento(this.state.id).then(res => {
+      this.setState({ veiculos: res.data });
+    });
   }
 
   listarTodos = () => {
     this.props.history.push("/apartamentos");
   };
+
+  listarMoradores = (listaMoradores) => {
+    return listaMoradores?.map(
+      (morador, index) => (index ? ", " : "") + morador.nome
+    )
+  }
+
+  listarVeiculos = (listaVeiculos) => {
+    return listaVeiculos?.map(
+      (veiculo, index) => (index ? ", " : "") + veiculo.placa
+    )
+  }
 
   render() {
     return (
@@ -51,10 +66,14 @@ class ViewApartamentoComponent extends PureComponent {
               <strong>Moradores:</strong>
               <div className="divisor" />
               <div>
-                {this.state.moradores &&
-                  this.state.moradores.map(
-                    (morador, index) => (index ? ", " : "") + morador.nome
-                  )}
+                {this.listarMoradores(this.state.moradores)}
+              </div>
+            </div>
+            <div className="row">
+              <strong>Veículos:</strong>
+              <div className="divisor" />
+              <div>
+                {this.listarVeiculos(this.state.veiculos)}
               </div>
             </div>
             <div className="viewapartamento__botaovoltar">

@@ -14,40 +14,31 @@ class ViewMoradorComponent extends PureComponent {
   }
 
   componentDidMount() {
-    /*MoradorService.getMoradorById(this.state.id).then((res) => {
-      this.setState({ morador: res.data });
-    });*/
+    MoradorService.getMoradorById(this.state.id)
+      .then(res => {
+        this.setState({ morador: res.data });
+      })
+      .then(() => {
+        this.getApartamento(this.state.morador.apartamentoMorador)
+      });
+  }
 
-    MoradorService.getMoradorById(this.state.id).then(async (res) => {
-      await ApartamentoService.getApartamentoById(res.data.apartamentoMorador).then(
-        (dados) => {
-          this.setState({
-            morador: {
-              ...res.data,
-              apto: dados.data.numero,
-              torre: dados.data.torre,
-            },
-          });
-        }
-      );
-    });
+  getApartamento = (apartamentoId) => {
+    ApartamentoService.getApartamentoById(apartamentoId)
+      .then(res => {
+        this.setState({ 
+          morador: {
+            ...this.state.morador,
+            apto: res.data.numero,
+            torre: res.data.torre
+          }
+        });
+      });
   }
 
   listarTodos = () => {
     this.props.history.push("/moradores");
   };
-
-  async findMoradores(apartamentoId) {
-    await ApartamentoService.getApartamentoByMorador(apartamentoId).then(
-      (resposta) =>
-        this.setState({
-          info: {
-            numero: resposta.data.numero,
-            torre: resposta.data.torre,
-          },
-        })
-    );
-  }
 
   render() {
     return (
@@ -58,23 +49,23 @@ class ViewMoradorComponent extends PureComponent {
             <div className="row">
               <strong>Nome:</strong>
               <div className="divisor" />
-              <div>{this.state.morador.nome}</div>
+              <div>{this.state.morador?.nome}</div>
             </div>
             <div className="row">
               <strong>Telefone:</strong>
               <div className="divisor" />
-              <div>{this.state.morador.telefone}</div>
+              <div>{this.state.morador?.telefone}</div>
             </div>
             <div className="row">
               <strong>Documento:</strong>
               <div className="divisor" />
-              <div>{this.state.morador.documento}</div>
+              <div>{this.state.morador?.documento}</div>
             </div>
             <div className="row">
               <strong>Apto:</strong>
               <div className="divisor" />
               <div>
-                {this.state.morador.apto} - {this.state.morador.torre}
+                {this.state.morador?.apto} - {this.state.morador?.torre}
               </div>
             </div>
             <button className="btn btn-info" onClick={this.listarTodos}>

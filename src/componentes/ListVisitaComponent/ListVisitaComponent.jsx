@@ -2,6 +2,7 @@ import React, { PureComponent } from "react";
 import VisitaService from "../../services/VisitaService";
 import ApartamentoService from "../../services/ApartamentoService";
 import VisitanteService from "../../services/VisitanteService";
+import Functions from "../../resources/Functions";
 
 class ListVisitaComponent extends PureComponent {
   constructor(props) {
@@ -16,38 +17,35 @@ class ListVisitaComponent extends PureComponent {
     this.putVisita = this.putVisita.bind(this);
     this.deleteVisita = this.deleteVisita.bind(this);
     this.viewVisita = this.viewVisita.bind(this);
-    this.findApartamento = this.findApartamento.bind(this);
-    this.findVisitante = this.findVisitante.bind(this);
   }
 
   componentDidMount() {
+    const mapaAptos = new Map();
+    const mapaNomes = new Map();
+
+    ApartamentoService.getApartamentos()
+      .then(res => {
+        for (let key in res.data) {
+          mapaAptos.set(res.data[key].id, res.data[key].numero+"-"+res.data[key].torre);
+        }
+      });
+    
+    VisitanteService.getVisitantes()
+      .then(res => {
+        for (let key in res.data) {
+          mapaNomes.set(res.data[key].id, res.data[key].nome);
+        }
+      });
+
     VisitaService.getVisitas()
       .then(async res => {
         let temp = res.data;
         for (let key in temp) {
-          await this.findApartamento(temp[key].apartamento);
-          await this.findVisitante(temp[key].visitante);
-          temp[key].apartamento = this.state.infoApto.numero + "-" + this.state.infoApto.torre;
-          temp[key].visitante = this.state.infoVisitante.nome;
-          let data = new Date(temp[key].data);
-          temp[key].data = `${data.getDay()}/${data.getMonth()}/${data.getFullYear()} 
-            às ${data.getHours()}:${data.getMinutes()}h`;
+          temp[key].apartamento = mapaAptos.get(temp[key].apartamento);
+          temp[key].visitante = mapaNomes.get(temp[key].visitante);
+          temp[key].data = Functions.dataFromDbToScreen(temp[key].data);
         }
         this.setState({ visitas: temp });
-      });
-  }
-
-  async findApartamento(apartamentoId) {
-    await ApartamentoService.getApartamentoById(apartamentoId)
-      .then(res => {
-        this.setState({ infoApto: res.data });
-      });
-  }
-
-  async findVisitante(visitanteId) {
-    await VisitanteService.getVisitanteById(visitanteId)
-      .then(res => {
-        this.setState({ infoVisitante: res.data });
       });
   }
 
@@ -55,14 +53,14 @@ class ListVisitaComponent extends PureComponent {
     this.props.history.push("/gerenciar-visita/novo");
   };
 
-  putVisita = (id, aptoId) => {
+  putVisita = (id) => {
     this.props.history.push(`/gerenciar-visita/${id}`);
   };
 
   deleteVisita = (id) => {
     let visita = this.state.visitas.filter((item) => item.id === id);
     if (
-      window.confirm(`Deseja realmente excluir a visita ${visita[0].data}?`)
+      window.confirm(`Deseja realmente excluir a visita de ${visita[0].visitante} no dia ${visita[0].data}?`)
     ) {
       VisitaService.deleteVisita(id).then((res) => {
         this.setState({

@@ -7,6 +7,7 @@ import CreateApartamentoComponent from "./componentes/CreateApartamentoComponent
 import CreateMoradorComponent from "./componentes/CreateMoradorComponent/CreateMoradorComponent";
 import CreateVeiculoComponent from "./componentes/CreateVeiculoComponent/CreateVeiculoComponent";
 import CreateVisitanteComponent from "./componentes/CreateVisitanteComponent/CreateVisitanteComponent";
+import CreateVisitaComponent from "./componentes/CreateVisitaComponent/CreateVisitaComponent";
 import ListApartamentoComponent from "./componentes/ListApartamentoComponent/ListApartamentoComponent";
 import ListMoradorComponent from "./componentes/ListMoradorComponent/ListMoradorComponent";
 import ListVeiculoComponent from "./componentes/ListVeiculoComponent/ListVeiculoComponent";
@@ -16,6 +17,7 @@ import ViewApartamentoComponent from "./componentes/ViewApartamentoComponent/Vie
 import ViewMoradorComponent from "./componentes/ViewMoradorComponent/ViewMoradorComponent";
 import ViewVeiculoComponent from "./componentes/ViewVeiculoComponent/ViewVeiculoComponent";
 import ViewVisitanteComponent from "./componentes/ViewVisitanteComponent/ViewVisitanteComponent";
+import ViewVisitaComponent from "./componentes/ViewVisitaComponent/ViewVisitaComponent";
 
 function App() {
   return (
@@ -24,7 +26,6 @@ function App() {
         <HeaderComponent />
         <div className="container">
           <Switch>
-            teste
             <Route path="/" exact component={ListApartamentoComponent} />
             <Route path="/apartamentos" component={ListApartamentoComponent} />
             <Route
@@ -57,14 +58,14 @@ function App() {
               component={ViewVisitanteComponent}
             />
             <Route path="/visitas" component={ListVisitaComponent} />
-           {/* <Route
+           <Route
               path="/gerenciar-visita/:id"
               component={CreateVisitaComponent}
             />
             <Route
               path="/ver-visita/:id"
               component={ViewVisitaComponent}
-           /> */}
+           />
           </Switch>
         </div>
         <FooterComponent />

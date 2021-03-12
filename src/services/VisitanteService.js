@@ -16,6 +16,10 @@ class VisitanteService {
     return axios.get(API_URL + "/" + visitanteId);
   }
 
+  getVisitanteByNome(visitanteNome) {
+    return axios.get(API_URL + "/nome/" + visitanteNome);
+  }
+
   updateVisitante(visitante, visitanteId) {
     return axios.patch(API_URL + "/" + visitanteId, visitante);
   }

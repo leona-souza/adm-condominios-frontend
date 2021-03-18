@@ -166,10 +166,9 @@ class CreateVisitaComponent extends PureComponent {
                                 <form>
                                     <div className="form-group">
                                         <label>Data</label>
-                                        <input className="input__visitante" type="datetime-local"
+                                        <input className="input__visitante form-control" type="datetime-local"
                                             value={this.state.data}
                                             name="data"
-                                            className="form-control"
                                             onChange={this.changeDataHandler} />
                                         <div className="divteste">
                                             <label>Visitante</label>

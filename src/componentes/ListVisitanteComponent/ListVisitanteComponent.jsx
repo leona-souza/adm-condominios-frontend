@@ -14,39 +14,37 @@ class ListVisitanteComponent extends PureComponent {
     this.putVisitante = this.putVisitante.bind(this);
     this.deleteVisitante = this.deleteVisitante.bind(this);
     this.viewVisitante = this.viewVisitante.bind(this);
-    this.findApartamento = this.findApartamento.bind(this);
   }
 
   componentDidMount() {
-    let temp = [];
+    let mapaAptos = new Map();
+    let listaDeVisitantes = [];
 
     VisitanteService.getVisitantes()
-      .then((res) => {
-        res.data.map(async dado => {
-          await this.findApartamento(dado.apartamentoVisitante);
-          let apto = this.state.info.numero;
-          let torre = this.state.info.torre;
-          let aptoId = this.state.info.aptoId;
-
-          temp = { ...dado, apto, torre, aptoId };
-          this.setState({
-            visitantes: [...this.state.visitantes, ...[temp]],
-          });
-        });
+    .then(res => listaDeVisitantes = res.data)
+    .then(() => {
+      listaDeVisitantes.forEach(dados => {
+        mapaAptos.set(dados.apartamentoVisitante, "indefinido");
       });
-  }
-
-  async findApartamento(apartamentoId) {
-    await ApartamentoService.getApartamentoById(apartamentoId).then(
-      (resposta) =>
-        this.setState({
-          info: {
-            aptoId: resposta.data.apartamentoVisitante,
-            numero: resposta.data.numero,
-            torre: resposta.data.torre,
-          },
+    })
+    .then(async () => {
+      const arrayApartamentos = Array.from(mapaAptos.keys());
+      await ApartamentoService.getApartamentosByList(arrayApartamentos)
+        .then(resAptos => {
+          resAptos.data.forEach(dados => {
+            mapaAptos.set(dados.id, dados.numero + "-" + dados.torre);
+          });
         })
-    );
+    })
+    .then(() => {
+      listaDeVisitantes.forEach(dados => {
+        dados.apartamentoVisitante = mapaAptos.get(dados.apartamentoVisitante);
+      });
+    })
+    .then(() => {
+      this.setState({ visitantes: listaDeVisitantes });
+    });
+    
   }
 
   addVisitante = () => {
@@ -116,7 +114,7 @@ class ListVisitanteComponent extends PureComponent {
                   <tr key={visitante.id}>
                     <td className="apartamento_largura">{visitante.nome}</td>
                     <td className="torre_largura">
-                      {visitante.apto} - {visitante.torre}
+                      {visitante.apartamentoVisitante}
                     </td>
                     <td className="acoes_largura">
                       <button

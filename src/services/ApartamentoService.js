@@ -28,6 +28,10 @@ class ApartamentoService {
     return axios.get(API_URL + "/" + apartamentoId);
   }
 
+  getApartamentosByList(array) {
+    return axios.get(API_URL + "/list/" + array);
+  }
+
   getMoradorByApartamento(apartamentoId) {
     return axios.get(API_URL + "/" + apartamentoId + "/moradores");
   }

@@ -16,6 +16,10 @@ class VisitanteService {
     return axios.get(API_URL + "/" + visitanteId);
   }
 
+  getVisitantesByList(array) {
+    return axios.get(API_URL + "/list/" + array);
+  }
+
   getVisitanteByNome(visitanteNome) {
     return axios.get(API_URL + "/nome/" + visitanteNome);
   }

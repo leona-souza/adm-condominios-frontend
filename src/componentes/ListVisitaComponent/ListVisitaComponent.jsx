@@ -13,6 +13,7 @@ class ListVisitaComponent extends PureComponent {
       infoApto: [],
       infoVisitante: [],
     };
+
     this.addVisita = this.addVisita.bind(this);
     this.putVisita = this.putVisita.bind(this);
     this.deleteVisita = this.deleteVisita.bind(this);
@@ -20,33 +21,62 @@ class ListVisitaComponent extends PureComponent {
   }
 
   componentDidMount() {
-    const mapaAptos = new Map();
-    const mapaNomes = new Map();
-
-    ApartamentoService.getApartamentos()
-      .then(res => {
-        for (let key in res.data) {
-          mapaAptos.set(res.data[key].id, res.data[key].numero+"-"+res.data[key].torre);
-        }
-      });
-    
-    VisitanteService.getVisitantes()
-      .then(res => {
-        for (let key in res.data) {
-          mapaNomes.set(res.data[key].id, res.data[key].nome);
-        }
-      });
+    let mapaAptos = new Map();
+    let mapaNomes = new Map();
+    let listaDeVisitas = [];
 
     VisitaService.getVisitas()
-      .then(async res => {
-        let temp = res.data;
-        for (let key in temp) {
-          temp[key].apartamento = mapaAptos.get(temp[key].apartamento);
-          temp[key].visitante = mapaNomes.get(temp[key].visitante);
-          temp[key].data = Functions.dataFromDbToScreen(temp[key].data);
-        }
-        this.setState({ visitas: temp });
-      });
+    .then(res => {
+      listaDeVisitas = res.data;
+    })
+    .then(async () => {
+      await this.mapearApartamentos(mapaAptos, listaDeVisitas);
+    })
+    .then(async () => {
+      await this.mapearVisitantes(mapaNomes, listaDeVisitas);
+    })
+    .then(() => {
+      this.converterDados(listaDeVisitas, mapaAptos, mapaNomes);
+    })
+    .then(() => {
+      this.setState({ visitas: listaDeVisitas });
+    });  
+  }
+
+  mapearApartamentos = async (mapa, array) => {
+    array.forEach(dado => {
+      mapa.set(dado.apartamento, "indefinido");
+    });
+    const arrayApartamentos = Array.from(mapa.keys());
+    await ApartamentoService.getApartamentosByList(arrayApartamentos)
+      .then(res => {
+        res.data.forEach(dado => {
+          mapa.set(dado.id, dado.numero +"-"+ dado.torre);
+        });    
+    });
+  }
+
+  mapearVisitantes = async (mapa, array) => {
+    array.forEach(dado => {
+      mapa.set(dado.visitante, "indefinido");
+    });
+    const arrayVisitantes = Array.from(mapa.keys());
+    await VisitanteService.getVisitantesByList(arrayVisitantes)
+      .then(res => {
+        res.data.forEach(dado => {
+          mapa.set(dado.id, dado.nome);
+        });    
+    });
+  }
+
+  converterDados = (array, mapaAptos, mapaNomes) => {
+    for (const key in array) {
+      const nome = mapaNomes.get(array[key].visitante);
+      const apto = mapaAptos.get(array[key].apartamento);
+      array[key].visitante = nome;
+      array[key].apartamento = apto;
+      array[key].data = Functions.dataFromDbToScreen(array[key].data);
+    };
   }
 
   addVisita = () => {

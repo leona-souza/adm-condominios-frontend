@@ -1,24 +1,24 @@
 {
   "files": {
-    "main.css": "/adm-condominios-backend/static/css/main.665ae159.chunk.css",
-    "main.js": "/adm-condominios-backend/static/js/main.587018be.chunk.js",
-    "main.js.map": "/adm-condominios-backend/static/js/main.587018be.chunk.js.map",
-    "runtime-main.js": "/adm-condominios-backend/static/js/runtime-main.a1455d1a.js",
-    "runtime-main.js.map": "/adm-condominios-backend/static/js/runtime-main.a1455d1a.js.map",
-    "static/css/2.20aa2d7b.chunk.css": "/adm-condominios-backend/static/css/2.20aa2d7b.chunk.css",
-    "static/js/2.4fe6745c.chunk.js": "/adm-condominios-backend/static/js/2.4fe6745c.chunk.js",
-    "static/js/2.4fe6745c.chunk.js.map": "/adm-condominios-backend/static/js/2.4fe6745c.chunk.js.map",
-    "static/js/3.24674903.chunk.js": "/adm-condominios-backend/static/js/3.24674903.chunk.js",
-    "static/js/3.24674903.chunk.js.map": "/adm-condominios-backend/static/js/3.24674903.chunk.js.map",
-    "index.html": "/adm-condominios-backend/index.html",
-    "static/css/2.20aa2d7b.chunk.css.map": "/adm-condominios-backend/static/css/2.20aa2d7b.chunk.css.map",
-    "static/css/main.665ae159.chunk.css.map": "/adm-condominios-backend/static/css/main.665ae159.chunk.css.map",
-    "static/js/2.4fe6745c.chunk.js.LICENSE.txt": "/adm-condominios-backend/static/js/2.4fe6745c.chunk.js.LICENSE.txt"
+    "main.css": "/adm-condominios-frontend/static/css/main.665ae159.chunk.css",
+    "main.js": "/adm-condominios-frontend/static/js/main.587018be.chunk.js",
+    "main.js.map": "/adm-condominios-frontend/static/js/main.587018be.chunk.js.map",
+    "runtime-main.js": "/adm-condominios-frontend/static/js/runtime-main.cb88dc7f.js",
+    "runtime-main.js.map": "/adm-condominios-frontend/static/js/runtime-main.cb88dc7f.js.map",
+    "static/css/2.20aa2d7b.chunk.css": "/adm-condominios-frontend/static/css/2.20aa2d7b.chunk.css",
+    "static/js/2.06d02f59.chunk.js": "/adm-condominios-frontend/static/js/2.06d02f59.chunk.js",
+    "static/js/2.06d02f59.chunk.js.map": "/adm-condominios-frontend/static/js/2.06d02f59.chunk.js.map",
+    "static/js/3.24674903.chunk.js": "/adm-condominios-frontend/static/js/3.24674903.chunk.js",
+    "static/js/3.24674903.chunk.js.map": "/adm-condominios-frontend/static/js/3.24674903.chunk.js.map",
+    "index.html": "/adm-condominios-frontend/index.html",
+    "static/css/2.20aa2d7b.chunk.css.map": "/adm-condominios-frontend/static/css/2.20aa2d7b.chunk.css.map",
+    "static/css/main.665ae159.chunk.css.map": "/adm-condominios-frontend/static/css/main.665ae159.chunk.css.map",
+    "static/js/2.06d02f59.chunk.js.LICENSE.txt": "/adm-condominios-frontend/static/js/2.06d02f59.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.a1455d1a.js",
+    "static/js/runtime-main.cb88dc7f.js",
     "static/css/2.20aa2d7b.chunk.css",
-    "static/js/2.4fe6745c.chunk.js",
+    "static/js/2.06d02f59.chunk.js",
     "static/css/main.665ae159.chunk.css",
     "static/js/main.587018be.chunk.js"
   ]

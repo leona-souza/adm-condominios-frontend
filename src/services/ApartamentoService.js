@@ -40,6 +40,10 @@ class ApartamentoService {
     return axios.get(API_URL + "/" + apartamentoId + "/veiculos");
   }
 
+  getVisitanteByApartamento(apartamentoId) {
+    return axios.get(API_URL + "/" + apartamentoId + "/visitantes");
+  }
+
 }
 
 export default new ApartamentoService();

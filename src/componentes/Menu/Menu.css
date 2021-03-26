@@ -1,0 +1,27 @@
+a:hover {
+    text-decoration: none !important;
+    color: #fff !important;
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+}
+
+.menu__item {
+    font-size: 24px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color: #ddd
+}
+
+.menu__item:hover {
+    background-color: #555;
+}
+
+.menu__icone {
+    margin-right: 5px;
+}

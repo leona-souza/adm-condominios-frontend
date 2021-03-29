@@ -15,7 +15,7 @@ class Menu extends PureComponent {
 
   render() {
     return (
-      <div className="menu">
+      <div>
         <a href="/" className="menu__item"><ApartmentIcon className="menu__icone" />Apartamentos</a>
         <a href="/moradores" className="menu__item"><PersonIcon className="menu__icone" />Moradores</a>
         <a href="/veiculos" className="menu__item"><DriveEtaIcon className="menu__icone" />Veiculos</a>

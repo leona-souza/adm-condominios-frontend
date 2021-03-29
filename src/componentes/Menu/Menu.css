@@ -3,18 +3,12 @@ a:hover {
     color: #fff !important;
 }
 
-.menu {
-    display: flex;
-    flex-direction: column;
-}
-
 .menu__item {
-    font-size: 24px;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding: 10px 0px;
     display: flex;
-    flex-direction: row;
     align-items: center;
+    font-size: 24px;
+    font-weight: 200;
     color: #ddd
 }
 

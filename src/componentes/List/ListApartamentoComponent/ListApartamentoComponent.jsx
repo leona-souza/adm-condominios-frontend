@@ -79,9 +79,11 @@ class ListApartamentoComponent extends PureComponent {
                 <td>{apartamento.torre}</td>
                 <td>{apartamento.vaga}</td>
                 <td>
-                  <DescriptionIcon className="tabela__icone" onClick={() => this.viewApartamento(apartamento.id)} />
-                  <EditIcon className="tabela__icone" onClick={() => this.putApartamento(apartamento.id)} />
-                  <DeleteIcon className="tabela__icone red" onClick={() => this.deleteApartamento(apartamento.id)} />
+                  <span className="tabela__acoes">
+                    <DescriptionIcon className="tabela__icone" onClick={() => this.viewApartamento(apartamento.id)} />
+                    <EditIcon className="tabela__icone" onClick={() => this.putApartamento(apartamento.id)} />
+                    <DeleteIcon className="tabela__icone red" onClick={() => this.deleteApartamento(apartamento.id)} />
+                  </span>
                 </td>
               </tr>
             ))}

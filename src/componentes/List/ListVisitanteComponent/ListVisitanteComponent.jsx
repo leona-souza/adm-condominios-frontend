@@ -28,7 +28,7 @@ class ListVisitanteComponent extends PureComponent {
     .then(res => listaDeVisitantes = res.data)
     .then(() => {
       listaDeVisitantes.forEach(dados => {
-        mapaAptos.set(dados.apartamentoVisitante, "indefinido");
+        mapaAptos.set(dados.apartamentoVisitante, "");
       });
     })
     .then(async () => {

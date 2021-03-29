@@ -11,46 +11,40 @@ class ListMoradorComponent extends PureComponent {
     super(props);
 
     this.state = {
-      moradores: [],
-      info: [],
+      moradores: []
     };
     this.addMorador = this.addMorador.bind(this);
     this.putMorador = this.putMorador.bind(this);
     this.deleteMorador = this.deleteMorador.bind(this);
     this.viewMorador = this.viewMorador.bind(this);
-    this.findApartamento = this.findApartamento.bind(this);
   }
 
   componentDidMount() {
-    let temp = [];
+    let mapaAptos = new Map();
+    let listaDeMoradores = [];
 
     MoradorService.getMoradores()
-      .then(res => {
-          res.data.map(async dado => {
-            await this.findApartamento(dado.apartamentoMorador);
-            let apto = this.state.info.numero;
-            let torre = this.state.info.torre;
-            let aptoId = this.state.info.aptoId;
-            temp = { ...dado, apto, torre, aptoId };
-            this.setState({
-              moradores: [...this.state.moradores, ...[temp]],
-            });
-          })
-      });
-  }
-
-  async findApartamento(apartamentoId) {
-    await ApartamentoService.getApartamentoById(apartamentoId).then(
-      (resposta) => {
-        this.setState({
-          info: {
-            aptoId: resposta.data.id,
-            numero: resposta.data.numero,
-            torre: resposta.data.torre,
-          },
-        })
-      }
-    );
+    .then(res => listaDeMoradores = res.data)
+    .then(() => {
+      listaDeMoradores.forEach(
+        morador => mapaAptos.set(morador.apartamentoMorador, "")
+      )
+    })
+    .then(async () => {
+      const arrayDeAptos = Array.from(mapaAptos.keys());
+      await ApartamentoService.getApartamentosByList(arrayDeAptos)
+      .then(resAptos => {
+        resAptos.data.forEach(apto => mapaAptos.set(apto.id, apto.numero+"-"+apto.torre))
+      })
+    })
+    .then(() => {
+      listaDeMoradores.forEach(
+        morador => morador.apartamentoMorador = mapaAptos.get(morador.apartamentoMorador)
+      )
+    })
+    .then(() => {
+      this.setState({ moradores: listaDeMoradores });
+    });
   }
 
   addMorador = () => {
@@ -99,11 +93,13 @@ class ListMoradorComponent extends PureComponent {
                 .map((morador) => (
                   <tr key={morador.id}>
                     <td>{morador.nome}</td>
-                    <td>{morador.apto} - {morador.torre}</td>
+                    <td>{morador.apartamentoMorador}</td>
                     <td>
-                      <DescriptionIcon className="tabela__icone" onClick={() => this.viewMorador(morador.id)} />
-                      <EditIcon className="tabela__icone" onClick={() => this.putMorador(morador.id, morador.aptoId)} />
-                      <DeleteIcon className="tabela__icone red" onClick={() => this.deleteMorador(morador.id)} />
+                      <span className="tabela__acoes">
+                        <DescriptionIcon className="tabela__icone" onClick={() => this.viewMorador(morador.id)} />
+                        <EditIcon className="tabela__icone" onClick={() => this.putMorador(morador.id, morador.aptoId)} />
+                        <DeleteIcon className="tabela__icone red" onClick={() => this.deleteMorador(morador.id)} />
+                      </span>
                     </td>
                   </tr>
                 ))}

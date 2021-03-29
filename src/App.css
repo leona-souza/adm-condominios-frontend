@@ -50,7 +50,6 @@ body {
   display: flex;
   align-items: top;
   color: var(--menuColor);
-  padding: 0px 10px;
 }
 
 .conteudo {
@@ -109,6 +108,11 @@ body {
 .tabela__titulo {
   padding-left: 15px;
   padding-right: 15px;
+}
+
+.tabela__acoes {
+  display: flex;
+  justify-content: center;
 }
 
 .tabela__icone:hover {
@@ -222,6 +226,12 @@ body {
     display: none;
   }
 
+  .titulo {
+    font-size: 26px;
+    width: 90%;
+    text-align: center;
+  }
+
   .caixa {
     width: 90%;
     padding: 0px;
@@ -245,17 +255,15 @@ body {
     flex-direction: column;
   }
 
-  .titulo {
-    font-size: 28px;
-    width: 90%;
-    text-align: center;
-  }
-
   .detalhes__linha {
     flex-direction: column;
   }
 
   .detalhes__titulo {
     text-align: left;
+  }
+
+  .detalhes__texto {
+    width: 100%;
   }
 }

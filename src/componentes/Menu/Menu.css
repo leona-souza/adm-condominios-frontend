@@ -4,7 +4,8 @@ a:hover {
 }
 
 .menu__item {
-    padding: 10px 0px;
+    padding: 10px 10px 10px 0px;
+    margin-left: 10px;
     display: flex;
     align-items: center;
     font-size: 24px;

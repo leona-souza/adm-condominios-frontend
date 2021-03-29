@@ -18,38 +18,34 @@ class ListVeiculoComponent extends PureComponent {
     this.putVeiculo = this.putVeiculo.bind(this);
     this.deleteVeiculo = this.deleteVeiculo.bind(this);
     this.viewVeiculo = this.viewVeiculo.bind(this);
-    this.findApartamento = this.findApartamento.bind(this);
   }
 
   componentDidMount() {
-    let temp = [];
+    let mapaAptos = new Map();
+    let listaDeVeiculos = [];
 
     VeiculoService.getVeiculos()
-      .then(res => {
-        res.data.map(async dados => {
-          await this.findApartamento(dados.apartamentoVeiculo);
-          let apto = this.state.info.numero;
-          let torre = this.state.info.torre;
-          let aptoId = this.state.info.aptoId;
-          temp = { ...dados, apto, torre, aptoId };
-          this.setState({
-            veiculos: [...this.state.veiculos, ...[temp]],
-          });
-        })
-      });
-  }
-
-  async findApartamento(apartamentoId) {
-    await ApartamentoService.getApartamentoById(apartamentoId).then(
-      (resposta) =>
-        this.setState({
-          info: {
-            aptoId: resposta.data.apartamentoVeiculo,
-            numero: resposta.data.numero,
-            torre: resposta.data.torre,
-          },
-        })
-    );
+    .then(res => listaDeVeiculos = res.data)
+    .then(() => {
+      listaDeVeiculos.forEach(
+        morador => mapaAptos.set(morador.apartamentoVeiculo, "")
+      )
+    })
+    .then(async () => {
+      const arrayDeAptos = Array.from(mapaAptos.keys());
+      await ApartamentoService.getApartamentosByList(arrayDeAptos)
+      .then(resAptos => {
+        resAptos.data.forEach(apto => mapaAptos.set(apto.id, apto.numero+"-"+apto.torre))
+      })
+    })
+    .then(() => {
+      listaDeVeiculos.forEach(
+        morador => morador.apartamentoVeiculo = mapaAptos.get(morador.apartamentoVeiculo)
+      )
+    })
+    .then(() => {
+      this.setState({ veiculos: listaDeVeiculos });
+    });
   }
 
   addVeiculo = () => {
@@ -85,8 +81,7 @@ class ListVeiculoComponent extends PureComponent {
         <table className="tabela">
           <thead>
             <tr>
-              <th>Modelo</th>
-              <th>Marca</th>
+              <th>Veículo</th>
               <th>Cor</th>
               <th>Placa</th>
               <th>Apartamento</th>
@@ -97,15 +92,16 @@ class ListVeiculoComponent extends PureComponent {
             {this.state.veiculos.sort((a, b) => (a.modelo > b.modelo) ? 1 : -1)
               .map((veiculo) => (
               <tr key={veiculo.id}>
-                <td>{veiculo.modelo}</td>
-                <td>{veiculo.marca}</td>
+                <td>{veiculo.marca} {veiculo.modelo}</td>
                 <td>{veiculo.cor}</td>
                 <td>{veiculo.placa}</td>
-                <td> {veiculo.apto}-{veiculo.torre}</td>
+                <td> {veiculo.apartamentoVeiculo}</td>
                 <td>
-                  <DescriptionIcon className="tabela__icone" onClick={() => this.viewVeiculo(veiculo.id)} />
-                  <EditIcon className="tabela__icone" onClick={() => this.putVeiculo(veiculo.id, veiculo.aptoId)} />
-                  <DeleteIcon className="tabela__icone red" onClick={() => this.deleteVeiculo(veiculo.id)} />
+                  <span className="tabela__acoes">
+                    <DescriptionIcon className="tabela__icone" onClick={() => this.viewVeiculo(veiculo.id)} />
+                    <EditIcon className="tabela__icone" onClick={() => this.putVeiculo(veiculo.id, veiculo.aptoId)} />
+                    <DeleteIcon className="tabela__icone red" onClick={() => this.deleteVeiculo(veiculo.id)} />
+                  </span>
                 </td>
               </tr>
             ))}

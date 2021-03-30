@@ -1,4 +1,5 @@
 import React, { PureComponent } from "react";
+import Loading from "../../Loading/Loading"
 import ApartamentoService from "../../../services/ApartamentoService";
 import ApartmentIcon from '@material-ui/icons/Apartment';
 import EditIcon from '@material-ui/icons/Edit';
@@ -11,7 +12,7 @@ class ViewApartamentoComponent extends PureComponent {
 
     this.state = {
       id: this.props.match.params.id,
-      apartamento: {},
+      apartamento: "",
       moradores: [],
       visitantes: []
     };

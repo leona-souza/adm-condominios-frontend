@@ -24,7 +24,7 @@ function App() {
     <div>
       <Router>
         <div className="principal">
-          <div className="menu">
+          <div className="menu-container">
             <Menu />
           </div>
           <div className="conteudo">

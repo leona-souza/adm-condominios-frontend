@@ -235,7 +235,7 @@ a {
 MEDIA
 *********************************/
 
-@media (max-width: 1024px) {
+@media (max-width: 768px) {
   .principal {
     display: flex;
     flex-direction: column;

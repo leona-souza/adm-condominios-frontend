@@ -11,12 +11,11 @@ class Menu extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {};
-    /* this.hamburguer = this.hamburguer.bind(this); */
   }
 
   hamburguer = () => {
     let div = document.getElementsByClassName("menu__itens");
-    div[0].style.zIndex = (div[0].style.zIndex != 1) ? 1 : -1;
+    div[0].style.display = (div[0].style.display != "flex") ? "flex" : "none";
   }
   
   render() {

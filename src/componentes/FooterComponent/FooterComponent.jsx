@@ -10,7 +10,7 @@ class FooterComponent extends PureComponent {
   render() {
     return (
       <footer className="footer">
-        <span className="text-muted">Souza</span>
+        <span>Souza</span>
       </footer>
     );
   }

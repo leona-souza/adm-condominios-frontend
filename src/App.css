@@ -59,6 +59,7 @@ a {
 .conteudo {
   background: #f5f5f5;
   width: 100%;
+  min-height: 100vh;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -215,10 +216,9 @@ a {
 }
 
 .formulario__botoes {
-  width: inherit;
+  width: 100%;
   margin-top: 10px;
   display: flex;
-  flex-direction: row;
   justify-content: space-evenly;
 }
 
@@ -226,11 +226,14 @@ a {
   position: fixed;
   bottom: 0;
   width: 100%;
-  height: 20px;
-  background-color: #282c34;
+  background-color: var(--menuBackground);
   text-align: center;
-  /* color: white; */
+  color: white;
 }
+
+/********************************* 
+MEDIA
+*********************************/
 
 @media (max-width: 1024px) {
   .principal {
@@ -239,6 +242,8 @@ a {
   }
 
   .menu-container {
+    position: fixed;
+    top: 0;
     width: 100%;
     display: flex;
     align-items: top;
@@ -247,26 +252,80 @@ a {
 
   .menu__hamburguer {
     position: block;
-    z-index: 0;
     display: block;
     font-size: 40px;
   }
 
   .menu__itens {
+    display: none;
+    flex-direction: column;
     width: 100%;
     position: absolute;
-    z-index: -1;
     background-color: var(--menuBackground);
   }
 
+
+
+
+
+
+  .tabela {
+    border-collapse: collapse;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 50px;
+  }
+  
+  .tabela th {
+    background: #f5f5f5;
+    font-weight: 600;
+  }
+  
+  .tabela th, td {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid var(--borderColor);
+  }
+  
+  .tabela tr:nth-child(even) {
+    background: #eee
+  }
+  
+  .tabela tr:nth-child(odd) {
+    background: #FFF
+  }
+  
+  .tabela__titulo {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  
+  .tabela__acoes {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .tabela__icone:hover {
+    cursor: pointer;
+  }
+
+
+
+
+
+
+
+
+
   .titulo {
+    margin-top: 60px;
     font-size: 26px;
     width: 90%;
     text-align: center;
   }
 
   .caixa {
-    width: 90%;
+    width: 98%;
     padding: 0px;
     flex-direction: column;
   }
@@ -301,4 +360,12 @@ a {
     text-align: left;
     width: 100%;
   }
+
+  .formulario {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 40px;
+    width: 90%;
+  }
+
 }

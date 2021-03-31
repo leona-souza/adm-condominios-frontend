@@ -92,8 +92,8 @@ class ListMoradorComponent extends PureComponent {
                 .sort((a, b) => (a.nome > b.nome) ? 1 : -1)
                 .map((morador) => (
                   <tr key={morador.id}>
-                    <td>{morador.nome}</td>
-                    <td>{morador.apartamentoMorador}</td>
+                    <td data-title="Nome">{morador.nome}</td>
+                    <td data-title="Apartamento">{morador.apartamentoMorador}</td>
                     <td>
                       <span className="tabela__acoes">
                         <DescriptionIcon className="tabela__icone" onClick={() => this.viewMorador(morador.id)} />

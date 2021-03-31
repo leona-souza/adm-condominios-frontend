@@ -97,12 +97,14 @@ class ListVisitanteComponent extends PureComponent {
             {this.state.visitantes.sort((a, b) => (a.nome < b.nome) ? -1 : 1)
               .map((visitante) => (
                 <tr key={visitante.id}>
-                  <td>{visitante.nome}</td>
-                  <td>{visitante.apartamentoVisitante}</td>
+                  <td data-title="Nome">{visitante.nome}</td>
+                  <td data-title="Apartamento">{visitante.apartamentoVisitante}</td>
                   <td>
-                    <DescriptionIcon className="tabela__icone" onClick={() => this.viewVisitante(visitante.id)} />
-                    <EditIcon className="tabela__icone" onClick={() => this.putVisitante(visitante.id, visitante.aptoId)} />
-                    <DeleteIcon className="tabela__icone red" onClick={() => this.deleteVisitante(visitante.id)} />
+                    <span className="tabela__acoes">
+                      <DescriptionIcon className="tabela__icone" onClick={() => this.viewVisitante(visitante.id)} />
+                      <EditIcon className="tabela__icone" onClick={() => this.putVisitante(visitante.id, visitante.aptoId)} />
+                      <DeleteIcon className="tabela__icone red" onClick={() => this.deleteVisitante(visitante.id)} />
+                    </span>
                   </td>
                 </tr>
               ))}

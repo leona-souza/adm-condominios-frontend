@@ -125,13 +125,15 @@ class ListVisitaComponent extends PureComponent {
           <tbody>
             {this.state.visitas.map(visita => (
               <tr key={visita.id}>
-                <td>{visita.data}</td>
-                <td>{visita.apartamento}</td>
-                <td>{visita.visitante}</td>
+                <td data-title="Data">{visita.data}</td>
+                <td data-title="Apartamento">{visita.apartamento}</td>
+                <td data-title="Visitante">{visita.visitante}</td>
                 <td>
-                  <DescriptionIcon className="tabela__icone" onClick={() => this.viewVisita(visita.id)} />
-                  <EditIcon className="tabela__icone" onClick={() => this.putVisita(visita.id, visita.aptoId)} />
-                  <DeleteIcon className="tabela__icone red" onClick={() => this.deleteVisita(visita.id)} />
+                  <span className="tabela__acoes">
+                    <DescriptionIcon className="tabela__icone" onClick={() => this.viewVisita(visita.id)} />
+                    <EditIcon className="tabela__icone" onClick={() => this.putVisita(visita.id, visita.aptoId)} />
+                    <DeleteIcon className="tabela__icone red" onClick={() => this.deleteVisita(visita.id)} />
+                  </span>
                 </td>
               </tr>
             ))}

@@ -75,9 +75,9 @@ class ListApartamentoComponent extends PureComponent {
           <tbody>
             {this.state.apartamentos.map((apartamento) => (
               <tr key={apartamento.id}>
-                <td>{apartamento.numero}</td>
-                <td>{apartamento.torre}</td>
-                <td>{apartamento.vaga}</td>
+                <td data-title="Apartamento">{apartamento.numero}</td>
+                <td data-title="Torre">{apartamento.torre}</td>
+                <td data-title="Vaga">{apartamento.vaga}</td>
                 <td>
                   <span className="tabela__acoes">
                     <DescriptionIcon className="tabela__icone" onClick={() => this.viewApartamento(apartamento.id)} />

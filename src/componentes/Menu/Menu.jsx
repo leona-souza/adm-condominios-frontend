@@ -15,7 +15,7 @@ class Menu extends PureComponent {
 
   hamburguer = () => {
     let div = document.getElementsByClassName("menu__itens");
-    div[0].style.display = (div[0].style.display != "flex") ? "flex" : "none";
+    div[0].style.display = (div[0].style.display !== "flex") ? "flex" : "none";
   }
   
   render() {

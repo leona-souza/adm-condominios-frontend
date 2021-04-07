@@ -8,6 +8,10 @@ class VisitanteService {
     return axios.get(API_URL);
   }
 
+  getVisitantesPaginados(pagina, limite) {
+    return axios.get(API_URL + `?pagina=${pagina}&limite=${limite}`);
+  }
+
   createVisitante(visitante) {
     return axios.post(API_URL, visitante);
   }

@@ -11,7 +11,11 @@ class ListApartamentoComponent extends PureComponent {
     super(props);
 
     this.state = {
-      apartamentos: []
+      apartamentos: [],
+      paginas: {
+        pagina: 1,
+        limite: 5,
+      }
     };
     this.addApartamento = this.addApartamento.bind(this);
     this.putApartamento = this.putApartamento.bind(this);
@@ -20,9 +24,11 @@ class ListApartamentoComponent extends PureComponent {
   }
 
   componentDidMount() {
-    ApartamentoService.getApartamentos().then((res) => {
+    const paginaAtual = this.state.paginas.pagina;
+    const paginaLimite = this.state.paginas.limite;
+    ApartamentoService.getApartamentosPaginados(paginaAtual, paginaLimite).then((res) => {
       this.setState({
-        apartamentos: res.data
+        apartamentos: res.data.resultados
       });
     });
   }

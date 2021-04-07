@@ -12,7 +12,10 @@ class ListVeiculoComponent extends PureComponent {
 
     this.state = {
       veiculos: [],
-      info: [],
+      paginas: {
+        pagina: 2,
+        limite: 5
+      }
     };
     this.addVeiculo = this.addVeiculo.bind(this);
     this.putVeiculo = this.putVeiculo.bind(this);
@@ -23,9 +26,11 @@ class ListVeiculoComponent extends PureComponent {
   componentDidMount() {
     let mapaAptos = new Map();
     let listaDeVeiculos = [];
+    const paginaAtual = this.state.paginas.pagina;
+    const paginaLimite = this.state.paginas.limite;
 
-    VeiculoService.getVeiculos()
-    .then(res => listaDeVeiculos = res.data)
+    VeiculoService.getVeiculosPaginados(paginaAtual, paginaLimite)
+    .then(res => listaDeVeiculos = res.data.resultados)
     .then(() => {
       listaDeVeiculos.forEach(
         morador => mapaAptos.set(morador.apartamentoVeiculo, "")

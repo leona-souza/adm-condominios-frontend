@@ -8,6 +8,10 @@ class MoradorService {
     return axios.get(API_URL);
   }
 
+  getMoradoresPaginados(pagina, limite) {
+    return axios.get(API_URL + `?pagina=${pagina}&limite=${limite}`);
+  }
+
   getMoradorById(moradorId) {
     return axios.get(API_URL + "/" + moradorId);
   }

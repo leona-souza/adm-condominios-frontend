@@ -8,6 +8,10 @@ class VeiculoService {
     return axios.get(API_URL);
   }
 
+  getVeiculosPaginados(pagina, limite) {
+    return axios.get(API_URL + `?pagina=${pagina}&limite=${limite}`);
+  }
+
   createVeiculo(veiculo) {
     return axios.post(API_URL, veiculo);
   }

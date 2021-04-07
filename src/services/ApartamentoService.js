@@ -3,10 +3,13 @@ require("dotenv").config();
 
 const API_URL = process.env.REACT_APP_API_URL + "/apartamentos";
 
-
 class ApartamentoService {
   getApartamentos() {
     return axios.get(API_URL);
+  }
+
+  getApartamentosPaginados(pagina, limite) {
+    return axios.get(API_URL + `?pagina=${pagina}&limite=${limite}`);
   }
 
   createApartamento(apartamento) {

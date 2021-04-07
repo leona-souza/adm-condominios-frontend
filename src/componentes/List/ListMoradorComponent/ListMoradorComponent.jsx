@@ -11,7 +11,11 @@ class ListMoradorComponent extends PureComponent {
     super(props);
 
     this.state = {
-      moradores: []
+      moradores: [],
+      paginas: {
+        pagina: 1,
+        limite: 5
+      }
     };
     this.addMorador = this.addMorador.bind(this);
     this.putMorador = this.putMorador.bind(this);
@@ -22,9 +26,11 @@ class ListMoradorComponent extends PureComponent {
   componentDidMount() {
     let mapaAptos = new Map();
     let listaDeMoradores = [];
+    const paginaAtual = this.state.paginas.pagina;
+    const paginaLimite = this.state.paginas.limite;
 
-    MoradorService.getMoradores()
-    .then(res => listaDeMoradores = res.data)
+    MoradorService.getMoradoresPaginados(paginaAtual, paginaLimite)
+    .then(res => listaDeMoradores = res.data.resultados)
     .then(() => {
       listaDeMoradores.forEach(
         morador => mapaAptos.set(morador.apartamentoMorador, "")

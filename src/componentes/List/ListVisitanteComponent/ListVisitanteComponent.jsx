@@ -12,7 +12,10 @@ class ListVisitanteComponent extends PureComponent {
 
     this.state = {
       visitantes: [],
-      info: [],
+      paginas: {
+        pagina: 1,
+        limite: 5
+      }
     };
     this.addVisitante = this.addVisitante.bind(this);
     this.putVisitante = this.putVisitante.bind(this);
@@ -23,9 +26,11 @@ class ListVisitanteComponent extends PureComponent {
   componentDidMount() {
     let mapaAptos = new Map();
     let listaDeVisitantes = [];
+    const paginaAtual = this.state.paginas.pagina;
+    const paginaLimite = this.state.paginas.limite;
 
-    VisitanteService.getVisitantes()
-    .then(res => listaDeVisitantes = res.data)
+    VisitanteService.getVisitantesPaginados(paginaAtual, paginaLimite)
+    .then(res => listaDeVisitantes = res.data.resultados)
     .then(() => {
       listaDeVisitantes.forEach(dados => {
         mapaAptos.set(dados.apartamentoVisitante, "");

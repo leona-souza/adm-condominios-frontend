@@ -8,6 +8,10 @@ class VisitaService {
     return axios.get(API_URL);
   }
 
+  getVisitasPaginadas(pagina, limite) {
+    return axios.get(API_URL + `?pagina=${pagina}&limite=${limite}`);
+  }
+
   createVisita(visita) {
     return axios.post(API_URL, visita);
   }

@@ -4,17 +4,19 @@ import DescriptionIcon from '@material-ui/icons/Description';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ApartamentoService from "../../../services/ApartamentoService";
+import Paginator from "../../Paginator/Paginator";
 import "./ListApartamentoComponent.css";
+import { LIMITE } from "../../../resources/Config";
+import Functions from "../../../resources/Functions";
 
 class ListApartamentoComponent extends PureComponent {
   constructor(props) {
     super(props);
-
     this.state = {
       apartamentos: [],
       paginas: {
         pagina: 1,
-        limite: 5,
+        limite: LIMITE,
       }
     };
     this.addApartamento = this.addApartamento.bind(this);
@@ -24,13 +26,17 @@ class ListApartamentoComponent extends PureComponent {
   }
 
   componentDidMount() {
-    const paginaAtual = this.state.paginas.pagina;
-    const paginaLimite = this.state.paginas.limite;
-    ApartamentoService.getApartamentosPaginados(paginaAtual, paginaLimite).then((res) => {
+    this.coletarDados(this.state.paginas.pagina);
+  }
+
+  coletarDados = (paginaAtual) => {
+    ApartamentoService.getApartamentosPaginados(paginaAtual, LIMITE)
+    .then(res => {
+      Functions.configurarPaginacao(paginaAtual, LIMITE, res.data.paginas.total, this);
       this.setState({
         apartamentos: res.data.resultados
       });
-    });
+    })
   }
 
   addApartamento = () => {
@@ -43,23 +49,23 @@ class ListApartamentoComponent extends PureComponent {
 
   deleteApartamento = (id) => {
     let apto = this.state.apartamentos.filter(
-      (apartamento) => apartamento.id === id
+      apartamento => apartamento.id === id
     );
     if (
       window.confirm(
-        `Deseja realmente excluir o apartamento ${apto[0].numero} - ${apto[0].torre}?`
+        `Deseja realmente excluir o apartamento ${apto[0].numero}-${apto[0].torre}?`
       )
     ) {
-      ApartamentoService.deleteApartamento(id).then((res) => {
+      ApartamentoService.deleteApartamento(id).then(() => {
         this.setState({
           apartamentos: this.state.apartamentos.filter(
-            (apartamento) => apartamento.id !== id
+            apartamento => apartamento.id !== id
           ),
         });
       });
     }
   };
-
+  
   viewApartamento = (id) => {
     this.props.history.push(`/ver-apartamento/${id}`);
   };
@@ -83,7 +89,7 @@ class ListApartamentoComponent extends PureComponent {
               <tr key={apartamento.id}>
                 <td data-title="Apartamento">{apartamento.numero}</td>
                 <td data-title="Torre">{apartamento.torre}</td>
-                <td data-title="Vaga">{apartamento.vaga}</td>
+                <td data-title="Vaga">{apartamento.vaga}&nbsp;</td>
                 <td>
                   <span className="tabela__acoes">
                     <DescriptionIcon className="tabela__icone" onClick={() => this.viewApartamento(apartamento.id)} />
@@ -95,6 +101,12 @@ class ListApartamentoComponent extends PureComponent {
             ))}
           </tbody>
         </table>
+        <Paginator 
+          pagina={this.state.paginas.pagina} 
+          total={this.state.paginas.total}
+          limite={this.state.paginas.limite}
+          onUpdate={this.coletarDados}
+        />
       </div>
     );
   }

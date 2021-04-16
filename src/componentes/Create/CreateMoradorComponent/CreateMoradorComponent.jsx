@@ -45,7 +45,7 @@ class CreateMoradorComponent extends PureComponent {
       return;
     } else {
       MoradorService.getMoradorById(this.state.id)
-        .then((res) => {
+        .then(res => {
           this.setState({
             nome: res.data.nome,
             documento: res.data.documento || "",
@@ -55,7 +55,7 @@ class CreateMoradorComponent extends PureComponent {
           });
         })
         .then(() => {
-          ApartamentoService.getApartamentoById(this.state.apartamento).then(res => {
+          ApartamentoService.getApartamentoById(this.state.apartamento.id).then(res => {
             this.setState({
               apartamento: res.data.id
             })

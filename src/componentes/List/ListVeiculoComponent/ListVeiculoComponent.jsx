@@ -5,6 +5,9 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import VeiculoService from "../../../services/VeiculoService";
 import ApartamentoService from "../../../services/ApartamentoService";
+import Paginator from "../../Paginator/Paginator";
+import { LIMITE } from "../../../resources/Config";
+import Functions from "../../../resources/Functions";
 
 class ListVeiculoComponent extends PureComponent {
   constructor(props) {
@@ -13,8 +16,8 @@ class ListVeiculoComponent extends PureComponent {
     this.state = {
       veiculos: [],
       paginas: {
-        pagina: 2,
-        limite: 5
+        pagina: 1,
+        limite: LIMITE
       }
     };
     this.addVeiculo = this.addVeiculo.bind(this);
@@ -24,51 +27,64 @@ class ListVeiculoComponent extends PureComponent {
   }
 
   componentDidMount() {
+    this.coletarDados(this.state.paginas.pagina);
+  }
+
+  coletarDados = (paginaAtual) => {
     let mapaAptos = new Map();
     let listaDeVeiculos = [];
-    const paginaAtual = this.state.paginas.pagina;
-    const paginaLimite = this.state.paginas.limite;
 
-    VeiculoService.getVeiculosPaginados(paginaAtual, paginaLimite)
-    .then(res => listaDeVeiculos = res.data.resultados)
-    .then(() => {
-      listaDeVeiculos.forEach(
-        morador => mapaAptos.set(morador.apartamentoVeiculo, "")
-      )
+    VeiculoService.getVeiculosPaginados(paginaAtual, LIMITE)
+    .then(res => {
+      Functions.configurarPaginacao(paginaAtual, LIMITE, res.data.paginas.total, this);
+      listaDeVeiculos = res.data.resultados;
     })
     .then(async () => {
-      const arrayDeAptos = Array.from(mapaAptos.keys());
-      await ApartamentoService.getApartamentosByList(arrayDeAptos)
-      .then(resAptos => {
-        resAptos.data.forEach(apto => mapaAptos.set(apto.id, apto.numero+"-"+apto.torre))
-      })
+      await this.mapearVeiculos(mapaAptos, listaDeVeiculos);
     })
     .then(() => {
-      listaDeVeiculos.forEach(
-        morador => morador.apartamentoVeiculo = mapaAptos.get(morador.apartamentoVeiculo)
-      )
+      this.converterDados(listaDeVeiculos, mapaAptos);
     })
     .then(() => {
       this.setState({ veiculos: listaDeVeiculos });
     });
   }
 
+  mapearVeiculos = async (mapa, array) => {
+    array.forEach(dado => {
+      mapa.set(dado.apartamentoVeiculo, "");
+    });
+    const arrayVeiculos = Array.from(mapa.keys());
+    await ApartamentoService.getApartamentosByList(arrayVeiculos)
+      .then(res => {
+        res.data.forEach(dado => {
+          mapa.set(dado.id, dado.numero +"-"+ dado.torre);
+        });    
+    });
+  }
+
+  converterDados = (lista, mapa) => {
+    lista.forEach(
+      veiculo => veiculo.apartamentoVeiculo = mapa.get(veiculo.apartamentoVeiculo)
+    );
+  }
+
   addVeiculo = () => {
     this.props.history.push("/gerenciar-veiculo/novo");
   };
 
-  putVeiculo = (id, aptoId) => {
+  putVeiculo = (id) => {
     this.props.history.push(`/gerenciar-veiculo/${id}`);
   };
 
   deleteVeiculo = (id) => {
-    let veiculo = this.state.veiculos.filter((item) => item.id === id);
+    let veiculo = this.state.veiculos.filter(item => item.id === id);
     if (
       window.confirm(`Deseja realmente excluir o veículo ${veiculo[0].modelo}?`)
     ) {
-      VeiculoService.deleteVeiculo(id).then((res) => {
+      VeiculoService.deleteVeiculo(id).then(() => {
         this.setState({
-          veiculos: this.state.veiculos.filter((veiculo) => veiculo.id !== id),
+          veiculos: this.state.veiculos.filter(veiculo => veiculo.id !== id),
         });
       });
     }
@@ -112,6 +128,14 @@ class ListVeiculoComponent extends PureComponent {
             ))}
           </tbody>
         </table>
+        <Paginator 
+          anterior={this.state.paginas.anterior}
+          pagina={this.state.paginas.pagina} 
+          proxima={this.state.paginas.proxima}
+          limite={this.state.paginas.limite}
+          total={this.state.paginas.total}
+          onUpdate={this.coletarDados}
+        />
       </div>
     );
   }

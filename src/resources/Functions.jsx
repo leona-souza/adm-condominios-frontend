@@ -20,6 +20,35 @@ class Functions {
         return ano +"-"+ mes +"-"+ dia +"T"+ hora +":"+ minutos;
     }
 
+    configurarPaginacao = (paginaAtual, limite, res, thisParent) => {
+        const total = Math.ceil(res / limite);
+          thisParent.setState({
+            paginas: {
+              pagina: paginaAtual,
+              total: total
+            },
+          });
+      }
+
+       /*mapearObjetos = async (mapa, array) => {
+        array.forEach(dado => {
+          mapa.set(dado.apartamentoVeiculo, "");
+        });
+        const arrayVeiculos = Array.from(mapa.keys());
+        await ApartamentoService.getApartamentosByList(arrayVeiculos)
+          .then(res => {
+            res.data.forEach(dado => {
+              mapa.set(dado.id, dado.numero +"-"+ dado.torre);
+            });    
+        });
+      }
+    
+      converterDados = (lista, mapa) => {
+        lista.forEach(
+          veiculo => veiculo.apartamentoVeiculo = mapa.get(veiculo.apartamentoVeiculo)
+        );
+      } */
+
 }
 
 export default new Functions();

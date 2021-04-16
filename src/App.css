@@ -6,6 +6,8 @@
   --menuBackground: #282c34;
   --formularioColor: #fff;
   --formularioTexto: #555;
+  --tabelaColorEven: #eee;
+  --tabelaColorOdd: #fff;
   --caixaColor: #fff;
   --larguraConteudo: 80%;
   --larguraFormulario: 100%;
@@ -87,7 +89,7 @@ a {
   border-collapse: collapse;
   width: var(--larguraConteudo);
   text-align: center;
-  margin-bottom: 50px;
+  margin-bottom: 30px;
 }
 
 .tabela th {
@@ -102,11 +104,11 @@ a {
 }
 
 .tabela tr:nth-child(even) {
-  background: #eee
+  background: var(--tabelaColorEven)
 }
 
 .tabela tr:nth-child(odd) {
-  background: #FFF
+  background: var(--tabelaColorOdd)
 }
 
 .tabela__titulo {

@@ -7,6 +7,8 @@ import VisitaService from "../../../services/VisitaService";
 import ApartamentoService from "../../../services/ApartamentoService";
 import VisitanteService from "../../../services/VisitanteService";
 import Functions from "../../../resources/Functions";
+import Paginator from "../../Paginator/Paginator";
+import { LIMITE } from "../../../resources/Config";
 
 class ListVisitaComponent extends PureComponent {
   constructor(props) {
@@ -18,7 +20,7 @@ class ListVisitaComponent extends PureComponent {
       infoVisitante: [],
       paginas: {
         pagina: 1,
-        limite: 5
+        limite: LIMITE
       }
     };
 
@@ -29,14 +31,24 @@ class ListVisitaComponent extends PureComponent {
   }
 
   componentDidMount() {
+    this.coletarDados(this.state.paginas.pagina, this.state.paginas.limite);
+  }
+
+  coletarDados = (paginaAtual, paginaLimite) => {
     let mapaAptos = new Map();
     let mapaNomes = new Map();
     let listaDeVisitas = [];
-    const paginaAtual = this.state.paginas.pagina;
-    const paginaLimite = this.state.paginas.limite;
 
-    VisitaService.getVisitasPaginadas(paginaAtual, paginaLimite)
+    VisitaService.getVisitasPaginadas(paginaAtual, LIMITE)
     .then(res => {
+      let total = Math.ceil(res.data.paginas.total / LIMITE);
+      this.setState({
+        paginas: {
+          pagina: paginaAtual,
+          limite: LIMITE,
+          total: total
+        }
+      });
       listaDeVisitas = res.data.resultados;
     })
     .then(async () => {
@@ -98,13 +110,13 @@ class ListVisitaComponent extends PureComponent {
   };
 
   deleteVisita = (id) => {
-    let visita = this.state.visitas.filter((item) => item.id === id);
+    let visita = this.state.visitas.filter(item => item.id === id);
     if (
       window.confirm(`Deseja realmente excluir a visita de ${visita[0].visitante} no dia ${visita[0].data}?`)
     ) {
-      VisitaService.deleteVisita(id).then((res) => {
+      VisitaService.deleteVisita(id).then(() => {
         this.setState({
-          visitas: this.state.visitas.filter((visita) => visita.id !== id),
+          visitas: this.state.visitas.filter(visita => visita.id !== id),
         });
       });
     }
@@ -145,6 +157,14 @@ class ListVisitaComponent extends PureComponent {
             ))}
           </tbody>
         </table>
+        <Paginator 
+          anterior={this.state.paginas.anterior}
+          pagina={this.state.paginas.pagina} 
+          proxima={this.state.paginas.proxima}
+          limite={this.state.paginas.limite}
+          total={this.state.paginas.total}
+          onUpdate={this.coletarDados}
+        />
       </div>
     );
   }

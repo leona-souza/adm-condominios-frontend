@@ -30,7 +30,7 @@ class CreateVisitanteComponent extends PureComponent {
   componentDidMount() {
     ApartamentoService.getApartamentos()
       .then((resposta) => {
-        resposta.data.map((dado) => {
+        resposta.data.resultados.map((dado) => {
           return this.setState({
             lista: [
               ...this.state.lista,

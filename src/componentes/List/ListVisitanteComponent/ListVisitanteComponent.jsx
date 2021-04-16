@@ -5,16 +5,19 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import VisitanteService from "../../../services/VisitanteService";
 import ApartamentoService from "../../../services/ApartamentoService";
+import Paginator from "../../Paginator/Paginator";
+import { LIMITE } from "../../../resources/Config";
+import Functions from "../../../resources/Functions";
+import { ThreeSixty } from "@material-ui/icons";
 
 class ListVisitanteComponent extends PureComponent {
   constructor(props) {
     super(props);
-
     this.state = {
       visitantes: [],
       paginas: {
         pagina: 1,
-        limite: 5
+        limite: LIMITE
       }
     };
     this.addVisitante = this.addVisitante.bind(this);
@@ -24,54 +27,64 @@ class ListVisitanteComponent extends PureComponent {
   }
 
   componentDidMount() {
+    this.coletarDados(this.state.paginas.pagina);   
+  }
+
+  coletarDados = (paginaAtual) => {
     let mapaAptos = new Map();
     let listaDeVisitantes = [];
-    const paginaAtual = this.state.paginas.pagina;
-    const paginaLimite = this.state.paginas.limite;
 
-    VisitanteService.getVisitantesPaginados(paginaAtual, paginaLimite)
-    .then(res => listaDeVisitantes = res.data.resultados)
-    .then(() => {
-      listaDeVisitantes.forEach(dados => {
-        mapaAptos.set(dados.apartamentoVisitante, "");
-      });
+    VisitanteService.getVisitantesPaginados(paginaAtual, LIMITE)
+    .then(res => {
+      Functions.configurarPaginacao(paginaAtual, LIMITE, res.data.paginas.total, this);
+      listaDeVisitantes = res.data.resultados;
     })
     .then(async () => {
-      const arrayApartamentos = Array.from(mapaAptos.keys());
-      await ApartamentoService.getApartamentosByList(arrayApartamentos)
-        .then(resAptos => {
-          resAptos.data.forEach(dados => {
-            mapaAptos.set(dados.id, dados.numero + "-" + dados.torre);
-          });
-        })
+      await this.mapearVisitantes(mapaAptos, listaDeVisitantes);
     })
     .then(() => {
-      listaDeVisitantes.forEach(dados => {
-        dados.apartamentoVisitante = mapaAptos.get(dados.apartamentoVisitante);
-      });
+      this.converterDados(mapaAptos, listaDeVisitantes);
     })
     .then(() => {
       this.setState({ visitantes: listaDeVisitantes });
     });
-    
+  }
+
+  mapearVisitantes = async (mapa, array) => {
+    array.forEach(dado => {
+      mapa.set(dado.apartamentoVisitante, "");
+    });
+    const arrayVisitantes = Array.from(mapa.keys());
+    await ApartamentoService.getApartamentosByList(arrayVisitantes)
+      .then(res => {
+        res.data.forEach(dado => {
+          mapa.set(dado.id, dado.numero +"-"+ dado.torre);
+        });    
+    });
+  }
+
+  converterDados = (mapa, array) => {
+    array.forEach(dados => {
+      dados.apartamentoVisitante = mapa.get(dados.apartamentoVisitante);
+    });
   }
 
   addVisitante = () => {
     this.props.history.push("/gerenciar-visitante/novo");
   };
 
-  putVisitante = (id, aptoId) => {
+  putVisitante = (id) => {
     this.props.history.push(`/gerenciar-visitante/${id}`);
   };
 
   deleteVisitante = (id) => {
-    let visitante = this.state.visitantes.filter((item) => item.id === id);
+    let visitante = this.state.visitantes.filter(item => item.id === id);
     if (
       window.confirm(
         `Deseja realmente excluir o visitante ${visitante[0].nome}?`
       )
     ) {
-      VisitanteService.deleteVisitante(id).then((res) => {
+      VisitanteService.deleteVisitante(id).then(() => {
         this.setState({
           visitantes: this.state.visitantes.filter(
             (visitante) => visitante.id !== id
@@ -115,6 +128,14 @@ class ListVisitanteComponent extends PureComponent {
               ))}
           </tbody>
         </table>
+        <Paginator 
+          anterior={this.state.paginas.anterior}
+          pagina={this.state.paginas.pagina} 
+          proxima={this.state.paginas.proxima}
+          limite={this.state.paginas.limite}
+          total={this.state.paginas.total}
+          onUpdate={this.coletarDados}
+        />
       </div>
     );
   }

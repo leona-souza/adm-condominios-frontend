@@ -4,9 +4,9 @@ const clicavel = "paginator__botao botao__clicavel";
 const naoClicavel = "paginator__botao ";
 
 class Paginator extends PureComponent {
-    constructor(props) {
+    /* constructor(props) {
         super(props);
-    }
+    } */
 
     renderBotoes = (texto, pagina, condicao, booleano) => {
       const selecionado = (booleano) ? "botao__selecionado" : "";

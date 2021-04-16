@@ -8,7 +8,6 @@ import ApartamentoService from "../../../services/ApartamentoService";
 import Paginator from "../../Paginator/Paginator";
 import { LIMITE } from "../../../resources/Config";
 import Functions from "../../../resources/Functions";
-import { ThreeSixty } from "@material-ui/icons";
 
 class ListVisitanteComponent extends PureComponent {
   constructor(props) {

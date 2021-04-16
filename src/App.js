@@ -1,7 +1,6 @@
 import React from "react";
 import "./App.css";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import FooterComponent from "./componentes/FooterComponent/FooterComponent";
 import Menu from "./componentes/Menu/Menu";
 import CreateApartamentoComponent from "./componentes/Create/CreateApartamentoComponent/CreateApartamentoComponent";
 import CreateMoradorComponent from "./componentes/Create/CreateMoradorComponent/CreateMoradorComponent";

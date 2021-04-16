@@ -1,5 +1,4 @@
 import React, { PureComponent } from "react";
-import Loading from "../../Loading/Loading"
 import ApartamentoService from "../../../services/ApartamentoService";
 import ApartmentIcon from '@material-ui/icons/Apartment';
 import EditIcon from '@material-ui/icons/Edit';

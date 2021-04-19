@@ -119,8 +119,8 @@ class ListVeiculoComponent extends PureComponent {
             {this.state.veiculos.sort((a, b) => (a.modelo > b.modelo) ? 1 : -1)
               .map((veiculo) => (
               <tr key={veiculo.id}>
-                <td data-title="Veículo">{veiculo.marca} {veiculo.modelo}</td>
-                <td data-title="Cor">{veiculo.cor}</td>
+                <td data-title="Veículo">&nbsp;{veiculo.marca} {veiculo.modelo}</td>
+                <td data-title="Cor">&nbsp;{veiculo.cor}</td>
                 <td data-title="Placa">{veiculo.placa}</td>
                 <td data-title="Apartamento"> {veiculo.apartamentoVeiculo}</td>
                 <td>

@@ -4,15 +4,15 @@ const clicavel = "paginator__botao botao__clicavel";
 const naoClicavel = "paginator__botao ";
 
 class Paginator extends PureComponent {
-    renderBotoes = (texto, pagina, condicao, numero) => {
-      const selecionado = numero ? "botao__selecionado" : "";
+    renderBotoes = (texto, pagina, limiteOuValor, isNumber) => {
+      const selecionado = isNumber ? "botao__selecionado" : "";
 
       return (
         <div 
-          key={pagina}
-          className={(this.props.pagina !== condicao) ? clicavel : naoClicavel + selecionado} 
+          key={texto}
+          className={(this.props.pagina !== limiteOuValor) ? clicavel : naoClicavel + selecionado} 
           onClick={() => {
-            (this.props.pagina !== condicao) && this.props.onUpdate(pagina, this.props.limite)
+            (this.props.pagina !== limiteOuValor) && this.props.onUpdate(pagina, this.props.limite)
           }}
         >
           {texto}

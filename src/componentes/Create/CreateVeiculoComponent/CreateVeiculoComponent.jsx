@@ -93,6 +93,7 @@ class CreateVeiculoComponent extends PureComponent {
       apartamentoVeiculo: this.state.apartamento,
     };
     if (this.state.id === "novo") {
+      console.log(veiculo);
       VeiculoService.createVeiculo(veiculo).then((res) => {
         this.props.history.push("/veiculos");
       });
@@ -139,7 +140,7 @@ class CreateVeiculoComponent extends PureComponent {
                 value={this.state.marca}
                 onChange={this.changeMarcaHandler}
               />
-            <label className="formulario__label">Placa</label>
+            <label className="formulario__label required">Placa</label>
               <input
                 name="placa"
                 className="formulario__input"

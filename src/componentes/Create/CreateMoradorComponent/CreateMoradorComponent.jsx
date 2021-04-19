@@ -54,13 +54,14 @@ class CreateMoradorComponent extends PureComponent {
             apartamento: res.data.apartamentoMorador
           });
         })
-        .then(() => {
-          ApartamentoService.getApartamentoById(this.state.apartamento.id).then(res => {
+        .then(async () => {
+          await ApartamentoService.getApartamentoById(this.state.apartamento).then(res => {
             this.setState({
               apartamento: res.data.id
             })
           });
         });
+        
     }
     
   }
@@ -114,7 +115,7 @@ class CreateMoradorComponent extends PureComponent {
       <div className="largura">
         <div className="titulo">{this.titulo()}</div>
           <form className="formulario">
-            <label className="formulario__label">Nome</label>
+            <label className="formulario__label required">Nome</label>
               <input
                 name="nome"
                 className="formulario__input"

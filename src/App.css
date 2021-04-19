@@ -27,6 +27,10 @@ a {
   min-height: 100vh;
 }
 
+.required:after {
+  content:" *";
+}
+
 .red {
   color: crimson;
 }

@@ -108,7 +108,7 @@ class CreateVisitanteComponent extends PureComponent {
       <div className="largura">
         <div className="titulo">{this.titulo()}</div>
           <form className="formulario">
-            <label className="formulario__label">Nome</label>
+            <label className="formulario__label required">Nome</label>
               <input
                 name="nome"
                 className="formulario__input"

@@ -97,14 +97,14 @@ class CreateApartamentoComponent extends PureComponent {
           <div className="titulo">{this.titulo()}</div>
             <div>
               <form className="formulario">
-                <label className="formulario__label">Número</label>
+                <label className="formulario__label required">Número</label>
                 <input
                   name="numero"
                   className="formulario__input"
                   value={this.state.numero}
                   onChange={this.changeNumeroHandler}
                 />
-                <label className="formulario__label">Torre</label>
+                <label className="formulario__label required">Torre</label>
                 <input
                   name="torre"
                   className="formulario__input"

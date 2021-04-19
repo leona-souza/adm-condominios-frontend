@@ -31,16 +31,19 @@ class ListVisitaComponent extends PureComponent {
   }
 
   componentDidMount() {
-    this.coletarDados(this.state.paginas.pagina, this.state.paginas.limite);
+    this.coletarDados(this.state.paginas.pagina);
   }
 
-  coletarDados = (paginaAtual, paginaLimite) => {
+  coletarDados = (paginaAtual) => {
     let mapaAptos = new Map();
     let mapaNomes = new Map();
     let listaDeVisitas = [];
 
     VisitaService.getVisitasPaginadas(paginaAtual, LIMITE)
     .then(res => {
+      if (res.data.resultados.length === 0) {
+        throw new Error("Nenhum registro encontrado");
+      }
       let total = Math.ceil(res.data.paginas.total / LIMITE);
       this.setState({
         paginas: {
@@ -62,6 +65,9 @@ class ListVisitaComponent extends PureComponent {
     })
     .then(() => {
       this.setState({ visitas: listaDeVisitas });
+    })
+    .catch((e) => {
+      console.log(e);
     });  
   }
 
@@ -70,12 +76,14 @@ class ListVisitaComponent extends PureComponent {
       mapa.set(dado.apartamento, "");
     });
     const arrayApartamentos = Array.from(mapa.keys());
-    await ApartamentoService.getApartamentosByList(arrayApartamentos)
+    if (arrayApartamentos[0]) {
+      await ApartamentoService.getApartamentosByList(arrayApartamentos)
       .then(res => {
         res.data.forEach(dado => {
           mapa.set(dado.id, dado.numero +"-"+ dado.torre);
         });    
-    });
+      });
+    }
   }
 
   mapearVisitantes = async (mapa, array) => {

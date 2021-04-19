@@ -36,6 +36,9 @@ class ListVeiculoComponent extends PureComponent {
 
     VeiculoService.getVeiculosPaginados(paginaAtual, LIMITE)
     .then(res => {
+      if (res.data.resultados.length === 0) {
+        throw new Error("Nenhum registro encontrado");
+      }
       Functions.configurarPaginacao(paginaAtual, LIMITE, res.data.paginas.total, this);
       listaDeVeiculos = res.data.resultados;
     })
@@ -47,6 +50,9 @@ class ListVeiculoComponent extends PureComponent {
     })
     .then(() => {
       this.setState({ veiculos: listaDeVeiculos });
+    })
+    .catch((e) => {
+      console.log(e);
     });
   }
 

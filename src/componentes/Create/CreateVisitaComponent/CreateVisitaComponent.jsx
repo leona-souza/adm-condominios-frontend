@@ -163,7 +163,7 @@ class CreateVisitaComponent extends PureComponent {
                 <div className="titulo">{this.titulo()}</div>
                 <div>
                     <form className="formulario">
-                    <label className="formulario__label">Data</label>
+                    <label className="formulario__label required">Data</label>
                         <input
                             name="data"
                             type="datetime-local"
@@ -171,7 +171,7 @@ class CreateVisitaComponent extends PureComponent {
                             value={this.state.data}
                             onChange={this.changeDataHandler}
                         />
-                    <label className="formulario__label">Visitante</label>
+                    <label className="formulario__label required">Visitante</label>
                         <input
                             placeholder="Procurar nomes"
                             name="visitante"

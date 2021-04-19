@@ -35,6 +35,9 @@ class ListVisitanteComponent extends PureComponent {
 
     VisitanteService.getVisitantesPaginados(paginaAtual, LIMITE)
     .then(res => {
+      if (res.data.resultados.length === 0) {
+        throw new Error("Nenhum registro encontrado");
+      }
       Functions.configurarPaginacao(paginaAtual, LIMITE, res.data.paginas.total, this);
       listaDeVisitantes = res.data.resultados;
     })
@@ -46,6 +49,9 @@ class ListVisitanteComponent extends PureComponent {
     })
     .then(() => {
       this.setState({ visitantes: listaDeVisitantes });
+    })
+    .catch((e) => {
+      console.log(e);
     });
   }
 

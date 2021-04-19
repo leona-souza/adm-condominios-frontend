@@ -32,11 +32,15 @@ class ListApartamentoComponent extends PureComponent {
   coletarDados = (paginaAtual) => {
     ApartamentoService.getApartamentosPaginados(paginaAtual, LIMITE)
     .then(res => {
+      if (res.data.resultados.length === 0) {
+        throw new Error("Nenhum registro encontrado");
+      }
       Functions.configurarPaginacao(paginaAtual, LIMITE, res.data.paginas.total, this);
       this.setState({
         apartamentos: res.data.resultados
       });
     })
+    .catch(e => console.log(e));
   }
 
   addApartamento = () => {

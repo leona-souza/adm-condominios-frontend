@@ -35,6 +35,9 @@ class ListMoradorComponent extends PureComponent {
     
     MoradorService.getMoradoresPaginados(paginaAtual, LIMITE)
     .then(res => {
+      if (res.data.resultados.length === 0) {
+        throw new Error("Nenhum registro encontrado");
+      }
       Functions.configurarPaginacao(paginaAtual, LIMITE, res.data.paginas.total, this);
       listaDeMoradores = res.data.resultados;
     })
@@ -46,6 +49,9 @@ class ListMoradorComponent extends PureComponent {
     })
     .then(() => {
       this.setState({ moradores: listaDeMoradores });
+    })
+    .catch((e) => {
+      console.log(e);
     });
   }
 

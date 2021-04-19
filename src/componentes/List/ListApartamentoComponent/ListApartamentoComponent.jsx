@@ -93,7 +93,7 @@ class ListApartamentoComponent extends PureComponent {
               <tr key={apartamento.id}>
                 <td data-title="Apartamento">{apartamento.numero}</td>
                 <td data-title="Torre">{apartamento.torre}</td>
-                <td data-title="Vaga">{apartamento.vaga}&nbsp;</td>
+                <td data-title="Vaga">&nbsp;{apartamento.vaga}</td>
                 <td>
                   <span className="tabela__acoes">
                     <DescriptionIcon className="tabela__icone" onClick={() => this.viewApartamento(apartamento.id)} />

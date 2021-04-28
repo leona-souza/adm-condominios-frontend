@@ -25,7 +25,7 @@ class Menu extends PureComponent {
           <MenuIcon onClick={() => this.hamburguer()} />
         </div>
         <div className="menu__itens">
-          <a href="/" className="menu__item"><ApartmentIcon className="menu__icone" />Apartamentos</a>
+          <a href="/apartamentos" className="menu__item"><ApartmentIcon className="menu__icone" />Apartamentos</a>
           <a href="/moradores" className="menu__item"><PersonIcon className="menu__icone" />Moradores</a>
           <a href="/veiculos" className="menu__item"><DriveEtaIcon className="menu__icone" />Veiculos</a>
           <a href="/visitantes" className="menu__item"><EmojiPeopleIcon className="menu__icone" />Visitantes</a>

@@ -4,7 +4,7 @@ class Loading extends PureComponent {
 
   render() {
     return (
-      <div>Loading...</div>
+      <div className="loading">Iniciando API, por favor aguarde alguns segundos.</div>
     );
   }
 }

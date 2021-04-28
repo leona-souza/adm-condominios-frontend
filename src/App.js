@@ -7,6 +7,7 @@ import CreateMoradorComponent from "./componentes/Create/CreateMoradorComponent/
 import CreateVeiculoComponent from "./componentes/Create/CreateVeiculoComponent/CreateVeiculoComponent";
 import CreateVisitanteComponent from "./componentes/Create/CreateVisitanteComponent/CreateVisitanteComponent";
 import CreateVisitaComponent from "./componentes/Create/CreateVisitaComponent/CreateVisitaComponent";
+import ListObjects from "./componentes/List/ListObjects/ListObjects";
 import ListApartamentoComponent from "./componentes/List/ListApartamentoComponent/ListApartamentoComponent";
 import ListMoradorComponent from "./componentes/List/ListMoradorComponent/ListMoradorComponent";
 import ListVeiculoComponent from "./componentes/List/ListVeiculoComponent/ListVeiculoComponent";
@@ -32,6 +33,9 @@ function App() {
 
               {/* Apartamentos */}
               <Route path="/apartamentos" component={ListApartamentoComponent} />
+              <Route path="/gerenciar-apartamento/:id" component={CreateApartamentoComponent} />
+              <Route path="/ver-apartamento/:id" component={ViewApartamentoComponent} />
+              {/* <Route path="/apartamentos" render={props => <ListObjects {...props} type="apartamentos" />} /> */}
               <Route path="/gerenciar-apartamento/:id" component={CreateApartamentoComponent} />
               <Route path="/ver-apartamento/:id" component={ViewApartamentoComponent} />
               

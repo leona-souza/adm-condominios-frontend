@@ -5,17 +5,16 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ApartamentoService from "../../../services/ApartamentoService";
 import Paginator from "../../Paginator/Paginator";
-import "./ListApartamentoComponent.css";
+import "./ListObjects.css";
 import { LIMITE } from "../../../resources/Config";
 import Functions from "../../../resources/Functions";
-import Loading from "../../Loading/Loading";
+import ObjectService from "../../../services/ObjectService";
 
-class ListApartamentoComponent extends PureComponent {
+class ListObjecs extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      loading: true,
-      apartamentos: [],
+      objects: [],
       paginas: {
         pagina: 1,
         limite: LIMITE,
@@ -32,15 +31,15 @@ class ListApartamentoComponent extends PureComponent {
   }
 
   coletarDados = (paginaAtual) => {
-    ApartamentoService.getApartamentosPaginados(paginaAtual, LIMITE)
+    const objeto = new ObjectService("apartamentos");
+    objeto.getObjectsPaginados(paginaAtual, LIMITE)
     .then(res => {
       if (res.data.resultados.length === 0) {
         throw new Error("Nenhum registro encontrado");
       }
       Functions.configurarPaginacao(paginaAtual, LIMITE, res.data.paginas.total, this);
       this.setState({
-        apartamentos: res.data.resultados,
-        loading: false
+        objects: res.data.resultados
       });
     })
     .catch(e => console.log(e));
@@ -55,17 +54,17 @@ class ListApartamentoComponent extends PureComponent {
   };
 
   deleteApartamento = (id) => {
-    let apto = this.state.apartamentos.filter(
-      apartamento => apartamento.id === id
+    let objeto = this.state.objects.filter(
+      obj => obj.id === id
     );
     if (
       window.confirm(
-        `Deseja realmente excluir o apartamento ${apto[0].numero}-${apto[0].torre}?`
+        `Deseja realmente excluir o apartamento ${objeto[0].numero}-${objeto[0].torre}?`
       )
     ) {
       ApartamentoService.deleteApartamento(id).then(() => {
         this.setState({
-          apartamentos: this.state.apartamentos.filter(
+          apartamentos: this.state.objects.filter(
             apartamento => apartamento.id !== id
           ),
         });
@@ -82,7 +81,6 @@ class ListApartamentoComponent extends PureComponent {
       <div className="largura">
         <div className="titulo">Lista de Apartamentos</div>
         <div className="botao__cursor botao__novo" onClick={this.addApartamento}><AddCircleOutlineIcon /> Adicionar apartamento</div>
-        {this.state.loading && <Loading />}
         <table className="tabela">
           <thead>
             <tr>
@@ -93,7 +91,7 @@ class ListApartamentoComponent extends PureComponent {
             </tr>
           </thead>
           <tbody>
-            {this.state.apartamentos.map((apartamento) => (
+            {this.state.objects.map((apartamento) => (
               <tr key={apartamento.id}>
                 <td data-title="Apartamento">{apartamento.numero}</td>
                 <td data-title="Torre">{apartamento.torre}</td>
@@ -120,4 +118,4 @@ class ListApartamentoComponent extends PureComponent {
   }
 }
 
-export default ListApartamentoComponent;
+export default ListObjecs;

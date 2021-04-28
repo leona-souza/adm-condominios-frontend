@@ -35,7 +35,9 @@ function App() {
               <Route path="/apartamentos" component={ListApartamentoComponent} />
               <Route path="/gerenciar-apartamento/:id" component={CreateApartamentoComponent} />
               <Route path="/ver-apartamento/:id" component={ViewApartamentoComponent} />
-              {/* <Route path="/apartamentos" render={props => <ListObjects {...props} type="apartamentos" />} /> */}
+
+              <Route path="/testes" render={props => <ListObjects {...props} type="apartamentos" />} />
+
               <Route path="/gerenciar-apartamento/:id" component={CreateApartamentoComponent} />
               <Route path="/ver-apartamento/:id" component={ViewApartamentoComponent} />
               

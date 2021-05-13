@@ -1,13 +1,9 @@
 import axios from "axios";
 require("dotenv").config();
 
-/* let API_URL = process.env.REACT_APP_API_URL + "/"; */
-
 class ObjectService {
-
-  constructor(type) {
-    console.log(type);
-    this.API_URL = process.env.REACT_APP_API_URL + "/" + type;
+  constructor() {
+    this.API_URL = null;
   }
 
   getObjects() {
@@ -18,7 +14,15 @@ class ObjectService {
     return axios.get(this.API_URL + `?pagina=${pagina}&limite=${limite}`);
   }
 
-/*   createObject(objeto) {
+  setApiUrl = (valor) => {
+    this.API_URL = valor;
+  }
+
+  getApiUrl = () => {
+    return this.API_URL;
+  }
+
+  createObject(objeto) {
     return axios.post(this.API_URL, objeto);
   }
 
@@ -51,8 +55,8 @@ class ObjectService {
 
   getVisitanteByApartamento(apartamentoId) {
     return axios.get(this.API_URL + "/" + apartamentoId + "/visitantes");
-  } */
+  }
 
 }
 
-export default new ObjectService();
+export default ObjectService;

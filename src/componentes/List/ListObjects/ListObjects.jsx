@@ -7,100 +7,111 @@ import ApartamentoService from "../../../services/ApartamentoService";
 import Paginator from "../../Paginator/Paginator";
 import "./ListObjects.css";
 import { LIMITE } from "../../../resources/Config";
-import Functions from "../../../resources/Functions";
-import ObjectService from "../../../services/ObjectService";
+import Apartamento from "../../../models/Apartamento";
+import Morador from "../../../models/Morador";
+import Veiculo from "../../../models/Veiculo";
 
-class ListObjecs extends PureComponent {
+class ListObjects extends PureComponent {
   constructor(props) {
     super(props);
+    
+    switch (this.props.type) {
+      case "apartamentos":
+        this.state = { objeto: new Apartamento() };
+        break;
+      case "moradores":
+        this.state = { objeto: new Morador() };
+        break;
+      case "veiculos":
+        this.state = { objeto: new Veiculo() };
+        break;
+      default:
+    }
+
     this.state = {
+      ...this.state,
       objects: [],
       paginas: {
         pagina: 1,
         limite: LIMITE,
       }
     };
-    this.addApartamento = this.addApartamento.bind(this);
-    this.putApartamento = this.putApartamento.bind(this);
-    this.deleteApartamento = this.deleteApartamento.bind(this);
-    this.viewApartamento = this.viewApartamento.bind(this);
+
+    this.addObject = this.addObject.bind(this);
+    this.putObject = this.putObject.bind(this);
+    this.deleteObject = this.deleteObject.bind(this);
+    this.viewObject = this.viewObject.bind(this);
   }
 
   componentDidMount() {
-    this.coletarDados(this.state.paginas.pagina);
+    this.state.objeto.coletarDados(this.state.paginas.pagina, this);
   }
 
-  coletarDados = (paginaAtual) => {
-    const objeto = new ObjectService("apartamentos");
-    objeto.getObjectsPaginados(paginaAtual, LIMITE)
-    .then(res => {
-      if (res.data.resultados.length === 0) {
-        throw new Error("Nenhum registro encontrado");
+  percorrerCampos = (obj) => {
+    let temp = [];
+    for (const [key, valor] of Object.entries(obj)) {
+      if (key !== "id") {
+        temp.push(<td key={valor} data-title="Torre">{valor}</td>);
       }
-      Functions.configurarPaginacao(paginaAtual, LIMITE, res.data.paginas.total, this);
-      this.setState({
-        objects: res.data.resultados
-      });
-    })
-    .catch(e => console.log(e));
+    }
+    return temp;    
   }
 
-  addApartamento = () => {
-    this.props.history.push("/gerenciar-apartamento/novo");
+  addObject = () => {
+    this.state.objeto.add();
   };
 
-  putApartamento = (id) => {
-    this.props.history.push(`/gerenciar-apartamento/${id}`);
+  putObject = (id) => {
+    this.state.objeto.put(id);
   };
 
-  deleteApartamento = (id) => {
+  viewObject = (id) => {
+    this.state.objeto.view(id);
+  };
+
+  deleteObject = (id) => {
     let objeto = this.state.objects.filter(
       obj => obj.id === id
     );
     if (
       window.confirm(
-        `Deseja realmente excluir o apartamento ${objeto[0].numero}-${objeto[0].torre}?`
+        this.state.objeto.mensagemDeletar(objeto[0])
       )
     ) {
-      ApartamentoService.deleteApartamento(id).then(() => {
+      this.state.objeto.deleteObject(id)
+      .then(() => {
         this.setState({
-          apartamentos: this.state.objects.filter(
-            apartamento => apartamento.id !== id
+          objects: this.state.objects.filter(
+            obj => obj.id !== id
           ),
         });
       });
     }
   };
-  
-  viewApartamento = (id) => {
-    this.props.history.push(`/ver-apartamento/${id}`);
-  };
 
   render() {
     return (
       <div className="largura">
-        <div className="titulo">Lista de Apartamentos</div>
-        <div className="botao__cursor botao__novo" onClick={this.addApartamento}><AddCircleOutlineIcon /> Adicionar apartamento</div>
+        <div className="titulo">{this.state.objeto.titulo}</div>
+        <div className="botao__cursor botao__novo" onClick={this.addObject}><AddCircleOutlineIcon /> {this.state.objeto.adicionar}</div>
         <table className="tabela">
           <thead>
             <tr>
-              <th className="tabela__titulo">Apartamento</th>
-              <th className="tabela__titulo">Torre</th>
-              <th className="tabela__titulo">Vaga</th>
+              {this.state.objeto.colunasDeListagem.map(coluna => 
+                <th key={coluna} className="tabela__titulo">{coluna}</th>
+              )}
               <th className="tabela__titulo">Ações</th>
             </tr>
           </thead>
           <tbody>
-            {this.state.objects.map((apartamento) => (
-              <tr key={apartamento.id}>
-                <td data-title="Apartamento">{apartamento.numero}</td>
-                <td data-title="Torre">{apartamento.torre}</td>
-                <td data-title="Vaga">&nbsp;{apartamento.vaga}</td>
+            {this.state.objects.map(obj => (
+              <tr key={obj.id}>
+                {this.percorrerCampos(obj)}
                 <td>
                   <span className="tabela__acoes">
-                    <DescriptionIcon className="tabela__icone" onClick={() => this.viewApartamento(apartamento.id)} />
-                    <EditIcon className="tabela__icone" onClick={() => this.putApartamento(apartamento.id)} />
-                    <DeleteIcon className="tabela__icone red" onClick={() => this.deleteApartamento(apartamento.id)} />
+                    <DescriptionIcon className="tabela__icone" onClick={() => this.viewObject(obj.id)} />
+                    <EditIcon className="tabela__icone" onClick={() => this.putObject(obj.id)} />
+                    <DeleteIcon className="tabela__icone red" onClick={() => this.deleteObject(obj.id)} />
                   </span>
                 </td>
               </tr>
@@ -111,11 +122,11 @@ class ListObjecs extends PureComponent {
           pagina={this.state.paginas.pagina} 
           total={this.state.paginas.total}
           limite={this.state.paginas.limite}
-          onUpdate={this.coletarDados}
+          onUpdate={this.state.objeto.coletarDados}
         />
       </div>
     );
   }
 }
 
-export default ListObjecs;
+export default ListObjects;

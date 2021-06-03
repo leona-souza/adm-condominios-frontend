@@ -1,0 +1,22 @@
+a:hover {
+    text-decoration: none !important;
+    color: #fff !important;
+}
+
+.menu__item {
+    padding: 10px 10px 10px 0px;
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
+    font-size: 24px;
+    font-weight: 200;
+    color: #ddd
+}
+
+.menu__item:hover {
+    background-color: #555;
+}
+
+.menu__icone {
+    margin-right: 5px;
+}

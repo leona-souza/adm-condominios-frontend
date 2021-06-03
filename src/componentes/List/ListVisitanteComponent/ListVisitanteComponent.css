@@ -1,0 +1,29 @@
+.listmorador__botaonovomorador {
+  border: none;
+}
+
+.tabela {
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 50px;
+}
+
+.apartamento_largura {
+  align-items: center;
+  text-align: center;
+}
+
+.torre_largura {
+  align-items: center;
+  text-align: center;
+}
+
+.vaga_largura {
+  align-items: center;
+  text-align: center;
+}
+
+.acoes_largura {
+  align-items: center;
+  text-align: center;
+}

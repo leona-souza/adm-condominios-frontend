@@ -1,0 +1,36 @@
+:root {
+    --paginatorSelected: #bbb;
+    --paginatorDisabled: #e9e9e9;
+}
+
+.paginator__container {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.paginator__botao {
+    border: 1px solid grey;
+    padding: 5px;
+    min-width: 20px;
+    text-align: center;
+    display: block;
+    background-color: var(--paginatorDisabled);
+}
+
+.paginator__botao:nth-child(n+1) {
+    margin-left: -1px;
+}
+
+.botao__selecionado {
+    background-color: var(--paginatorSelected);
+    color: white;
+}
+
+.botao__clicavel {
+    cursor: pointer;
+    background-color: inherit;
+}
+
+.botao__clicavel:hover {
+    background-color: var(--paginatorSelected);
+}

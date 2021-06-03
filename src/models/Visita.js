@@ -16,6 +16,10 @@ export default class Visita extends ObjectService {
         "Visitante",
         "Apartamento"
       ];
+      this.equivalencia = new Map();
+      this.equivalencia.set("data", "Data");
+      this.equivalencia.set("nome", "Nome");
+      this.equivalencia.set("apartamentoVisitante", "Apartamento");
   }
 
   mensagemDeletar = (objeto) => {

@@ -3,13 +3,14 @@ import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import DescriptionIcon from '@material-ui/icons/Description';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
-import ApartamentoService from "../../../services/ApartamentoService";
 import Paginator from "../../Paginator/Paginator";
 import "./ListObjects.css";
 import { LIMITE } from "../../../resources/Config";
 import Apartamento from "../../../models/Apartamento";
 import Morador from "../../../models/Morador";
 import Veiculo from "../../../models/Veiculo";
+import Visitante from "../../../models/Visitante";
+import Visita from "../../../models/Visita";
 
 class ListObjects extends PureComponent {
   constructor(props) {
@@ -24,6 +25,12 @@ class ListObjects extends PureComponent {
         break;
       case "veiculos":
         this.state = { objeto: new Veiculo() };
+        break;
+      case "visitantes":
+        this.state = { objeto: new Visitante() };
+        break;
+      case "visitas":
+        this.state = { objeto: new Visita() };
         break;
       default:
     }
@@ -51,7 +58,7 @@ class ListObjects extends PureComponent {
     let temp = [];
     for (const [key, valor] of Object.entries(obj)) {
       if (key !== "id") {
-        temp.push(<td key={valor} data-title="Torre">{valor}</td>);
+        temp.push(<td key={valor} data-title={this.state.objeto.equivalencia.get(key)}>{valor}</td>);
       }
     }
     return temp;    
@@ -91,7 +98,7 @@ class ListObjects extends PureComponent {
 
   render() {
     return (
-      <div className="largura">
+      <div className="largura">{console.log(this.state.objects)}
         <div className="titulo">{this.state.objeto.titulo}</div>
         <div className="botao__cursor botao__novo" onClick={this.addObject}><AddCircleOutlineIcon /> {this.state.objeto.adicionar}</div>
         <table className="tabela">

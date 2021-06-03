@@ -14,6 +14,10 @@ export default class Apartamento extends ObjectService {
       "Torre",
       "Vaga"
     ];
+    this.equivalencia = new Map();
+    this.equivalencia.set("numero", "Número");
+    this.equivalencia.set("torre", "Torre");
+    this.equivalencia.set("vaga", "Vaga");
   }
 
   mensagemDeletar = (objeto) => {
@@ -29,7 +33,8 @@ export default class Apartamento extends ObjectService {
       Functions.configurarPaginacao(paginaAtual, LIMITE, res.data.paginas.total, thisPai);
       res.data.resultados.forEach(obj => delete obj.obs);
       thisPai.setState({
-        objects: res.data.resultados
+        objects: res.data.resultados,
+        equivalencias: this.equivalencia
       });
     })
     .catch(e => console.log(e));

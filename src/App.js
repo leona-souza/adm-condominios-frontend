@@ -33,6 +33,8 @@ function App() {
               <Route path="/apartamentos" render={props => <ListObjects {...props} type="apartamentos" />} />
               <Route path="/moradores" render={props => <ListObjects {...props} type="moradores" />} />
               <Route path="/veiculos" render={props => <ListObjects {...props} type="veiculos" />} />
+              <Route path="/visitantes" render={props => <ListObjects {...props} type="visitantes" />} />
+              <Route path="/visitas" render={props => <ListObjects {...props} type="visitas" />} />
 
               {/* Apartamentos */}
               {/* <Route path="/apartamentos" component={ListApartamentoComponent} /> */}
@@ -50,12 +52,12 @@ function App() {
               <Route path="/ver-veiculo/:id" component={ViewVeiculoComponent} />
 
               {/* Visitantes */}
-              <Route path="/visitantes" component={ListVisitanteComponent} />
+              {/* <Route path="/visitantes" component={ListVisitanteComponent} /> */}
               <Route path="/gerenciar-visitante/:id" component={CreateVisitanteComponent} />
               <Route path="/ver-visitante/:id" component={ViewVisitanteComponent} />
 
               {/* Visitas */}
-              <Route path="/visitas" component={ListVisitaComponent} />
+              {/* <Route path="/visitas" component={ListVisitaComponent} /> */}
               <Route path="/gerenciar-visita/:id" component={CreateVisitaComponent} />
               <Route path="/ver-visita/:id" component={ViewVisitaComponent} />
             </Switch>

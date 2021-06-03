@@ -3,29 +3,25 @@ import ApartamentoService from "../services/ApartamentoService";
 import Functions from "../resources/Functions";
 import { LIMITE } from "../resources/Config";
 
-export default class Morador extends ObjectService {
+export default class Visitante extends ObjectService {
   constructor() {
     super();
-    this.setApiUrl(process.env.REACT_APP_API_URL + "/moradores");
-    this.titulo = "Lista de Moradores";
-    this.adicionar = "Adicionar morador";
+    this.setApiUrl(process.env.REACT_APP_API_URL + "/visitantes");
+    this.titulo = "Lista de Visitantes";
+    this.adicionar = "Adicionar visitante";
     this.colunasDeListagem = [
         "Nome",
         "Apartamento"
       ];
-      this.equivalencia = new Map();
-      this.equivalencia.set("nome", "Nome");
-      this.equivalencia.set("documento", "Documento");
-      this.equivalencia.set("apartamentoMorador", "Apartamento");
   }
 
   mensagemDeletar = (objeto) => {
-    return `Deseja realmente excluir o morador ${objeto.nome}?`
+    return `Deseja realmente excluir o visitante ${objeto.nome}?`
   }
 
   coletarDados = (paginaAtual, thisPai) => {
     let mapaAptos = new Map();
-    let listaDeMoradores = [];
+    let listaDeVisitantes = [];
     
     this.getObjectsPaginados(paginaAtual, LIMITE)
     .then(res => {
@@ -36,28 +32,28 @@ export default class Morador extends ObjectService {
       res.data.resultados.forEach(obj => delete obj.documento);
       res.data.resultados.forEach(obj => delete obj.telefone);
       res.data.resultados.forEach(obj => delete obj.obs);
-      listaDeMoradores = res.data.resultados;
+      listaDeVisitantes = res.data.resultados;
     })
     .then(async () => { 
-       await this.mapearMoradores(mapaAptos, listaDeMoradores);
+       await this.mapearVisitantes(mapaAptos, listaDeVisitantes);
     })
     .then(() => {
-      this.converterDados(listaDeMoradores, mapaAptos);
+      this.converterDados(listaDeVisitantes, mapaAptos);
     })
     .then(() => {
-      thisPai.setState({ objects: listaDeMoradores });
+      thisPai.setState({ objects: listaDeVisitantes });
     })
     .catch((e) => {
       console.log(e);
     });
   }
 
-  mapearMoradores = async (mapa, array) => {
+  mapearVisitantes = async (mapa, array) => {
     array.forEach(dado => {
-      mapa.set(dado.apartamentoMorador, "");
+      mapa.set(dado.apartamentoVisitante, "");
     });
-    const arrayMoradores = Array.from(mapa.keys());
-    await ApartamentoService.getApartamentosByList(arrayMoradores)
+    const arrayVisitantes = Array.from(mapa.keys());
+    await ApartamentoService.getApartamentosByList(arrayVisitantes)
       .then(res => {
         res.data.forEach(dado => {
           mapa.set(dado.id, dado.numero +"-"+ dado.torre);
@@ -67,18 +63,18 @@ export default class Morador extends ObjectService {
 
   converterDados = (lista, mapa) => {
     lista.forEach(
-      morador => morador.apartamentoMorador = mapa.get(morador.apartamentoMorador)
+      visitante => visitante.apartamentoVisitante = mapa.get(visitante.apartamentoVisitante)
     );
   }
 
   add = () => {
-    window.location.href = "/gerenciar-morador/novo";
+    window.location.href = "/gerenciar-visitante/novo";
   }
   view = (id) => {
-    window.location.href = `/ver-morador/${id}`;
+    window.location.href = `/ver-visitante/${id}`;
   }
   put = (id) => {
-    window.location.href = `/gerenciar-morador/${id}`;
+    window.location.href = `/gerenciar-visitante/${id}`;
   }
 
 }

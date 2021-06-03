@@ -16,6 +16,12 @@ export default class Veiculo extends ObjectService {
         "Placa",
         "Apartamento"
       ];
+    this.equivalencia = new Map();
+    this.equivalencia.set("modelo", "Modelo");
+    this.equivalencia.set("marca", "Marca");
+    this.equivalencia.set("placa", "Placa");
+    this.equivalencia.set("cor", "Cor");
+    this.equivalencia.set("apartamentoVeiculo", "Apartamento");
   }
 
   mensagemDeletar = (objeto) => {
@@ -69,7 +75,13 @@ export default class Veiculo extends ObjectService {
   }
 
   add = () => {
-    window.location.href = "/gerenciar-apartamento/novo";
+    window.location.href = "/gerenciar-veiculo/novo";
+  }
+  view = (id) => {
+    window.location.href = `/ver-veiculo/${id}`;
+  }
+  put = (id) => {
+    window.location.href = `/gerenciar-veiculo/${id}`;
   }
 
 }

@@ -8,10 +8,6 @@ import CreateVeiculoComponent from "./componentes/Create/CreateVeiculoComponent/
 import CreateVisitanteComponent from "./componentes/Create/CreateVisitanteComponent/CreateVisitanteComponent";
 import CreateVisitaComponent from "./componentes/Create/CreateVisitaComponent/CreateVisitaComponent";
 import ListObjects from "./componentes/List/ListObjects/ListObjects";
-import ListApartamentoComponent from "./componentes/List/ListApartamentoComponent/ListApartamentoComponent";
-import ListVeiculoComponent from "./componentes/List/ListVeiculoComponent/ListVeiculoComponent";
-import ListVisitanteComponent from "./componentes/List/ListVisitanteComponent/ListVisitanteComponent";
-import ListVisitaComponent from "./componentes/List/ListVisitaComponent/ListVisitaComponent";
 import ViewApartamentoComponent from "./componentes/View/ViewApartamentoComponent/ViewApartamentoComponent";
 import ViewMoradorComponent from "./componentes/View/ViewMoradorComponent/ViewMoradorComponent";
 import ViewVeiculoComponent from "./componentes/View/ViewVeiculoComponent/ViewVeiculoComponent";
@@ -28,7 +24,8 @@ function App() {
           </div>
           <div className="conteudo">
             <Switch>
-              <Route path="/" exact component={ListApartamentoComponent} />
+              <Route path="/" exact render={props => <ListObjects {...props} type="apartamentos" />} />
+              
               {/* Listagem */}
               <Route path="/apartamentos" render={props => <ListObjects {...props} type="apartamentos" />} />
               <Route path="/moradores" render={props => <ListObjects {...props} type="moradores" />} />
@@ -37,7 +34,6 @@ function App() {
               <Route path="/visitas" render={props => <ListObjects {...props} type="visitas" />} />
 
               {/* Apartamentos */}
-              {/* <Route path="/apartamentos" component={ListApartamentoComponent} /> */}
               <Route path="/gerenciar-apartamento/:id" component={CreateApartamentoComponent} />
               <Route path="/ver-apartamento/:id" component={ViewApartamentoComponent} />
               

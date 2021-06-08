@@ -3,41 +3,42 @@ import ApartamentoService from "../services/ApartamentoService";
 import Functions from "../resources/Functions";
 import { LIMITE } from "../resources/Config";
 
-export default class Veiculo extends ObjectService {
-  constructor() {
-    super();
-    this.setApiUrl(process.env.REACT_APP_API_URL + "/veiculos");
-    this.titulo = "Lista de Veículos";
-    this.adicionar = "Adicionar veículo";
-    this.colunasDeListagem = [
-        "Modelo",
-        "Marca",
-        "Cor",
-        "Placa",
-        "Apartamento"
-      ];
-    this.equivalencia = new Map();
-    this.equivalencia.set("modelo", "Modelo");
-    this.equivalencia.set("marca", "Marca");
-    this.equivalencia.set("placa", "Placa");
-    this.equivalencia.set("cor", "Cor");
-    this.equivalencia.set("apartamentoVeiculo", "Apartamento");
-  }
+const retornoVeiculo = {
+  apiUrl: ObjectService.API_URL+'/veiculos',
+  titulo: "Lista de Veículos",
+  adicionar: "Adicionar veículo",
+  colunasDeListagem: [
+    "Modelo",
+    "Marca",
+    "Cor",
+    "Placa",
+    "Apartamento"
+  ],
+  
+  equivalencia: function() {
+    let valores = new Map();
+    valores.set("modelo", "Modelo");
+    valores.set("marca", "Marca");
+    valores.set("placa", "Placa");
+    valores.set("cor", "Cor");
+    valores.set("apartamentoVeiculo", "Apartamento");
+    return valores;
+  }(),
 
-  mensagemDeletar = (objeto) => {
+  mensagemDeletar: function(objeto) {
     return `Deseja realmente excluir o veículo ${objeto.placa}?`
-  }
+  },
 
-  coletarDados = (paginaAtual, thisPai) => {
+  coletarDados: function(paginaAtual, setObjects) {
     let mapaAptos = new Map();
     let listaDeVeiculos = [];
 
-    this.getObjectsPaginados(paginaAtual, LIMITE)
+    ObjectService.getObjectsPaginados(paginaAtual, LIMITE, this.apiUrl)
     .then(res => {
       if (res.data.resultados.length === 0) {
         throw new Error("Nenhum registro encontrado");
       }
-      Functions.configurarPaginacao(paginaAtual, LIMITE, res.data.paginas.total, thisPai);
+      //Functions.configurarPaginacao(paginaAtual, LIMITE, res.data.paginas.total, thisPai);
       res.data.resultados.forEach(obj => delete obj.obs);
       listaDeVeiculos = res.data.resultados;
     })
@@ -48,14 +49,17 @@ export default class Veiculo extends ObjectService {
       this.converterDados(listaDeVeiculos, mapaAptos);
     })
     .then(() => {
-      thisPai.setState({ objects: listaDeVeiculos });
+      setObjects({ 
+        valores: listaDeVeiculos,
+        equivalencias: this.equivalencia
+      });
     })
     .catch((e) => {
       console.log(e);
     });
-  }
+  },
 
-  mapearVeiculos = async (mapa, array) => {
+  mapearVeiculos: async function(mapa, array) {
     array.forEach(dado => {
       mapa.set(dado.apartamentoVeiculo, "");
     });
@@ -66,22 +70,24 @@ export default class Veiculo extends ObjectService {
           mapa.set(dado.id, dado.numero +"-"+ dado.torre);
         });    
     });
-  }
+  },
 
-  converterDados = (lista, mapa) => {
+  converterDados: function(lista, mapa) {
     lista.forEach(
       veiculo => veiculo.apartamentoVeiculo = mapa.get(veiculo.apartamentoVeiculo)
     );
-  }
+  },
 
-  add = () => {
+  add: function() {
     window.location.href = "/gerenciar-veiculo/novo";
-  }
-  view = (id) => {
+  },
+
+  view: function(id) {
     window.location.href = `/ver-veiculo/${id}`;
-  }
-  put = (id) => {
+  },
+  put: function(id) {
     window.location.href = `/gerenciar-veiculo/${id}`;
   }
-
 }
+
+export default retornoVeiculo;

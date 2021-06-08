@@ -20,14 +20,12 @@ class Functions {
         return ano +"-"+ mes +"-"+ dia +"T"+ hora +":"+ minutos;
     }
 
-    configurarPaginacao = (paginaAtual, limite, res, thisParent) => {
-        const total = Math.ceil(res / limite);
-          thisParent.setState({
-            paginas: {
-              pagina: paginaAtual,
-              total: total
-            },
-          });
+    configurarPaginacao = (paginaAtual, limite, totalResultados, setPaginas) => {
+        const total = Math.ceil(totalResultados / limite);
+          /* setPaginas({
+            pagina: paginaAtual,
+            total
+          }) */
       }
 
        /*mapearObjetos = async (mapa, array) => {

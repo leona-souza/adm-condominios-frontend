@@ -6,13 +6,14 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import Paginator from "../../Paginator/Paginator";
 import "./ListObjects.css";
 import { LIMITE } from "../../../resources/Config";
-import Apartamento from "../../../models/Apartamento";
-import Morador from "../../../models/Morador";
-import Veiculo from "../../../models/Veiculo";
-import Visitante from "../../../models/Visitante";
-import Visita from "../../../models/Visita";
+import retornoApartamento from "../../../models/Apartamento";
+import retornoMorador from "../../../models/Morador";
+import retornoVeiculo from "../../../models/Veiculo";
+import retornoVisitante from "../../../models/Visitante";
+import retornoVisita from "../../../models/Visita";
 
 function ListObjects(props) {
+  let tipoDeObjeto = null;
   const [objeto, setObjeto] = useState({});
   const [objects, setObjects] = useState([]);
   const [paginas, setPaginas] = useState({
@@ -22,35 +23,36 @@ function ListObjects(props) {
 
     switch (props.type) {
       case "apartamentos":
-        const apto = new Apartamento();
-
-        console.log(apto);
-        setObjeto(new Apartamento());
+        tipoDeObjeto = retornoApartamento;
         break;
-       case "moradores":
-        setObjeto(new Morador());
+      case "moradores":
+        tipoDeObjeto = retornoMorador;
         break;
       case "veiculos":
-        setObjeto(new Veiculo());
+        tipoDeObjeto = retornoVeiculo;
         break;
       case "visitantes":
-        setObjeto(new Visitante());
+        tipoDeObjeto = retornoVisitante;
         break;
       case "visitas":
-        setObjeto(new Visita());
+        tipoDeObjeto = retornoVisita;
         break;
       default:
-    }
+    }    
 
-  useEffect(() => {
-    objeto.coletarDados(paginas.pagina, this);
-  }, []);
+    
+    useEffect(() => {
+      setObjeto(tipoDeObjeto);
+      if (objeto.coletarDados) {
+        objeto.coletarDados(paginas.pagina, setObjects);
+      }
+  }, [objeto]);
 
   const percorrerCampos = (obj) => {
     let temp = [];
     for (const [key, valor] of Object.entries(obj)) {
       if (key !== "id") {
-        temp.push(<td key={valor} data-title={this.state.objeto.equivalencia.get(key)}>{valor}</td>);
+        temp.push(<td key={valor} data-title={objeto.equivalencia.get(key)}>{valor}</td>);
       }
     }
     return temp;    
@@ -90,20 +92,19 @@ function ListObjects(props) {
 
     return (
       <div className="largura">
-        {console.log(objeto)}
         <div className="titulo">{objeto.titulo}</div>
         <div className="botao__cursor botao__novo" onClick={addObject}><AddCircleOutlineIcon /> {objeto.adicionar}</div>
         <table className="tabela">
           <thead>
             <tr>
-              {objeto.colunasDeListagem.map(coluna => 
+              {objeto.colunasDeListagem?.map(coluna => 
                 <th key={coluna} className="tabela__titulo">{coluna}</th>
               )}
               <th className="tabela__titulo">Ações</th>
             </tr>
           </thead>
           <tbody>
-            {objects.map(obj => (
+            {objects.valores?.map(obj => (
               <tr key={obj.id}>
                 {percorrerCampos(obj)}
                 <td>
@@ -117,12 +118,12 @@ function ListObjects(props) {
             ))}
           </tbody>
         </table>
-        <Paginator 
-          pagina={paginas.pagina} 
-          total={paginas.total}
-          limite={paginas.limite}
-          onUpdate={objeto.coletarDados}
-        />
+          <Paginator 
+            pagina={paginas.pagina} 
+            total={paginas.total}
+            limite={paginas.limite}
+            onUpdate={objeto.coletarDados}
+          />
       </div>
     );
   }

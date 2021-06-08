@@ -2,52 +2,57 @@ import ObjectService from "../services/ObjectService";
 import Functions from "../resources/Functions";
 import { LIMITE } from "../resources/Config";
 
-export default function Apartamento(props) {
+const retornoApartamento = {
+  //setApiUrl(process.env.REACT_APP_API_URL + "/apartamentos")
+  apiUrl: ObjectService.API_URL+'/apartamentos',
+  titulo: "Lista de Apartamentos",
+  adicionar: "Adicionar apartamento",
+  colunasDeListagem: [
+    "Apartamento",
+    "Torre",
+    "Vaga"
+  ],
 
-    //this.setApiUrl(process.env.REACT_APP_API_URL + "/apartamentos");
-    const titulo = "Lista de Apartamentos";
-    const adicionar = "Adicionar apartamento";   
-    const colunasDeListagem = [
-      "Apartamento",
-      "Torre",
-      "Vaga"
-    ];
-    this.equivalencia = new Map();
-    this.equivalencia.set("numero", "Número");
-    this.equivalencia.set("torre", "Torre");
-    this.equivalencia.set("vaga", "Vaga");
+  equivalencia: function () { 
+    let valores = new Map()
+    valores.set("numero", "Número");
+    valores.set("torre", "Torre");
+    valores.set("vaga", "Vaga");
+    return valores;
+  }(),
 
-
-  mensagemDeletar = (objeto) => {
+  mensagemDeletar: function(objeto) {
     return `Deseja realmente excluir o apartamento ${objeto.numero}-${objeto.torre}?`
-  }
+  },
 
-  coletarDados = (paginaAtual, thisPai) => {
-    this.getObjectsPaginados(paginaAtual, LIMITE)
+  coletarDados: function(paginaAtual, setObjects) {
+    ObjectService.getObjectsPaginados(paginaAtual, LIMITE, this.apiUrl)
     .then(res => {
       if (res.data.resultados.length === 0) {
         throw new Error("Nenhum registro encontrado");
       }
-      Functions.configurarPaginacao(paginaAtual, LIMITE, res.data.paginas.total, thisPai);
+      Functions.configurarPaginacao(paginaAtual, LIMITE, res.data.paginas.total);
       res.data.resultados.forEach(obj => delete obj.obs);
-      thisPai.setState({
-        objects: res.data.resultados,
+      setObjects({
+        valores: res.data.resultados,
         equivalencias: this.equivalencia
       });
     })
     .catch(e => console.log(e));
-  }
+  },
 
-  add = () => {
+  add: function() {
     window.location.href = "/gerenciar-apartamento/novo";
-  }
-  view = (id) => {
+  },
+
+  view: function(id) {
     window.location.href = `/ver-apartamento/${id}`;
-  }
-  put = (id) => {
+  },
+
+  put: function(id) {
     window.location.href = `/gerenciar-apartamento/${id}`;
   }
-
 }
 
 
+export default retornoApartamento;

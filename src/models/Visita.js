@@ -5,28 +5,29 @@ import VisitaService from "../services/VisitaService";
 import Functions from "../resources/Functions";
 import { LIMITE } from "../resources/Config";
 
-export default class Visita extends ObjectService {
-  constructor() {
-    super();
-    this.setApiUrl(process.env.REACT_APP_API_URL + "/visitas");
-    this.titulo = "Lista de Visitas";
-    this.adicionar = "Adicionar visita";
-    this.colunasDeListagem = [
-        "Data",
-        "Visitante",
-        "Apartamento"
-      ];
-      this.equivalencia = new Map();
-      this.equivalencia.set("data", "Data");
-      this.equivalencia.set("nome", "Nome");
-      this.equivalencia.set("apartamentoVisitante", "Apartamento");
-  }
+const retornoVisita = {
+  apiUrl: process.env.REACT_APP_API_URL + "/visitas",
+  titulo: "Lista de Visitas",
+  adicionar: "Adicionar visita",
+  colunasDeListagem: [
+    "Data",
+    "Visitante",
+    "Apartamento"
+  ],
 
-  mensagemDeletar = (objeto) => {
+  equivalencia: function() {
+    let valores = new Map();
+    valores.set("data", "Data");
+    valores.set("nome", "Nome");
+    valores.set("apartamentoVisitante", "Apartamento");
+    return valores;
+  }(),
+
+  mensagemDeletar: function(objeto) {
     return `Deseja realmente excluir a visita ${objeto.data}?`
-  }
+  },
 
-  coletarDados = (paginaAtual, thisPai) => {
+  coletarDados: function(paginaAtual, setObjects) {
     let mapaAptos = new Map();
     let mapaNomes = new Map();
     let listaDeVisitas = [];
@@ -36,7 +37,7 @@ export default class Visita extends ObjectService {
       if (res.data.resultados.length === 0) {
         throw new Error("Nenhum registro encontrado");
       }
-      Functions.configurarPaginacao(paginaAtual, LIMITE, res.data.paginas.total, thisPai);
+      //Functions.configurarPaginacao(paginaAtual, LIMITE, res.data.paginas.total, thisPai);
       res.data.resultados.forEach(obj => delete obj.obs);
       listaDeVisitas = res.data.resultados;
     })
@@ -50,14 +51,17 @@ export default class Visita extends ObjectService {
       this.converterDados(listaDeVisitas, mapaAptos, mapaNomes);
     })
     .then(() => {
-      thisPai.setState({ objects: listaDeVisitas });
+      setObjects({
+        valores: listaDeVisitas,
+        equivalencias: this.equivalencia
+      })
     })
     .catch((e) => {
       console.log(e);
     });  
-  }
+  },
 
-  mapearApartamentos = async (mapa, array) => {
+  mapearApartamentos: async function(mapa, array) {
     array.forEach(dado => {
       mapa.set(dado.apartamento, "");
     });
@@ -70,9 +74,9 @@ export default class Visita extends ObjectService {
         });    
       });
     }
-  }
+  },
 
-  mapearVisitantes = async (mapa, array) => {
+  mapearVisitantes: async function(mapa, array) {
     array.forEach(dado => {
       mapa.set(dado.visitante, "");
     });
@@ -83,9 +87,9 @@ export default class Visita extends ObjectService {
           mapa.set(dado.id, dado.nome);
         });    
     });
-  }
+  },
 
-  converterDados = (array, mapaAptos, mapaNomes) => {
+  converterDados: function(array, mapaAptos, mapaNomes) {
     for (const key in array) {
       const nome = mapaNomes.get(array[key].visitante);
       const apto = mapaAptos.get(array[key].apartamento);
@@ -93,17 +97,19 @@ export default class Visita extends ObjectService {
       array[key].apartamento = apto;
       array[key].data = Functions.dataFromDbToScreen(array[key].data);
     };
-  }
+  },
 
-  add = () => {
+  add: function() {
     window.location.href = "/gerenciar-visita/novo";
-  }
-  view = (id) => {
+  },
+
+  view: function(id) {
     window.location.href = `/ver-visita/${id}`;
-  }
-  put = (id) => {
+  },
+
+  put: function(id) {
     window.location.href = `/gerenciar-visita/${id}`;
   }
-
 }
 
+export default retornoVisita;

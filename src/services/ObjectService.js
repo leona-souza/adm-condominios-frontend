@@ -1,62 +1,47 @@
 import axios from "axios";
 require("dotenv").config();
 
-class ObjectService {
-  constructor() {
-    this.API_URL = null;
-  }
-
-  getObjects() {
+const ObjectService = {
+  API_URL: process.env.REACT_APP_API_URL,
+  getObjects: function() {
     return axios.get(this.API_URL);
-  }
-
-  getObjectsPaginados(pagina, limite) {
-    return axios.get(this.API_URL + `?pagina=${pagina}&limite=${limite}`);
-  }
-
-  setApiUrl = (valor) => {
+  },
+  getObjectsPaginados: function(pagina, limite, tipo) {
+    return axios.get(tipo + `?pagina=${pagina}&limite=${limite}`);
+  },
+  setApiUrl: function(valor) {
     this.API_URL = valor;
-  }
-
-  getApiUrl = () => {
+  },
+  getApiUrl: function() {
     return this.API_URL;
-  }
-
-  createObject(objeto) {
+  },
+  createObject: function(objeto) {
     return axios.post(this.API_URL, objeto);
-  }
-
-  updateObject(objeto, objetoId) {
+  },
+  updateObject: function(objeto, objetoId) {
     return axios.patch(
       this.API_URL + "/" + objetoId,
       objeto
     );
-  }
-
-  deleteObject(objetoId) {
+  },
+  deleteObject: function(objetoId) {
     return axios.delete(this.API_URL + "/" + objetoId);
-  }
-
-  getObjectById(objetoId) {
+  },
+  getObjectById: function(objetoId) {
     return axios.get(this.API_URL + "/" + objetoId);
-  }
-
-  getObjectsByList(array) {
+  },
+  getObjectsByList: function(array) {
     return axios.get(this.API_URL + "/list/" + array);
-  }
-
-  getMoradorByApartamento(apartamentoId) {
+  },
+  getMoradorByApartamento: function(apartamentoId) {
     return axios.get(this.API_URL + "/" + apartamentoId + "/moradores");
-  }
-
-  getVeiculoByApartamento(apartamentoId) {
+  },
+  getVeiculoByApartamento: function(apartamentoId) {
     return axios.get(this.API_URL + "/" + apartamentoId + "/veiculos");
-  }
-
-  getVisitanteByApartamento(apartamentoId) {
+  },
+  getVisitanteByApartamento: function(apartamentoId) {
     return axios.get(this.API_URL + "/" + apartamentoId + "/visitantes");
   }
-
 }
 
 export default ObjectService;

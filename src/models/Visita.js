@@ -15,14 +15,6 @@ const retornoVisita = {
     "Apartamento"
   ],
 
-  equivalencia: function() {
-    let valores = new Map();
-    valores.set("data", "Data");
-    valores.set("nome", "Nome");
-    valores.set("apartamentoVisitante", "Apartamento");
-    return valores;
-  }(),
-
   mensagemDeletar: function(objeto) {
     return `Deseja realmente excluir a visita ${objeto.data}?`
   },
@@ -34,9 +26,8 @@ const retornoVisita = {
 
     VisitaService.getVisitasPaginadas(paginaAtual, LIMITE)
     .then(res => {
-      if (res.data.resultados.length === 0) {
-        throw new Error("Nenhum registro encontrado");
-      }
+      ObjectService.hasZeroResults(res.data.resultados.length);
+
       //Functions.configurarPaginacao(paginaAtual, LIMITE, res.data.paginas.total, thisPai);
       res.data.resultados.forEach(obj => delete obj.obs);
       listaDeVisitas = res.data.resultados;
@@ -53,7 +44,11 @@ const retornoVisita = {
     .then(() => {
       setObjects({
         valores: listaDeVisitas,
-        equivalencias: this.equivalencia
+        equivalencias: new Map([
+          ["data", "Data"],
+          ["nome", "Nome"],
+          ["apartamentoVisitante", "Apartamento"]
+        ])
       })
     })
     .catch((e) => {

@@ -1,3 +1,5 @@
+import React, { useState } from "react";
+
 class Functions {
 
     dataFromDbToScreen(dataCrua) {

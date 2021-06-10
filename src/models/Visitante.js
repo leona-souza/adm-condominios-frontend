@@ -12,13 +12,6 @@ const retornoVisitante = {
     "Apartamento"
   ],
 
-  equivalencia: function() {
-    let valores = new Map();
-    valores.set("nome", "Nome");
-    valores.set("apartamentoVisitante", "Apartamento");
-    return valores;
-  }(),
-
   mensagemDeletar: function(objeto) {
     return `Deseja realmente excluir o visitante ${objeto.nome}?`
   },
@@ -29,14 +22,13 @@ const retornoVisitante = {
     
     ObjectService.getObjectsPaginados(paginaAtual, LIMITE, this.apiUrl)
     .then(res => {
-      if (res.data.resultados.length === 0) {
-        throw new Error("Nenhum registro encontrado");
-      }
+      ObjectService.hasZeroResults(res.data.resultados.length);
+
       //Functions.configurarPaginacao(paginaAtual, LIMITE, res.data.paginas.total, thisPai);
-      res.data.resultados.forEach(obj => delete obj.documento);
-      res.data.resultados.forEach(obj => delete obj.telefone);
-      res.data.resultados.forEach(obj => delete obj.obs);
-      listaDeVisitantes = res.data.resultados;
+      res.data.resultados.forEach(obj => {
+        const { id, nome, apartamentoVisitante } = obj;
+        listaDeVisitantes.push({ id, nome, apartamentoVisitante });
+      })
     })
     .then(async () => { 
        await this.mapearVisitantes(mapaAptos, listaDeVisitantes);
@@ -47,7 +39,10 @@ const retornoVisitante = {
     .then(() => {
       setObjects({
         valores: listaDeVisitantes,
-        equivalencias: this.equivalencia
+        equivalencias: new Map([
+          ["nome", "Nome"],
+          ["apartamentoVisitante", "Apartamento"]
+        ])
       });
     })
     .catch((e) => {

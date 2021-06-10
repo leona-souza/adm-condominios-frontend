@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import DescriptionIcon from '@material-ui/icons/Description';
 import EditIcon from '@material-ui/icons/Edit';
@@ -11,6 +11,7 @@ import retornoMorador from "../../../models/Morador";
 import retornoVeiculo from "../../../models/Veiculo";
 import retornoVisitante from "../../../models/Visitante";
 import retornoVisita from "../../../models/Visita";
+import PaginacaoContext from "../../../context/PaginacaoContext";
 
 function ListObjects(props) {
   let tipoDeObjeto = null;
@@ -21,38 +22,37 @@ function ListObjects(props) {
     limite: LIMITE,
   });
 
-    switch (props.type) {
-      case "apartamentos":
-        tipoDeObjeto = retornoApartamento;
-        break;
-      case "moradores":
-        tipoDeObjeto = retornoMorador;
-        break;
-      case "veiculos":
-        tipoDeObjeto = retornoVeiculo;
-        break;
-      case "visitantes":
-        tipoDeObjeto = retornoVisitante;
-        break;
-      case "visitas":
-        tipoDeObjeto = retornoVisita;
-        break;
-      default:
-    }    
+  switch (props.type) {
+    case "apartamentos":
+      tipoDeObjeto = retornoApartamento;
+      break;
+    case "moradores":
+      tipoDeObjeto = retornoMorador;
+      break;
+    case "veiculos":
+      tipoDeObjeto = retornoVeiculo;
+      break;
+    case "visitantes":
+      tipoDeObjeto = retornoVisitante;
+      break;
+    case "visitas":
+      tipoDeObjeto = retornoVisita;
+      break;
+    default:
+  }    
 
-    
-    useEffect(() => {
-      setObjeto(tipoDeObjeto);
-      if (objeto.coletarDados) {
-        objeto.coletarDados(paginas.pagina, setObjects);
-      }
+  useEffect(() => {
+    setObjeto(tipoDeObjeto);
+    if (objeto.coletarDados) {
+      objeto.coletarDados(paginas.pagina, setObjects);
+    }
   }, [objeto]);
 
   const percorrerCampos = (obj) => {
     let temp = [];
     for (const [key, valor] of Object.entries(obj)) {
       if (key !== "id") {
-        temp.push(<td key={valor} data-title={objeto.equivalencia.get(key)}>{valor}</td>);
+        temp.push(<td key={valor} data-title={objeto.equivalencia?.get(key)}>{valor}</td>);
       }
     }
     return temp;    
@@ -118,12 +118,14 @@ function ListObjects(props) {
             ))}
           </tbody>
         </table>
+
           <Paginator 
             pagina={paginas.pagina} 
             total={paginas.total}
             limite={paginas.limite}
             onUpdate={objeto.coletarDados}
           />
+
       </div>
     );
   }

@@ -15,16 +15,6 @@ const retornoVeiculo = {
     "Apartamento"
   ],
   
-  equivalencia: function() {
-    let valores = new Map();
-    valores.set("modelo", "Modelo");
-    valores.set("marca", "Marca");
-    valores.set("placa", "Placa");
-    valores.set("cor", "Cor");
-    valores.set("apartamentoVeiculo", "Apartamento");
-    return valores;
-  }(),
-
   mensagemDeletar: function(objeto) {
     return `Deseja realmente excluir o veículo ${objeto.placa}?`
   },
@@ -35,9 +25,8 @@ const retornoVeiculo = {
 
     ObjectService.getObjectsPaginados(paginaAtual, LIMITE, this.apiUrl)
     .then(res => {
-      if (res.data.resultados.length === 0) {
-        throw new Error("Nenhum registro encontrado");
-      }
+      ObjectService.hasZeroResults(res.data.resultados.length);
+
       //Functions.configurarPaginacao(paginaAtual, LIMITE, res.data.paginas.total, thisPai);
       res.data.resultados.forEach(obj => delete obj.obs);
       listaDeVeiculos = res.data.resultados;
@@ -51,7 +40,13 @@ const retornoVeiculo = {
     .then(() => {
       setObjects({ 
         valores: listaDeVeiculos,
-        equivalencias: this.equivalencia
+        equivalencias: new Map([
+          ["modelo", "Modelo"],
+          ["marca", "Marca"],
+          ["placa", "Placa"],
+          ["cor", "Cor"],
+          ["apartamentoVeiculo", "Apartamento"]
+        ])
       });
     })
     .catch((e) => {

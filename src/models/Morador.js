@@ -11,15 +11,7 @@ const retornoMorador = {
     "Nome",
     "Apartamento"
   ],
-  
-  equivalencia: function() {
-    let valores = new Map();
-    valores.set("nome", "Nome");
-    valores.set("documento", "Documento");
-    valores.set("apartamentoMorador", "Apartamento");
-    return valores;
-  }(),
-
+ 
   mensagemDeletar: function(objeto) {
     return `Deseja realmente excluir o morador ${objeto.nome}?`
   },
@@ -30,14 +22,13 @@ const retornoMorador = {
     
     ObjectService.getObjectsPaginados(paginaAtual, LIMITE, this.apiUrl)
     .then(res => {
-      if (res.data.resultados.length === 0) {
-        throw new Error("Nenhum registro encontrado");
-      }
+      ObjectService.hasZeroResults(res.data.resultados.length);
       //Functions.configurarPaginacao(paginaAtual, LIMITE, res.data.paginas.total, thisPai);
-      res.data.resultados.forEach(obj => delete obj.documento);
-      res.data.resultados.forEach(obj => delete obj.telefone);
-      res.data.resultados.forEach(obj => delete obj.obs);
-      listaDeMoradores = res.data.resultados;
+      res.data.resultados.forEach(obj => {
+        const { id, nome, apartamentoMorador } = obj;
+        listaDeMoradores.push({ id, nome, apartamentoMorador });
+      })
+
     })
     .then(async () => { 
        await this.mapearMoradores(mapaAptos, listaDeMoradores);
@@ -48,7 +39,11 @@ const retornoMorador = {
     .then(() => {
       setObjects({
         valores: listaDeMoradores,
-        equivalencias: this.equivalencia
+        equivalencias: new Map([
+          ["nome", "Nome"],
+          ["documento", "Documento"],
+          ["apartamentoMorador", "Apartamento"]
+        ])
       });
     })
     .catch((e) => {

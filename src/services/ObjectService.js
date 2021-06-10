@@ -9,12 +9,6 @@ const ObjectService = {
   getObjectsPaginados: function(pagina, limite, tipo) {
     return axios.get(tipo + `?pagina=${pagina}&limite=${limite}`);
   },
-  setApiUrl: function(valor) {
-    this.API_URL = valor;
-  },
-  getApiUrl: function() {
-    return this.API_URL;
-  },
   createObject: function(objeto) {
     return axios.post(this.API_URL, objeto);
   },
@@ -41,6 +35,11 @@ const ObjectService = {
   },
   getVisitanteByApartamento: function(apartamentoId) {
     return axios.get(this.API_URL + "/" + apartamentoId + "/visitantes");
+  },
+  hasZeroResults : function(numero) {
+    if (numero === 0) {
+      throw new Error("Nenhum registro encontrado");
+    }
   }
 }
 

@@ -3,7 +3,6 @@ import Functions from "../resources/Functions";
 import { LIMITE } from "../resources/Config";
 
 const retornoApartamento = {
-  //setApiUrl(process.env.REACT_APP_API_URL + "/apartamentos")
   apiUrl: ObjectService.API_URL+'/apartamentos',
   titulo: "Lista de Apartamentos",
   adicionar: "Adicionar apartamento",
@@ -13,14 +12,6 @@ const retornoApartamento = {
     "Vaga"
   ],
 
-  equivalencia: function () { 
-    let valores = new Map()
-    valores.set("numero", "Número");
-    valores.set("torre", "Torre");
-    valores.set("vaga", "Vaga");
-    return valores;
-  }(),
-
   mensagemDeletar: function(objeto) {
     return `Deseja realmente excluir o apartamento ${objeto.numero}-${objeto.torre}?`
   },
@@ -28,14 +19,18 @@ const retornoApartamento = {
   coletarDados: function(paginaAtual, setObjects) {
     ObjectService.getObjectsPaginados(paginaAtual, LIMITE, this.apiUrl)
     .then(res => {
-      if (res.data.resultados.length === 0) {
-        throw new Error("Nenhum registro encontrado");
-      }
+      ObjectService.hasZeroResults(res.data.resultados.length);
+
       Functions.configurarPaginacao(paginaAtual, LIMITE, res.data.paginas.total);
       res.data.resultados.forEach(obj => delete obj.obs);
+
       setObjects({
         valores: res.data.resultados,
-        equivalencias: this.equivalencia
+        equivalencias: new Map([
+          ["numero", "Número"],
+          ["torre", "Torre"],
+          ["vaga", "Vaga"]
+        ])
       });
     })
     .catch(e => console.log(e));

@@ -7,6 +7,7 @@ import CreateMoradorComponent from "./componentes/Create/CreateMoradorComponent/
 import CreateVeiculoComponent from "./componentes/Create/CreateVeiculoComponent/CreateVeiculoComponent";
 import CreateVisitanteComponent from "./componentes/Create/CreateVisitanteComponent/CreateVisitanteComponent";
 import CreateVisitaComponent from "./componentes/Create/CreateVisitaComponent/CreateVisitaComponent";
+import ViewObjects from "./componentes/View/ViewObjectsComponent/ViewObjects";
 import ListObjects from "./componentes/List/ListObjects/ListObjects";
 import ViewApartamentoComponent from "./componentes/View/ViewApartamentoComponent/ViewApartamentoComponent";
 import ViewMoradorComponent from "./componentes/View/ViewMoradorComponent/ViewMoradorComponent";
@@ -33,19 +34,22 @@ function App() {
               <Route path="/visitantes" render={props => <ListObjects {...props} type="visitantes" />} />
               <Route path="/visitas" render={props => <ListObjects {...props} type="visitas" />} />
 
+              {/* Detalhes */}
+              <Route path="/ver-apartamento/:id"  render={props => <ViewObjects {...props} type="apartamento" />} />
+              <Route path="/ver-morador/:id"  render={props => <ViewObjects {...props} type="morador" />} />
+              <Route path="/ver-veiculo/:id"  render={props => <ViewObjects {...props} type="veiculo" />} />
+
               {/* Apartamentos */}
+              {/* <Route path="/ver-apartamento/:id" component={ViewApartamentoComponent} /> */}
               <Route path="/gerenciar-apartamento/:id" component={CreateApartamentoComponent} />
-              <Route path="/ver-apartamento/:id" component={ViewApartamentoComponent} />
               
               {/* Moradores */}
-              {/* <Route path="/moradores" component={ListMoradorComponent} /> */}
+              {/* <Route path="/ver-morador/:id" component={ViewMoradorComponent} /> */}
               <Route path="/gerenciar-morador/:id" component={CreateMoradorComponent} />
-              <Route path="/ver-morador/:id" component={ViewMoradorComponent} />
 
               {/* Veículos */}
-              {/* <Route path="/veiculos" component={ListVeiculoComponent} /> */}
+              {/* <Route path="/ver-veiculo/:id" component={ViewVeiculoComponent} /> */}
               <Route path="/gerenciar-veiculo/:id" component={CreateVeiculoComponent} />
-              <Route path="/ver-veiculo/:id" component={ViewVeiculoComponent} />
 
               {/* Visitantes */}
               {/* <Route path="/visitantes" component={ListVisitanteComponent} /> */}

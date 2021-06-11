@@ -3,7 +3,23 @@ import ApartamentoService from "../services/ApartamentoService";
 import Functions from "../resources/Functions";
 import { LIMITE } from "../resources/Config";
 
-const retornoVeiculo = {
+/**********************/
+/*** FUNÇÕES COMUNS ***/
+/**********************/
+const funcoesComuns = {
+  add: function() {
+    window.location.href = "/gerenciar-veiculo/novo";
+  },
+  view: function(id) {
+    window.location.href = `/ver-veiculo/${id}`;
+  },
+  put: function(id) {
+    window.location.href = `/gerenciar-veiculo/${id}`;
+  }
+}
+
+export const veiculoModelListagem = {
+  ...funcoesComuns,
   apiUrl: ObjectService.API_URL+'/veiculos',
   titulo: "Lista de Veículos",
   adicionar: "Adicionar veículo",
@@ -19,14 +35,14 @@ const retornoVeiculo = {
     return `Deseja realmente excluir o veículo ${objeto.placa}?`
   },
 
-  coletarDados: function(paginaAtual, setObjects) {
+  coletarDados: async function(paginaAtual) {
+    let retorno = [];
     let mapaAptos = new Map();
     let listaDeVeiculos = [];
 
-    ObjectService.getObjectsPaginados(paginaAtual, LIMITE, this.apiUrl)
+    await ObjectService.getObjectsPaginados(paginaAtual, LIMITE, this.apiUrl)
     .then(res => {
       ObjectService.hasZeroResults(res.data.resultados.length);
-
       //Functions.configurarPaginacao(paginaAtual, LIMITE, res.data.paginas.total, thisPai);
       res.data.resultados.forEach(obj => delete obj.obs);
       listaDeVeiculos = res.data.resultados;
@@ -38,7 +54,8 @@ const retornoVeiculo = {
       this.converterDados(listaDeVeiculos, mapaAptos);
     })
     .then(() => {
-      setObjects({ 
+      retorno = { 
+        ...this,
         valores: listaDeVeiculos,
         equivalencias: new Map([
           ["modelo", "Modelo"],
@@ -47,11 +64,10 @@ const retornoVeiculo = {
           ["cor", "Cor"],
           ["apartamentoVeiculo", "Apartamento"]
         ])
-      });
+      };
     })
-    .catch((e) => {
-      console.log(e);
-    });
+    .catch(e => console.log(e));
+    return retorno;
   },
 
   mapearVeiculos: async function(mapa, array) {
@@ -71,18 +87,14 @@ const retornoVeiculo = {
     lista.forEach(
       veiculo => veiculo.apartamentoVeiculo = mapa.get(veiculo.apartamentoVeiculo)
     );
-  },
-
-  add: function() {
-    window.location.href = "/gerenciar-veiculo/novo";
-  },
-
-  view: function(id) {
-    window.location.href = `/ver-veiculo/${id}`;
-  },
-  put: function(id) {
-    window.location.href = `/gerenciar-veiculo/${id}`;
   }
 }
 
-export default retornoVeiculo;
+export const veiculoModelDetalhes = {
+  ...funcoesComuns
+}
+
+export default {
+  veiculoModelListagem,
+  veiculoModelDetalhes
+};

@@ -1,9 +1,29 @@
 import ObjectService from "../services/ObjectService";
 import ApartamentoService from "../services/ApartamentoService";
+import MoradorService from "../services/MoradorService";
 import Functions from "../resources/Functions";
 import { LIMITE } from "../resources/Config";
 
-const retornoMorador = {
+/**********************/
+/*** FUNÇÕES COMUNS ***/
+/**********************/
+const funcoesComuns = {
+  add: function() {
+    window.location.href = "/gerenciar-morador/novo";
+  },
+  view: function(id) {
+    window.location.href = `/ver-morador/${id}`;
+  },
+  put: function(id) {
+    window.location.href = `/gerenciar-morador/${id}`;
+  }
+}
+
+/**********************/
+/* MODELO DE LISTAGEM */
+/**********************/
+export const moradorModelListagem = {
+  ...funcoesComuns,
   apiUrl: ObjectService.API_URL+'/moradores',
   titulo: "Lista de Moradores",
   adicionar: "Adicionar morador",
@@ -11,16 +31,17 @@ const retornoMorador = {
     "Nome",
     "Apartamento"
   ],
- 
+
   mensagemDeletar: function(objeto) {
     return `Deseja realmente excluir o morador ${objeto.nome}?`
   },
 
-  coletarDados: function(paginaAtual, setObjects) {
+  coletarDados: async function(paginaAtual) {
+    let retorno = [];
     let mapaAptos = new Map();
     let listaDeMoradores = [];
     
-    ObjectService.getObjectsPaginados(paginaAtual, LIMITE, this.apiUrl)
+    await ObjectService.getObjectsPaginados(paginaAtual, LIMITE, this.apiUrl)
     .then(res => {
       ObjectService.hasZeroResults(res.data.resultados.length);
       //Functions.configurarPaginacao(paginaAtual, LIMITE, res.data.paginas.total, thisPai);
@@ -37,20 +58,21 @@ const retornoMorador = {
       this.converterDados(listaDeMoradores, mapaAptos);
     })
     .then(() => {
-      setObjects({
+      retorno = {
+        ...this,
         valores: listaDeMoradores,
         equivalencias: new Map([
           ["nome", "Nome"],
           ["documento", "Documento"],
           ["apartamentoMorador", "Apartamento"]
         ])
-      });
+      };
     })
-    .catch((e) => {
-      console.log(e);
-    });
+    .catch(e => console.log(e));
+    
+    return retorno;
   },
-
+  
   mapearMoradores: async function(mapa, array) {
     array.forEach(dado => {
       mapa.set(dado.apartamentoMorador, "");
@@ -68,19 +90,35 @@ const retornoMorador = {
     lista.forEach(
       morador => morador.apartamentoMorador = mapa.get(morador.apartamentoMorador)
     );
-  },
-
-  add: function() {
-    window.location.href = "/gerenciar-morador/novo";
-  },
-
-  view: function(id) {
-    window.location.href = `/ver-morador/${id}`;
-  },
-
-  put: function(id) {
-    window.location.href = `/gerenciar-morador/${id}`;
   }
 }
 
-export default retornoMorador;
+/**********************/
+/* MODELO DE DETALHES */
+/**********************/
+export const moradorModelDetalhes = {
+  ...funcoesComuns,
+  titulo: "Ver detalhes do morador",
+
+  listarTodos: function() {
+    window.location.href= "/moradores";
+  },
+
+  coletarDados: async function(id) {
+    let morador = {};
+
+    await MoradorService.getMoradorById(id).then(res => {
+      morador = res.data;
+    });
+   
+    return {
+      ...this,
+      morador
+    };
+  }
+}
+
+export default {
+  moradorModelListagem,
+  moradorModelDetalhes
+};

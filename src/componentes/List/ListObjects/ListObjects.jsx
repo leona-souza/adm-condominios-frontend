@@ -4,19 +4,18 @@ import DescriptionIcon from '@material-ui/icons/Description';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Paginator from "../../Paginator/Paginator";
-import "./ListObjects.css";
 import { LIMITE } from "../../../resources/Config";
-import retornoApartamento from "../../../models/Apartamento";
-import retornoMorador from "../../../models/Morador";
-import retornoVeiculo from "../../../models/Veiculo";
+import { apartamentoModelListagem } from "../../../models/Apartamento";
+import { moradorModelListagem } from "../../../models/Morador";
+import { veiculoModelListagem } from "../../../models/Veiculo";
 import retornoVisitante from "../../../models/Visitante";
 import retornoVisita from "../../../models/Visita";
 import PaginacaoContext from "../../../context/PaginacaoContext";
+import "./ListObjects.css";
 
 function ListObjects(props) {
-  let tipoDeObjeto = null;
+  let modeloDeObjeto = null;
   const [objeto, setObjeto] = useState({});
-  const [objects, setObjects] = useState([]);
   const [paginas, setPaginas] = useState({
     pagina: 1,
     limite: LIMITE,
@@ -24,29 +23,28 @@ function ListObjects(props) {
 
   switch (props.type) {
     case "apartamentos":
-      tipoDeObjeto = retornoApartamento;
+      modeloDeObjeto = apartamentoModelListagem;
       break;
     case "moradores":
-      tipoDeObjeto = retornoMorador;
+      modeloDeObjeto = moradorModelListagem;
       break;
     case "veiculos":
-      tipoDeObjeto = retornoVeiculo;
+      modeloDeObjeto = veiculoModelListagem;
       break;
     case "visitantes":
-      tipoDeObjeto = retornoVisitante;
+      modeloDeObjeto = retornoVisitante;
       break;
     case "visitas":
-      tipoDeObjeto = retornoVisita;
+      modeloDeObjeto = retornoVisita;
       break;
     default:
   }    
 
   useEffect(() => {
-    setObjeto(tipoDeObjeto);
-    if (objeto.coletarDados) {
-      objeto.coletarDados(paginas.pagina, setObjects);
-    }
-  }, [objeto]);
+    modeloDeObjeto.coletarDados(paginas.pagina)
+      .then(res => setObjeto(res))
+      .catch(e => console.log('erro', e));
+  }, []);
 
   const percorrerCampos = (obj) => {
     let temp = [];
@@ -58,20 +56,8 @@ function ListObjects(props) {
     return temp;    
   }
 
-  const addObject = () => {
-    objeto.add();
-  };
-
-  const putObject = (id) => {
-    objeto.put(id);
-  };
-
-  const viewObject = (id) => {
-    objeto.view(id);
-  };
-
   const deleteObject = (id) => {
-    let objeto = objects.filter(
+    let objeto = objeto.filter(
       obj => obj.id === id
     );
     if (
@@ -82,7 +68,7 @@ function ListObjects(props) {
       objeto.deleteObject(id)
       .then(() => {
         this.setState({
-          objects: objects.filter(
+          objeto: objeto.filter(
             obj => obj.id !== id
           ),
         });
@@ -93,7 +79,7 @@ function ListObjects(props) {
     return (
       <div className="largura">
         <div className="titulo">{objeto.titulo}</div>
-        <div className="botao__cursor botao__novo" onClick={addObject}><AddCircleOutlineIcon /> {objeto.adicionar}</div>
+        <div className="botao__cursor botao__novo" onClick={() => objeto.add()}><AddCircleOutlineIcon /> {objeto.adicionar}</div>
         <table className="tabela">
           <thead>
             <tr>
@@ -104,13 +90,13 @@ function ListObjects(props) {
             </tr>
           </thead>
           <tbody>
-            {objects.valores?.map(obj => (
+            {objeto.valores?.map(obj => (
               <tr key={obj.id}>
                 {percorrerCampos(obj)}
                 <td>
                   <span className="tabela__acoes">
-                    <DescriptionIcon className="tabela__icone" onClick={() => viewObject(obj.id)} />
-                    <EditIcon className="tabela__icone" onClick={() => putObject(obj.id)} />
+                    <DescriptionIcon className="tabela__icone" onClick={() => objeto.view(obj.id)} />
+                    <EditIcon className="tabela__icone" onClick={() => objeto.put(obj.id)} />
                     <DeleteIcon className="tabela__icone red" onClick={() => deleteObject(obj.id)} />
                   </span>
                 </td>

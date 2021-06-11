@@ -65,6 +65,7 @@ export const apartamentoModelListagem = {
 export const apartamentoModelDetalhes = {
   ...funcoesComuns,
   titulo: "Ver detalhes do apartamento",
+  avatarCss: "fonte__apartamento",
 
   listarTodos: function() {
     window.location.href= "/apartamentos";
@@ -106,10 +107,15 @@ export const apartamentoModelDetalhes = {
 
     return {
       ...this,
-      moradores: this.listarMoradores(moradores),
-      veiculos: this.listarVeiculos(veiculos),
-      visitantes: this.listarVisitantes(visitantes),
-      apartamento
+      id: apartamento.id,
+      valorAvatar: `${apartamento.numero}-${apartamento.torre}`,
+      valores: [
+        { nome: "Vaga", valor: apartamento.vaga },
+        { nome: "Moradores", valor: this.listarMoradores(moradores) },
+        { nome: "Veículos", valor: this.listarVeiculos(veiculos) },
+        { nome: "Visitantes", valor: this.listarVisitantes(visitantes) },
+        { nome: "Obs", valor: apartamento.obs },
+      ]
     };
   }
 }

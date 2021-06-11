@@ -99,6 +99,7 @@ export const moradorModelListagem = {
 export const moradorModelDetalhes = {
   ...funcoesComuns,
   titulo: "Ver detalhes do morador",
+  avatarCss: "fonte__apartamento",
 
   listarTodos: function() {
     window.location.href= "/moradores";
@@ -106,14 +107,26 @@ export const moradorModelDetalhes = {
 
   coletarDados: async function(id) {
     let morador = {};
+    let apartamento = {};
 
-    await MoradorService.getMoradorById(id).then(res => {
-      morador = res.data;
-    });
-   
+    await MoradorService.getMoradorById(id)
+      .then(res => {
+        morador = res.data
+      });
+    await ApartamentoService.getApartamentoById(morador.apartamentoMorador)
+      .then(res => {
+        apartamento = `${res.data.numero}-${res.data.torre}`
+      });
     return {
       ...this,
-      morador
+      id: morador.id,
+      valorAvatar: morador.nome,
+      valores: [
+        { nome: "Apartamento", valor: apartamento },
+        { nome: "Telefone", valor: morador.telefone },
+        { nome: "Documento", valor: morador.documento },
+        { nome: "Obs", valor: morador.obs }
+      ]
     };
   }
 }

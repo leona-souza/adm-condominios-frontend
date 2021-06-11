@@ -41,30 +41,16 @@ function ViewObjectsComponent(props) {
       <div className="caixa">
         <div className="caixa__titulo">
           <div className="titulo__icone">{icone}</div>
-          <div className="fonte__apartamento">{objeto.apartamento && `${objeto.apartamento?.numero}-${objeto.apartamento?.torre}`}</div>
-          <div className="detalhes__botoes botao__cursor" onClick={() => objeto.put(objeto.apartamento.id)}><EditIcon />Alterar</div>
+          <div className={objeto.avatarCss}>{objeto.valorAvatar}</div>
+          <div className="detalhes__botoes botao__cursor" onClick={() => objeto.put(objeto.id)}><EditIcon />Alterar</div>
         </div>
         <div className="caixa__detalhes">
-          <div className="detalhes__linha">
-            <div className="detalhes__titulo">Vaga:</div>
-            <div className="detalhes__texto">{objeto.apartamento?.vaga}</div>
-          </div>
-          <div className="detalhes__linha">
-            <div className="detalhes__titulo">Moradores:</div>
-            <div className="detalhes__texto">{objeto.moradores}</div>
-          </div>
-          <div className="detalhes__linha">
-            <div className="detalhes__titulo">Veículos:</div>
-            <div className="detalhes__texto">{objeto.veiculos}</div>
-          </div>
-          <div className="detalhes__linha">
-            <div className="detalhes__titulo">Visitantes:</div>
-            <div className="detalhes__texto">{objeto.visitantes}</div>
-          </div>
-          <div className="detalhes__linha">
-            <div className="detalhes__titulo">Obs:</div>
-            <div className="detalhes__texto">{objeto.apartamento?.obs}</div>
-          </div>
+          {objeto.valores && objeto.valores.map(obj => (
+            <div key={obj.nome} className="detalhes__linha">
+              <div className="detalhes__titulo">{obj.nome}:</div>
+              <div className="detalhes__texto">{obj.valor}</div>
+            </div>
+          ))}
         </div>
       </div>
       <div className="detalhes__botoes botao__cursor" onClick={objeto.listarTodos}>

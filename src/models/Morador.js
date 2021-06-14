@@ -23,17 +23,22 @@ const funcoesComuns = {
 /* MODELO DE LISTAGEM */
 /**********************/
 export const moradorModelListagem = {
-  ...funcoesComuns,
   apiUrl: ObjectService.API_URL+'/moradores',
-  titulo: "Lista de Moradores",
-  adicionar: "Adicionar morador",
-  colunasDeListagem: [
-    "Nome",
-    "Apartamento"
-  ],
 
-  mensagemDeletar: function(objeto) {
-    return `Deseja realmente excluir o morador ${objeto.nome}?`
+  mapearMoradores: async function(mapa, array) {
+    array.forEach(dado => mapa.set(dado.apartamentoMorador, ""));
+    const arrayMoradores = Array.from(mapa.keys());
+    await ApartamentoService.getApartamentosByList(arrayMoradores)
+      .then(res => {
+        res.data.forEach(dado => {
+          mapa.set(dado.id, dado.numero +"-"+ dado.torre);
+        });    
+    });
+  },
+  converterDados: function(lista, mapa) {
+    lista.forEach(
+      morador => morador.apartamentoMorador = mapa.get(morador.apartamentoMorador)
+    );
   },
 
   coletarDados: async function(paginaAtual) {
@@ -59,7 +64,18 @@ export const moradorModelListagem = {
     })
     .then(() => {
       retorno = {
-        ...this,
+        ...funcoesComuns,
+        titulo: "Lista de Moradores",
+        adicionar: "Adicionar morador",
+        colunasDeListagem: [
+          "Nome",
+          "Apartamento"
+        ],
+
+        mensagemDeletar: function(objeto) {
+          return `Deseja realmente excluir o morador ${objeto.nome}?`
+        },
+
         valores: listaDeMoradores,
         equivalencias: new Map([
           ["nome", "Nome"],
@@ -69,27 +85,7 @@ export const moradorModelListagem = {
       };
     })
     .catch(e => console.log(e));
-    
     return retorno;
-  },
-  
-  mapearMoradores: async function(mapa, array) {
-    array.forEach(dado => {
-      mapa.set(dado.apartamentoMorador, "");
-    });
-    const arrayMoradores = Array.from(mapa.keys());
-    await ApartamentoService.getApartamentosByList(arrayMoradores)
-      .then(res => {
-        res.data.forEach(dado => {
-          mapa.set(dado.id, dado.numero +"-"+ dado.torre);
-        });    
-    });
-  },
-
-  converterDados: function(lista, mapa) {
-    lista.forEach(
-      morador => morador.apartamentoMorador = mapa.get(morador.apartamentoMorador)
-    );
   }
 }
 
@@ -97,30 +93,25 @@ export const moradorModelListagem = {
 /* MODELO DE DETALHES */
 /**********************/
 export const moradorModelDetalhes = {
-  ...funcoesComuns,
-  titulo: "Ver detalhes do morador",
-  avatarCss: "fonte__apartamento",
-
-  listarTodos: function() {
-    window.location.href= "/moradores";
-  },
-
   coletarDados: async function(id) {
     let morador = {};
     let apartamento = {};
 
     await MoradorService.getMoradorById(id)
-      .then(res => {
-        morador = res.data
-      });
+      .then(res => morador = res.data)
+      .catch(e => console.log(e));
     await ApartamentoService.getApartamentoById(morador.apartamentoMorador)
-      .then(res => {
-        apartamento = `${res.data.numero}-${res.data.torre}`
-      });
+      .then(res => apartamento = `${res.data.numero}-${res.data.torre}`)
+      .catch(e => console.log(e));
+
     return {
-      ...this,
+      ...funcoesComuns,
       id: morador.id,
+      titulo: "Ver detalhes do morador",
+      avatarCss: "fonte__visitante",
       valorAvatar: morador.nome,
+      listarTodos:"/moradores",
+      
       valores: [
         { nome: "Apartamento", valor: apartamento },
         { nome: "Telefone", valor: morador.telefone },

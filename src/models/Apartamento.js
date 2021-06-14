@@ -22,19 +22,7 @@ const funcoesComuns = {
 /* MODELO DE LISTAGEM */
 /**********************/
 export const apartamentoModelListagem = {
-  ...funcoesComuns,
   apiUrl: ObjectService.API_URL+'/apartamentos',
-  titulo: "Lista de Apartamentos",
-  adicionar: "Adicionar apartamento",
-  colunasDeListagem: [
-    "Apartamento",
-    "Torre",
-    "Vaga"
-  ],
-
-  mensagemDeletar: function(objeto) {
-    return `Deseja realmente excluir o apartamento ${objeto.numero}-${objeto.torre}?`
-  },
 
   coletarDados: async function(paginaAtual) {
     let retorno = {};
@@ -43,8 +31,22 @@ export const apartamentoModelListagem = {
       ObjectService.hasZeroResults(res.data.resultados.length);
       //Functions.configurarPaginacao(paginaAtual, LIMITE, res.data.paginas.total);
       res.data.resultados.forEach(obj => delete obj.obs);
+      
       retorno = {
-        ...this,
+        ...funcoesComuns,
+
+        mensagemDeletar: function(objeto) {
+          return `Deseja realmente excluir o apartamento ${objeto.numero}-${objeto.torre}?`
+        },
+
+        titulo: "Lista de Apartamentos",
+        adicionar: "Adicionar apartamento",
+        colunasDeListagem: [
+          "Apartamento",
+          "Torre",
+          "Vaga"
+        ],
+
         valores: res.data.resultados,
         equivalencias: new Map([
           ["numero", "Número"],
@@ -63,13 +65,6 @@ export const apartamentoModelListagem = {
 /* MODELO DE DETALHES */
 /**********************/
 export const apartamentoModelDetalhes = {
-  ...funcoesComuns,
-  titulo: "Ver detalhes do apartamento",
-  avatarCss: "fonte__apartamento",
-
-  listarTodos: function() {
-    window.location.href= "/apartamentos";
-  },
   listarMoradores: function(listaMoradores) {
     return listaMoradores?.map(
       (morador, index) => (index ? ", " : "") + morador.nome
@@ -92,23 +87,27 @@ export const apartamentoModelDetalhes = {
     let veiculos = [];
     let visitantes = [];
 
-    await ApartamentoService.getApartamentoById(id).then(res => {
-      apartamento = res.data;
-    });
-    await ApartamentoService.getMoradorByApartamento(id).then(res => {
-      moradores = res.data;
-    });
-    await ApartamentoService.getVeiculoByApartamento(id).then(res => {
-      veiculos = res.data;
-    });
-    await ApartamentoService.getVisitanteByApartamento(id).then(res => {
-      visitantes = res.data;
-    });
+    await ApartamentoService.getApartamentoById(id)
+      .then(res => apartamento = res.data)
+      .catch(e => console.log(e));
+    await ApartamentoService.getMoradorByApartamento(id)
+      .then(res => moradores = res.data)
+      .catch(e => console.log(e));
+    await ApartamentoService.getVeiculoByApartamento(id)
+      .then(res => veiculos = res.data)
+      .catch(e => console.log(e));
+    await ApartamentoService.getVisitanteByApartamento(id)
+      .then(res => visitantes = res.data)
+      .catch(e => console.log(e));
 
     return {
-      ...this,
+      ...funcoesComuns,
       id: apartamento.id,
+      titulo: "Ver detalhes do apartamento",
+      avatarCss: "fonte__apartamento",
       valorAvatar: `${apartamento.numero}-${apartamento.torre}`,
+      listarTodos: "/apartamentos",
+
       valores: [
         { nome: "Vaga", valor: apartamento.vaga },
         { nome: "Moradores", valor: this.listarMoradores(moradores) },

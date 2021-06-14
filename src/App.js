@@ -9,11 +9,6 @@ import CreateVisitanteComponent from "./componentes/Create/CreateVisitanteCompon
 import CreateVisitaComponent from "./componentes/Create/CreateVisitaComponent/CreateVisitaComponent";
 import ViewObjects from "./componentes/View/ViewObjectsComponent/ViewObjects";
 import ListObjects from "./componentes/List/ListObjects/ListObjects";
-import ViewApartamentoComponent from "./componentes/View/ViewApartamentoComponent/ViewApartamentoComponent";
-import ViewMoradorComponent from "./componentes/View/ViewMoradorComponent/ViewMoradorComponent";
-import ViewVeiculoComponent from "./componentes/View/ViewVeiculoComponent/ViewVeiculoComponent";
-import ViewVisitanteComponent from "./componentes/View/ViewVisitanteComponent/ViewVisitanteComponent";
-import ViewVisitaComponent from "./componentes/View/ViewVisitaComponent/ViewVisitaComponent";
 
 function App() {
   return (
@@ -38,28 +33,16 @@ function App() {
               <Route path="/ver-apartamento/:id"  render={props => <ViewObjects {...props} type="apartamento" />} />
               <Route path="/ver-morador/:id"  render={props => <ViewObjects {...props} type="morador" />} />
               <Route path="/ver-veiculo/:id"  render={props => <ViewObjects {...props} type="veiculo" />} />
+              <Route path="/ver-visitante/:id"  render={props => <ViewObjects {...props} type="visitante" />} />
+              <Route path="/ver-visita/:id"  render={props => <ViewObjects {...props} type="visita" />} />
 
-              {/* Apartamentos */}
-              {/* <Route path="/ver-apartamento/:id" component={ViewApartamentoComponent} /> */}
+              {/* Forms */}
               <Route path="/gerenciar-apartamento/:id" component={CreateApartamentoComponent} />
-              
-              {/* Moradores */}
-              {/* <Route path="/ver-morador/:id" component={ViewMoradorComponent} /> */}
               <Route path="/gerenciar-morador/:id" component={CreateMoradorComponent} />
-
-              {/* Veículos */}
-              {/* <Route path="/ver-veiculo/:id" component={ViewVeiculoComponent} /> */}
               <Route path="/gerenciar-veiculo/:id" component={CreateVeiculoComponent} />
-
-              {/* Visitantes */}
-              {/* <Route path="/visitantes" component={ListVisitanteComponent} /> */}
               <Route path="/gerenciar-visitante/:id" component={CreateVisitanteComponent} />
-              <Route path="/ver-visitante/:id" component={ViewVisitanteComponent} />
-
-              {/* Visitas */}
-              {/* <Route path="/visitas" component={ListVisitaComponent} /> */}
               <Route path="/gerenciar-visita/:id" component={CreateVisitaComponent} />
-              <Route path="/ver-visita/:id" component={ViewVisitaComponent} />
+              
             </Switch>
           </div>
         </div>

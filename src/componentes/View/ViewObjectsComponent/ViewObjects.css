@@ -2,3 +2,27 @@
   font-size: 70px;
   font-weight: 100;
 }
+
+.caixa__titulo .fonte__morador {
+  font-size: 40px;
+  font-weight: 100;
+  text-align: center;
+}
+
+.caixa__titulo .fonte__veiculo {
+  font-size: 40px;
+  font-weight: 100;
+  text-align: center;
+}
+
+.caixa__titulo .fonte__visitante {
+  font-size: 40px;
+  font-weight: 100;
+  text-align: center;
+}
+
+.caixa__titulo .fonte__visita {
+  font-size: 40px;
+  font-weight: 100;
+  text-align: center;
+}

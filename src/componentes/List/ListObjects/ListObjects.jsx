@@ -8,8 +8,8 @@ import { LIMITE } from "../../../resources/Config";
 import { apartamentoModelListagem } from "../../../models/Apartamento";
 import { moradorModelListagem } from "../../../models/Morador";
 import { veiculoModelListagem } from "../../../models/Veiculo";
-import retornoVisitante from "../../../models/Visitante";
-import retornoVisita from "../../../models/Visita";
+import { visitanteModelListagem } from "../../../models/Visitante";
+import { visitaModelListagem } from "../../../models/Visita";
 import PaginacaoContext from "../../../context/PaginacaoContext";
 import "./ListObjects.css";
 
@@ -32,10 +32,10 @@ function ListObjects(props) {
       modeloDeObjeto = veiculoModelListagem;
       break;
     case "visitantes":
-      modeloDeObjeto = retornoVisitante;
+      modeloDeObjeto = visitanteModelListagem;
       break;
     case "visitas":
-      modeloDeObjeto = retornoVisita;
+      modeloDeObjeto = visitaModelListagem;
       break;
     default:
   }    

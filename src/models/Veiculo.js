@@ -2,6 +2,7 @@ import ObjectService from "../services/ObjectService";
 import ApartamentoService from "../services/ApartamentoService";
 import Functions from "../resources/Functions";
 import { LIMITE } from "../resources/Config";
+import VeiculoService from "../services/VeiculoService";
 
 /**********************/
 /*** FUNÇÕES COMUNS ***/
@@ -18,23 +19,29 @@ const funcoesComuns = {
   }
 }
 
-
-
+/**********************/
+/* MODELO DE LISTAGEM */
+/**********************/
 export const veiculoModelListagem = {
-  ...funcoesComuns,
   apiUrl: ObjectService.API_URL+'/veiculos',
-  titulo: "Lista de Veículos",
-  adicionar: "Adicionar veículo",
-  colunasDeListagem: [
-    "Modelo",
-    "Marca",
-    "Cor",
-    "Placa",
-    "Apartamento"
-  ],
-  
-  mensagemDeletar: function(objeto) {
-    return `Deseja realmente excluir o veículo ${objeto.placa}?`
+
+  mapearVeiculos: async function(mapa, array) {
+    array.forEach(dado => {
+      mapa.set(dado.apartamentoVeiculo, "");
+    });
+    const arrayVeiculos = Array.from(mapa.keys());
+    await ApartamentoService.getApartamentosByList(arrayVeiculos)
+      .then(res => {
+        res.data.forEach(dado => {
+          mapa.set(dado.id, dado.numero +"-"+ dado.torre);
+        });    
+    });
+  },
+
+  converterDados: function(lista, mapa) {
+    lista.forEach(
+      veiculo => veiculo.apartamentoVeiculo = mapa.get(veiculo.apartamentoVeiculo)
+    );
   },
 
   coletarDados: async function(paginaAtual) {
@@ -57,7 +64,21 @@ export const veiculoModelListagem = {
     })
     .then(() => {
       retorno = { 
-        ...this,
+        ...funcoesComuns,
+        titulo: "Lista de Veículos",
+        adicionar: "Adicionar veículo",
+        colunasDeListagem: [
+          "Modelo",
+          "Marca",
+          "Cor",
+          "Placa",
+          "Apartamento"
+        ],
+        
+        mensagemDeletar: function(objeto) {
+          return `Deseja realmente excluir o veículo ${objeto.placa}?`
+        },
+
         valores: listaDeVeiculos,
         equivalencias: new Map([
           ["modelo", "Modelo"],
@@ -70,30 +91,42 @@ export const veiculoModelListagem = {
     })
     .catch(e => console.log(e));
     return retorno;
-  },
-
-  mapearVeiculos: async function(mapa, array) {
-    array.forEach(dado => {
-      mapa.set(dado.apartamentoVeiculo, "");
-    });
-    const arrayVeiculos = Array.from(mapa.keys());
-    await ApartamentoService.getApartamentosByList(arrayVeiculos)
-      .then(res => {
-        res.data.forEach(dado => {
-          mapa.set(dado.id, dado.numero +"-"+ dado.torre);
-        });    
-    });
-  },
-
-  converterDados: function(lista, mapa) {
-    lista.forEach(
-      veiculo => veiculo.apartamentoVeiculo = mapa.get(veiculo.apartamentoVeiculo)
-    );
   }
 }
 
+/**********************/
+/* MODELO DE DETALHES */
+/**********************/
 export const veiculoModelDetalhes = {
-  ...funcoesComuns
+
+  coletarDados: async function(id) {
+    let veiculo = {};
+    let apartamento = "";
+
+    await VeiculoService.getVeiculoById(id)
+      .then(res => veiculo = res.data)
+      .catch(e => console.log(e));
+    await ApartamentoService.getApartamentoById(veiculo.apartamentoVeiculo)
+      .then(res => apartamento = `${res.data.numero}-${res.data.torre}`)
+      .catch(e => console.log(e));
+
+    return {
+      ...funcoesComuns,
+      id: veiculo.id,
+      titulo: "Ver detalhes do veículo",
+      avatarCss: "fonte__veiculo",
+      valorAvatar: veiculo.placa,
+      listarTodos: "/veiculos",
+
+      valores: [
+        { nome: "Marca", valor: veiculo.marca },
+        { nome: "Modelo", valor: veiculo.modelo },
+        { nome: "Cor", valor: veiculo.cor },
+        { nome: "Apartamento", valor: apartamento },
+        { nome: "Obs", valor: veiculo.obs }
+      ]
+    }
+  }
 }
 
 export default {

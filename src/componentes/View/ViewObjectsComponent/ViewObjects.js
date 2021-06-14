@@ -2,9 +2,13 @@ import React, { useState, useEffect } from "react";
 import { apartamentoModelDetalhes } from "../../../models/Apartamento";
 import { moradorModelDetalhes } from "../../../models/Morador";
 import { veiculoModelDetalhes } from "../../../models/Veiculo";
+import { visitanteModelDetalhes } from "../../../models/Visitante";
+import { visitaModelDetalhes } from "../../../models/Visita";
 import ApartmentIcon from '@material-ui/icons/Apartment';
 import PersonIcon from '@material-ui/icons/Person';
 import DriveEtaIcon from '@material-ui/icons/DriveEta';
+import EmojiPeopleIcon from '@material-ui/icons/EmojiPeople';
+import EventIcon from '@material-ui/icons/Event';
 import EditIcon from '@material-ui/icons/Edit';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import "./ViewObjects.css";
@@ -27,7 +31,19 @@ function ViewObjectsComponent(props) {
       modeloDeObjeto = veiculoModelDetalhes;
       icone = <DriveEtaIcon fontSize="inherit" />
       break;
+    case "visitante":
+      modeloDeObjeto = visitanteModelDetalhes;
+      icone = <EmojiPeopleIcon fontSize="inherit" />
+      break;
+    case "visita":
+      modeloDeObjeto = visitaModelDetalhes;
+      icone = <EventIcon fontSize="inherit" />
+      break;
     default:
+  }
+
+  const listarTodos = () => {
+    window.location.href= objeto.listarTodos;
   }
 
   useEffect(() => {
@@ -53,7 +69,7 @@ function ViewObjectsComponent(props) {
           ))}
         </div>
       </div>
-      <div className="detalhes__botoes botao__cursor" onClick={objeto.listarTodos}>
+      <div className="detalhes__botoes botao__cursor" onClick={listarTodos}>
         <ArrowBackIosIcon /> Voltar
       </div>
     </div>

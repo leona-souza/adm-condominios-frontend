@@ -7,7 +7,7 @@ import CreateMoradorComponent from "./componentes/Create/CreateMoradorComponent/
 import CreateVeiculoComponent from "./componentes/Create/CreateVeiculoComponent/CreateVeiculoComponent";
 import CreateVisitanteComponent from "./componentes/Create/CreateVisitanteComponent/CreateVisitanteComponent";
 import CreateVisitaComponent from "./componentes/Create/CreateVisitaComponent/CreateVisitaComponent";
-import ViewObjects from "./componentes/View/ViewObjectsComponent/ViewObjects";
+import ViewObjects from "./componentes/View/ViewObjects/ViewObjects";
 import ListObjects from "./componentes/List/ListObjects/ListObjects";
 
 function App() {

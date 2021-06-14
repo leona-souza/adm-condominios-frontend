@@ -119,7 +119,73 @@ export const apartamentoModelDetalhes = {
   }
 }
 
+/************************/
+/* MODELO DE FORMULÁRIO */
+/************************/
+export const apartamentoModelForm = {
+  coletarDados: function(id) {
+    let retorno = {};
+    let valores = {};
+
+    if (id === "novo") {
+      valores = {
+        id: "",
+        numero: "",
+        torre: "",
+        vaga: "",
+        obs: "",
+        titulo: "Cadastrar apartamento"
+      }
+    };
+
+    retorno = {
+      campos: [
+        { 
+          titulo: "Número", 
+          cssTitulo: "formulario__label required", 
+          name: "numero", 
+          value: valores.numero, 
+          cssInput: "formulario__input",
+          placeholder: "",
+          tipo: "input"
+        },
+        { 
+          titulo: "Torre", 
+          cssTitulo: "formulario__label required", 
+          name: "torre", 
+          value: valores.torre, 
+          cssInput: "formulario__input",
+          placeholder: "",
+          tipo: "input"
+        },
+        { 
+          titulo: "Vaga", 
+          cssTitulo: "formulario__label", 
+          name: "vaga", 
+          value: valores.vaga, 
+          cssInput: "formulario__input",
+          placeholder: "",
+          tipo: "input"
+        },
+        { 
+          titulo: "Obs", 
+          cssTitulo: "formulario__label", 
+          name: "obs", 
+          value: valores.obs, 
+          cssInput: "formulario__textarea",
+          placeholder: "",
+          rows: 5,
+          tipo: "textarea"
+        }
+      ]
+    }
+
+    return retorno;
+  }
+}
+
 export default {
   apartamentoModelListagem,
-  apartamentoModelDetalhes
+  apartamentoModelDetalhes,
+  apartamentoModelForm
 }

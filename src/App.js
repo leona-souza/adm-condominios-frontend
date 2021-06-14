@@ -9,6 +9,7 @@ import CreateVisitanteComponent from "./componentes/Create/CreateVisitanteCompon
 import CreateVisitaComponent from "./componentes/Create/CreateVisitaComponent/CreateVisitaComponent";
 import ViewObjects from "./componentes/View/ViewObjects/ViewObjects";
 import ListObjects from "./componentes/List/ListObjects/ListObjects";
+import CreateObjects from "./componentes/Create/CreateObjects/CreateObjects";
 
 function App() {
   return (
@@ -37,7 +38,8 @@ function App() {
               <Route path="/ver-visita/:id"  render={props => <ViewObjects {...props} type="visita" />} />
 
               {/* Forms */}
-              <Route path="/gerenciar-apartamento/:id" component={CreateApartamentoComponent} />
+              <Route path="/gerenciar-apartamento/:id"  render={props => <CreateObjects {...props} type="apartamento" />} />
+              {/* <Route path="/gerenciar-apartamento/:id" component={CreateApartamentoComponent} /> */}
               <Route path="/gerenciar-morador/:id" component={CreateMoradorComponent} />
               <Route path="/gerenciar-veiculo/:id" component={CreateVeiculoComponent} />
               <Route path="/gerenciar-visitante/:id" component={CreateVisitanteComponent} />

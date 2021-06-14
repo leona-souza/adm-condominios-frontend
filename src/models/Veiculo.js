@@ -18,6 +18,8 @@ const funcoesComuns = {
   }
 }
 
+
+
 export const veiculoModelListagem = {
   ...funcoesComuns,
   apiUrl: ObjectService.API_URL+'/veiculos',

@@ -39,8 +39,8 @@ function App() {
 
               {/* Forms */}
               <Route path="/gerenciar-apartamento/:id"  render={props => <CreateObjects {...props} type="apartamento" />} />
-              {/* <Route path="/gerenciar-apartamento/:id" component={CreateApartamentoComponent} /> */}
-              <Route path="/gerenciar-morador/:id" component={CreateMoradorComponent} />
+              <Route path="/gerenciar-morador/:id"  render={props => <CreateObjects {...props} type="morador" />} />
+              {/* <Route path="/gerenciar-morador/:id" component={CreateMoradorComponent} /> */}
               <Route path="/gerenciar-veiculo/:id" component={CreateVeiculoComponent} />
               <Route path="/gerenciar-visitante/:id" component={CreateVisitanteComponent} />
               <Route path="/gerenciar-visita/:id" component={CreateVisitaComponent} />

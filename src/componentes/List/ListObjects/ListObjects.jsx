@@ -57,22 +57,17 @@ function ListObjects(props) {
   }
 
   const deleteObject = (id) => {
-    let objeto = objeto.filter(
-      obj => obj.id === id
-    );
+    const objetoParaExcluir = objeto.valores.filter(obj => obj.id === id);
+    const novaLista = objeto.valores.filter(obj => obj.id !== id)
+
     if (
       window.confirm(
-        objeto.mensagemDeletar(objeto[0])
+        objeto.mensagemDeletar(objetoParaExcluir[0])
       )
     ) {
-      objeto.deleteObject(id)
-      .then(() => {
-        this.setState({
-          objeto: objeto.filter(
-            obj => obj.id !== id
-          ),
-        });
-      });
+      objeto.delete(id)
+        .then(() => setObjeto({ ...objeto, valores: novaLista }))
+        .catch(e => console.log(e))
     }
   };
 

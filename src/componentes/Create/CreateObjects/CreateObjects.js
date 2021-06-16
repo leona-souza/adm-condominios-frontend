@@ -1,104 +1,58 @@
 import React, { useState, useEffect } from "react";
 import { apartamentoModelForm } from "../../../models/Apartamento";
-import ApartamentoService from "../../../services/ApartamentoService";
+import { moradorModelForm } from "../../../models/Morador";
 import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Cancel';
 import "./CreateObjects.css";
 
-function CreateObject() {
-  let modeloDeObjeto = apartamentoModelForm.coletarDados("novo");
+function CreateObject(props) {
+  let modeloDeObjeto;
+  const { id } = props.match.params;
   const [objeto, setObjeto] = useState({});
 
+  switch(props.type) {
+    case "apartamento":
+      modeloDeObjeto = apartamentoModelForm;
+      break;
+    case "morador":
+      modeloDeObjeto = moradorModelForm;
+      break;
+    default:
+  }
+
   useEffect(() => {
-    setObjeto(modeloDeObjeto);
+    modeloDeObjeto.coletarDados(id)
+      .then(res => setObjeto(res))
+      .catch(e => console.log(e));
   }, []);
 
-    /* this.state = {
-      id: this.props.match.params.id,
-      numero: "",
-      torre: "",
-      vaga: "",
-      obs: ""
-    }; */
-
-  /* componentDidMount() {
-    if (this.state.id === "novo") {
-      return;
+  const manageObjeto = () => {
+    if (id === "novo") {
+      objeto.criarObjeto(objeto);
     } else {
-      ApartamentoService.getApartamentoById(this.state.id).then((res) => {
-        this.setState({
-          numero: res.data.numero,
-          torre: res.data.torre,
-          vaga: res.data.vaga || "",
-          obs: res.data.obs || ""
-        });
-      });
+      objeto.alterarObjeto(objeto);
     }
-  } */
-
-  /* changeNumeroHandler = (event) => {
-    this.setState({ numero: event.target.value });
-  };
-
-  changeTorreHandler = (event) => {
-    this.setState({ torre: event.target.value });
-  };
-
-  changeVagaHandler = (event) => {
-    this.setState({ vaga: event.target.value });
-  };
-
-  changeObsHandler = (event) => {
-    this.setState({ obs: event.target.value });
-  }; */
-
-  /* manageApartamento = (e) => {
-    e.preventDefault();
-    let apartamento = {
-      numero: this.state.numero,
-      torre: this.state.torre,
-      vaga: this.state.vaga,
-      obs: this.state.obs
-    };
-    if (this.state.id === "novo") {
-      ApartamentoService.createApartamento(apartamento).then((res) => {
-        this.props.history.push("/apartamentos");
-      });
-      this.setState({ 
-        numero: "",
-        torre: "",
-        vaga: "",
-        obs: ""
-      });
-    } else {
-      ApartamentoService.updateApartamento(apartamento, this.state.id).then(
-        (res) => {
-          this.props.history.push("/apartamentos");
-        }
-      );
-    }
-  }; */
+  }
 
   const changeHandler = e => { 
     const { campos } = objeto;
     const temp = campos.find(key => key.name === e.target.name);
     temp.value = e.target.value;
-    setObjeto({ campos });
+    setObjeto({ ...objeto, campos });
   };
 
   const cancel = () => {
-    this.props.history.push("/apartamentos");
+    window.location.href = objeto.enderecoVoltar;
   };
 
   return (
-    <div className="largura">{console.log(objeto)}
+    <div className="largura">
       <div className="titulo">{objeto.titulo}</div>
         <div>
           <form className="formulario">
 
             {objeto.campos?.map(campo => {
               const label = <label className={campo.cssTitulo}>{campo.titulo}:</label>;
-
               switch(campo.tipo) {
                 case "input":
                   return (
@@ -127,13 +81,35 @@ function CreateObject() {
                       />
                     </React.Fragment>
                   );
+                case "select":
+                  return(
+                    <React.Fragment key={campo.name}>
+                      {label}
+                      <select
+                        name={campo.name}
+                        className={campo.cssInput}
+                        value={campo.value}
+                        onChange={changeHandler}
+                      >
+                        {
+                          objeto.listaDeApartamentos.map(dados => {
+                            return (
+                              <option key={dados.id} value={dados.id}>
+                                {dados.numero}-{dados.torre}
+                              </option>
+                            );
+                          })
+                        }
+                      </select>
+                    </React.Fragment>
+                  )
                 default:
               }
             })}
 
             <div className="formulario__botoes">
-              <div /* onClick={this.manageApartamento} */ className="botao__cursor"><SaveIcon /> Salvar</div>
-              <div /* onClick={this.cancel.bind(this)} */ className="red botao__cursor"><CancelIcon /> Cancelar</div>
+              <div onClick={manageObjeto} className="botao__cursor"><SaveIcon /> Salvar</div>
+              <div onClick={cancel} className="red botao__cursor"><CancelIcon /> Cancelar</div>
             </div>
           </form>
         </div>

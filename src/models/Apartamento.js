@@ -2,10 +2,12 @@ import ObjectService from "../services/ObjectService";
 import Functions from "../resources/Functions";
 import { LIMITE } from "../resources/Config";
 import ApartamentoService from "../services/ApartamentoService";
+import { FeaturedPlayListOutlined } from "@material-ui/icons";
+import { getDefaultNormalizer } from "@testing-library/react";
 
-/**********************/
-/*** FUNÇÕES COMUNS ***/
-/**********************/
+/***********************************************************************/
+/*************************** FUNÇÕES COMUNS ****************************/
+/***********************************************************************/
 const funcoesComuns = {
   add: function() {
     window.location.href = "/gerenciar-apartamento/novo";
@@ -18,9 +20,9 @@ const funcoesComuns = {
   }
 }
 
-/**********************/
-/* MODELO DE LISTAGEM */
-/**********************/
+/***********************************************************************/
+/************************* MODELO DE LISTAGEM **************************/
+/***********************************************************************/
 export const apartamentoModelListagem = {
   apiUrl: ObjectService.API_URL+'/apartamentos',
 
@@ -61,9 +63,9 @@ export const apartamentoModelListagem = {
   }
 }
 
-/**********************/
-/* MODELO DE DETALHES */
-/**********************/
+/***********************************************************************/
+/************************* MODELO DE DETALHES **************************/
+/***********************************************************************/
 export const apartamentoModelDetalhes = {
   listarMoradores: function(listaMoradores) {
     return listaMoradores?.map(
@@ -119,26 +121,40 @@ export const apartamentoModelDetalhes = {
   }
 }
 
-/************************/
-/* MODELO DE FORMULÁRIO */
-/************************/
+/***********************************************************************/
+/************************ MODELO DE FORMULÁRIO *************************/
+/***********************************************************************/
 export const apartamentoModelForm = {
-  coletarDados: function(id) {
+  coletarDados: async function(id) {
     let retorno = {};
     let valores = {};
 
     if (id === "novo") {
       valores = {
-        id: "",
         numero: "",
         torre: "",
         vaga: "",
         obs: "",
-        titulo: "Cadastrar apartamento"
+        titulo: "Adicionar apartamento"
       }
-    };
+    } else {
+      await ApartamentoService.getApartamentoById(id)
+        .then(res => {
+          const { numero, torre, vaga, obs } = res.data;
+          valores = {
+            numero,
+            torre,
+            vaga,
+            obs,
+            titulo: "Alterar apartamento"
+          }
+        })
+        .catch(e => console.log(e));
+    }
 
     retorno = {
+      titulo: valores.titulo,
+      id,
       campos: [
         { 
           titulo: "Número", 
@@ -177,7 +193,31 @@ export const apartamentoModelForm = {
           rows: 5,
           tipo: "textarea"
         }
-      ]
+      ],
+      enderecoVoltar: "/apartamentos",
+
+      reestruturarObjeto: function(obj) {
+        const { campos } = obj;
+        return {
+          id,
+          numero: campos[0].value,
+          torre: campos[1].value,
+          vaga: campos[2].value,
+          obs: campos[3].value
+        };
+      },
+      criarObjeto: function(obj) {
+        const objeto = this.reestruturarObjeto(obj);
+        ApartamentoService.createApartamento(objeto)
+          .then(() => window.location.href = this.enderecoVoltar)
+          .catch(e => console.log(e));
+      },
+      alterarObjeto: function(obj) {
+        const objeto = this.reestruturarObjeto(obj);
+        ApartamentoService.updateApartamento(objeto, objeto.id)
+          .then(() => window.location.href = this.enderecoVoltar)
+          .catch(e => console.log(e));
+      }
     }
 
     return retorno;

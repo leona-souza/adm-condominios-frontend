@@ -16,12 +16,17 @@ const funcoesComuns = {
   },
   put: function(id) {
     window.location.href = `/gerenciar-morador/${id}`;
+  },
+  delete: async function(id) {
+    await MoradorService.deleteMorador(id)
+      .then(res => console.log(res.status))
+      .catch(e => console.log(e));
   }
 }
 
-/**********************/
-/* MODELO DE LISTAGEM */
-/**********************/
+/***********************************************************************/
+/************************* MODELO DE LISTAGEM **************************/
+/***********************************************************************/
 export const moradorModelListagem = {
   apiUrl: ObjectService.API_URL+'/moradores',
 
@@ -89,9 +94,9 @@ export const moradorModelListagem = {
   }
 }
 
-/**********************/
-/* MODELO DE DETALHES */
-/**********************/
+/***********************************************************************/
+/************************ MODELO DE DETALHES *************************/
+/***********************************************************************/
 export const moradorModelDetalhes = {
   coletarDados: async function(id) {
     let morador = {};
@@ -122,7 +127,134 @@ export const moradorModelDetalhes = {
   }
 }
 
+/***********************************************************************/
+/************************ MODELO DE FORMULÁRIO *************************/
+/***********************************************************************/
+export const moradorModelForm = {
+  coletarDados: async function(id) {
+    let retorno = {};
+    let valores = {};
+
+    const listarApartamentos = async () => {
+      let temp = [];
+      await ApartamentoService.getApartamentos()
+        .then(res => temp = res.data.resultados)
+        .catch(e => console.log(e));
+      return temp;
+    };
+
+    if (id === "novo") {
+      const primeiroApartamento = await listarApartamentos();
+      valores = {
+        nome: "",
+        documento: "",
+        telefone: "",
+        apartamentoMorador: primeiroApartamento[0].id,
+        obs: "",
+        titulo: "Adicionar morador"
+      }
+    } else {
+      await MoradorService.getMoradorById(id)
+        .then(res => {
+          const { nome, telefone, documento, apartamentoMorador, obs  } = res.data;
+          valores = {
+            nome,
+            telefone,
+            documento,
+            apartamentoMorador,
+            obs,
+            titulo: "Alterar morador"
+          }
+        })
+        .catch(e => console.log(e));
+    };
+
+    retorno = {
+      titulo: valores.titulo,
+      id,
+      campos: [
+        { 
+          titulo: "Nome", 
+          cssTitulo: "formulario__label required", 
+          name: "nome", 
+          value: valores.nome, 
+          cssInput: "formulario__input",
+          placeholder: "",
+          tipo: "input"
+        },
+        { 
+          titulo: "Telefone", 
+          cssTitulo: "formulario__label", 
+          name: "telefone", 
+          value: valores.telefone, 
+          cssInput: "formulario__input",
+          placeholder: "",
+          tipo: "input"
+        },
+        { 
+          titulo: "Documento", 
+          cssTitulo: "formulario__label", 
+          name: "documento", 
+          value: valores.documento, 
+          cssInput: "formulario__input",
+          placeholder: "",
+          tipo: "input"
+        },
+        { 
+          titulo: "Apartamento", 
+          cssTitulo: "formulario__label", 
+          name: "apartamento", 
+          value: valores.apartamentoMorador, 
+          cssInput: "formulario__input",
+          placeholder: "",
+          tipo: "select"
+        },
+        { 
+          titulo: "Obs", 
+          cssTitulo: "formulario__label", 
+          name: "obs", 
+          value: valores.obs, 
+          cssInput: "formulario__textarea",
+          placeholder: "",
+          rows: 5,
+          tipo: "textarea"
+        }
+      ],
+      enderecoVoltar: "/moradores",
+      listaDeApartamentos: await listarApartamentos(),
+
+      reestruturarObjeto: function(obj) {
+        const { campos } = obj;
+        const temp = {
+          id,
+          nome: campos[0].value,
+          telefone: campos[1].value,
+          documento: campos[2].value,
+          apartamentoMorador: campos[3].value,
+          obs: campos[4].value
+        };
+        return temp;
+      },
+      criarObjeto: function(obj) {
+        const objeto = this.reestruturarObjeto(obj);
+        MoradorService.createMorador(objeto)
+          .then(() => window.location.href = this.enderecoVoltar)
+          .catch(e => console.log(e));
+      },
+      alterarObjeto: function(obj) {
+        const objeto = this.reestruturarObjeto(obj);
+        MoradorService.updateMorador(objeto, objeto.id)
+          .then(() => window.location.href = this.enderecoVoltar)
+          .catch(e => console.log(e));
+      }
+    }
+
+    return retorno;
+  }
+}
+
 export default {
   moradorModelListagem,
-  moradorModelDetalhes
+  moradorModelDetalhes,
+  moradorModelForm
 };

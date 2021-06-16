@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { apartamentoModelForm } from "../../../models/Apartamento";
 import { moradorModelForm } from "../../../models/Morador";
 import { veiculoModelForm } from "../../../models/Veiculo";
+import { visitanteModelForm } from "../../../models/Visitante";
 import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Cancel';
 import "./CreateObjects.css";
@@ -20,6 +21,9 @@ function CreateObject(props) {
       break;
     case "veiculo":
       modeloDeObjeto = veiculoModelForm;
+      break;
+    case "visitante":
+      modeloDeObjeto = visitanteModelForm;
       break;
     default:
   }

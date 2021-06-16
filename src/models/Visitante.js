@@ -4,9 +4,9 @@ import Functions from "../resources/Functions";
 import { LIMITE } from "../resources/Config";
 import VisitanteService from "../services/VisitanteService";
 
-/**********************/
-/*** FUNÇÕES COMUNS ***/
-/**********************/
+/***********************************************************************/
+/*************************** FUNÇÕES COMUNS ****************************/
+/***********************************************************************/
 const funcoesComuns = {
   add: function() {
     window.location.href = "/gerenciar-visitante/novo";
@@ -16,12 +16,17 @@ const funcoesComuns = {
   },
   put: function(id) {
     window.location.href = `/gerenciar-visitante/${id}`;
+  },
+  delete: async function(id) {
+    await VisitanteService.deleteVisitante(id)
+      .then(res => console.log(res.status))
+      .catch(e => console.log(e));
   }
 }
 
-/**********************/
-/* MODELO DE LISTAGEM */
-/**********************/
+/***********************************************************************/
+/************************* MODELO DE LISTAGEM **************************/
+/***********************************************************************/
 export const visitanteModelListagem = {
   apiUrl: process.env.REACT_APP_API_URL + "/visitantes",
 
@@ -87,9 +92,9 @@ export const visitanteModelListagem = {
   }
 }
 
-/**********************/
-/* MODELO DE DETALHES */
-/**********************/
+/***********************************************************************/
+/************************* MODELO DE DETALHES **************************/
+/***********************************************************************/
 export const visitanteModelDetalhes = {
   coletarDados: async function(id) {
     let visitante = {};
@@ -120,7 +125,131 @@ export const visitanteModelDetalhes = {
   }
 }
 
+export const visitanteModelForm = {
+  coletarDados: async function(id) {
+    let retorno = {};
+    let valores = {};
+
+    const listarApartamentos = async () => {
+      let temp = [];
+      await ApartamentoService.getApartamentos()
+        .then(res => temp = res.data.resultados)
+        .catch(e => console.log(e));
+      return temp;
+    };
+
+    if (id === "novo") {
+      const primeiroApartamento = await listarApartamentos();
+      valores = {
+        nome: "",
+        documento: "",
+        telefone: "",
+        apartamentoVisitante: primeiroApartamento[0].id,
+        obs: "",
+        titulo: "Adicionar visitante"
+      }
+    } else {
+      await VisitanteService.getVisitanteById(id)
+        .then(res => {
+          const { nome, telefone, documento, apartamentoVisitante, obs  } = res.data;
+          valores = {
+            nome,
+            telefone,
+            documento,
+            apartamentoVisitante,
+            obs,
+            titulo: "Alterar visitante"
+          }
+        })
+        .catch(e => console.log(e));
+    };
+
+    retorno = {
+      titulo: valores.titulo,
+      id,
+      campos: [
+        { 
+          titulo: "Nome", 
+          cssTitulo: "formulario__label required", 
+          name: "nome", 
+          value: valores.nome, 
+          cssInput: "formulario__input",
+          placeholder: "",
+          tipo: "input"
+        },
+        { 
+          titulo: "Telefone", 
+          cssTitulo: "formulario__label", 
+          name: "telefone", 
+          value: valores.telefone, 
+          cssInput: "formulario__input",
+          placeholder: "",
+          tipo: "input"
+        },
+        { 
+          titulo: "Documento", 
+          cssTitulo: "formulario__label", 
+          name: "documento", 
+          value: valores.documento, 
+          cssInput: "formulario__input",
+          placeholder: "",
+          tipo: "input"
+        },
+        { 
+          titulo: "Apartamento", 
+          cssTitulo: "formulario__label", 
+          name: "apartamento", 
+          value: valores.apartamentoVisitante, 
+          cssInput: "formulario__input",
+          placeholder: "",
+          tipo: "select"
+        },
+        { 
+          titulo: "Obs", 
+          cssTitulo: "formulario__label", 
+          name: "obs", 
+          value: valores.obs, 
+          cssInput: "formulario__textarea",
+          placeholder: "",
+          rows: 5,
+          tipo: "textarea"
+        }
+      ],
+      enderecoVoltar: "/visitantes",
+      listaDeApartamentos: await listarApartamentos(),
+
+      reestruturarObjeto: function(obj) {
+        const { campos } = obj;
+        const temp = {
+          id,
+          nome: campos[0].value,
+          telefone: campos[1].value,
+          documento: campos[2].value,
+          apartamentoVisitante: campos[3].value,
+          obs: campos[4].value
+        };
+        return temp;
+      },
+      criarObjeto: function(obj) {
+        const objeto = this.reestruturarObjeto(obj);
+        VisitanteService.createVisitante(objeto)
+          .then(() => window.location.href = this.enderecoVoltar)
+          .catch(e => console.log(e));
+      },
+      alterarObjeto: function(obj) {
+        const objeto = this.reestruturarObjeto(obj);
+        VisitanteService.updateVisitante(objeto, objeto.id)
+          .then(() => window.location.href = this.enderecoVoltar)
+          .catch(e => console.log(e));
+      }
+    }
+
+    return retorno;
+  }
+}
+
 export default {
   visitanteModelListagem,
-  visitanteModelDetalhes
+  visitanteModelDetalhes,
+  visitanteModelForm
 };

@@ -4,9 +4,9 @@ import MoradorService from "../services/MoradorService";
 import Functions from "../resources/Functions";
 import { LIMITE } from "../resources/Config";
 
-/**********************/
-/*** FUNÇÕES COMUNS ***/
-/**********************/
+/***********************************************************************/
+/*************************** FUNÇÕES COMUNS ****************************/
+/***********************************************************************/
 const funcoesComuns = {
   add: function() {
     window.location.href = "/gerenciar-morador/novo";
@@ -95,7 +95,7 @@ export const moradorModelListagem = {
 }
 
 /***********************************************************************/
-/************************ MODELO DE DETALHES *************************/
+/************************* MODELO DE DETALHES **************************/
 /***********************************************************************/
 export const moradorModelDetalhes = {
   coletarDados: async function(id) {

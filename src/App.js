@@ -2,11 +2,6 @@ import React from "react";
 import "./App.css";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Menu from "./componentes/Menu/Menu";
-import CreateApartamentoComponent from "./componentes/Create/CreateApartamentoComponent/CreateApartamentoComponent";
-import CreateMoradorComponent from "./componentes/Create/CreateMoradorComponent/CreateMoradorComponent";
-import CreateVeiculoComponent from "./componentes/Create/CreateVeiculoComponent/CreateVeiculoComponent";
-import CreateVisitanteComponent from "./componentes/Create/CreateVisitanteComponent/CreateVisitanteComponent";
-import CreateVisitaComponent from "./componentes/Create/CreateVisitaComponent/CreateVisitaComponent";
 import ViewObjects from "./componentes/View/ViewObjects/ViewObjects";
 import ListObjects from "./componentes/List/ListObjects/ListObjects";
 import CreateObjects from "./componentes/Create/CreateObjects/CreateObjects";
@@ -37,13 +32,12 @@ function App() {
               <Route path="/ver-visitante/:id"  render={props => <ViewObjects {...props} type="visitante" />} />
               <Route path="/ver-visita/:id"  render={props => <ViewObjects {...props} type="visita" />} />
 
-              {/* Forms */}
+              {/* Formulários */}
               <Route path="/gerenciar-apartamento/:id"  render={props => <CreateObjects {...props} type="apartamento" />} />
               <Route path="/gerenciar-morador/:id"  render={props => <CreateObjects {...props} type="morador" />} />
-              {/* <Route path="/gerenciar-morador/:id" component={CreateMoradorComponent} /> */}
-              <Route path="/gerenciar-veiculo/:id" component={CreateVeiculoComponent} />
-              <Route path="/gerenciar-visitante/:id" component={CreateVisitanteComponent} />
-              <Route path="/gerenciar-visita/:id" component={CreateVisitaComponent} />
+              <Route path="/gerenciar-veiculo/:id"  render={props => <CreateObjects {...props} type="veiculo" />} />
+              <Route path="/gerenciar-visitante/:id"  render={props => <CreateObjects {...props} type="visitante" />} />
+              <Route path="/gerenciar-visita/:id"  render={props => <CreateObjects {...props} type="visita" />} />
               
             </Switch>
           </div>

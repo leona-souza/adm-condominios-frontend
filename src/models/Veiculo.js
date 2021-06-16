@@ -16,7 +16,7 @@ const funcoesComuns = {
   },
   put: function(id) {
     window.location.href = `/gerenciar-veiculo/${id}`;
-  },
+  },//teste
   delete: async function(id) {
     await VeiculoService.deleteVeiculo(id)
       .then(res => console.log(res.status))

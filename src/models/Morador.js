@@ -180,6 +180,7 @@ export const moradorModelForm = {
           value: valores.nome, 
           cssInput: "formulario__input",
           placeholder: "",
+          type: "text",
           tipo: "input"
         },
         { 
@@ -189,6 +190,7 @@ export const moradorModelForm = {
           value: valores.telefone, 
           cssInput: "formulario__input",
           placeholder: "",
+          type: "text",
           tipo: "input"
         },
         { 
@@ -198,6 +200,7 @@ export const moradorModelForm = {
           value: valores.documento, 
           cssInput: "formulario__input",
           placeholder: "",
+          type: "text",
           tipo: "input"
         },
         { 

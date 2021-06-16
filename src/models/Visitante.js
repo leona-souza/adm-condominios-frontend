@@ -125,6 +125,9 @@ export const visitanteModelDetalhes = {
   }
 }
 
+/***********************************************************************/
+/************************ MODELO DE FORMULÁRIO *************************/
+/***********************************************************************/
 export const visitanteModelForm = {
   coletarDados: async function(id) {
     let retorno = {};
@@ -175,6 +178,7 @@ export const visitanteModelForm = {
           value: valores.nome, 
           cssInput: "formulario__input",
           placeholder: "",
+          type: "text",
           tipo: "input"
         },
         { 
@@ -184,6 +188,7 @@ export const visitanteModelForm = {
           value: valores.telefone, 
           cssInput: "formulario__input",
           placeholder: "",
+          type: "text",
           tipo: "input"
         },
         { 
@@ -193,6 +198,7 @@ export const visitanteModelForm = {
           value: valores.documento, 
           cssInput: "formulario__input",
           placeholder: "",
+          type: "text",
           tipo: "input"
         },
         { 

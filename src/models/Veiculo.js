@@ -189,6 +189,7 @@ export const veiculoModelForm = {
           value: valores.modelo, 
           cssInput: "formulario__input",
           placeholder: "",
+          type: "text",
           tipo: "input"
         },
         { 
@@ -198,6 +199,7 @@ export const veiculoModelForm = {
           value: valores.marca, 
           cssInput: "formulario__input",
           placeholder: "",
+          type: "text",
           tipo: "input"
         },
         { 
@@ -207,6 +209,7 @@ export const veiculoModelForm = {
           value: valores.placa, 
           cssInput: "formulario__input",
           placeholder: "",
+          type: "text",
           tipo: "input"
         },
         { 
@@ -216,6 +219,7 @@ export const veiculoModelForm = {
           value: valores.cor, 
           cssInput: "formulario__input",
           placeholder: "",
+          type: "text",
           tipo: "input"
         },
         { 

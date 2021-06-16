@@ -17,6 +17,11 @@ const funcoesComuns = {
   },
   put: function(id) {
     window.location.href = `/gerenciar-apartamento/${id}`;
+  },
+  delete: async function(id) {
+    await ApartamentoService.deleteApartamento(id)
+      .then(res => console.log(res.status))
+      .catch(e => console.log(e));
   }
 }
 
@@ -163,6 +168,7 @@ export const apartamentoModelForm = {
           value: valores.numero, 
           cssInput: "formulario__input",
           placeholder: "",
+          type: "text",
           tipo: "input"
         },
         { 
@@ -172,6 +178,7 @@ export const apartamentoModelForm = {
           value: valores.torre, 
           cssInput: "formulario__input",
           placeholder: "",
+          type: "text",
           tipo: "input"
         },
         { 
@@ -181,6 +188,7 @@ export const apartamentoModelForm = {
           value: valores.vaga, 
           cssInput: "formulario__input",
           placeholder: "",
+          type: "text",
           tipo: "input"
         },
         { 

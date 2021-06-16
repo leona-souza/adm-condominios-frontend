@@ -271,5 +271,6 @@ export const visitaModelForm = {
 
 export default {
   visitaModelListagem,
-  visitaModelDetalhes
+  visitaModelDetalhes,
+  visitaModelForm
 };

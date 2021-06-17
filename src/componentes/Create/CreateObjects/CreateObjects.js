@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { apartamentoModelForm } from "../../../models/Apartamento";
 import { moradorModelForm } from "../../../models/Morador";
 import { veiculoModelForm } from "../../../models/Veiculo";
@@ -12,6 +12,7 @@ function CreateObject(props) {
   let modeloDeObjeto;
   const { id } = props.match.params;
   const [objeto, setObjeto] = useState({});
+  const timerRef = useRef(null);
 
   switch(props.type) {
     case "apartamento":
@@ -46,11 +47,26 @@ function CreateObject(props) {
     }
   }
 
+  const buscarNomes = async (e) => {
+    if (
+      e.target.name === "visitante" && 
+      e.target.value.length > 0 && 
+      objeto.nomeVisitante !== undefined
+    ) {
+      clearTimeout(timerRef.current);
+      timerRef.current = setTimeout(async () => {
+        const nomesConsultados = await objeto.consultarNomes(e.target.value);
+        setObjeto({ ...objeto, nomesConsultados });
+      }, 1000)
+    }
+  }
+
   const changeHandler = e => { 
     const { campos } = objeto;
     const temp = campos.find(key => key.name === e.target.name);
     temp.value = e.target.value;
     setObjeto({ ...objeto, campos });
+    buscarNomes(e);
   };
 
   const cancel = () => {
@@ -58,7 +74,7 @@ function CreateObject(props) {
   };
 
   return (
-    <div className="largura">
+    <div className="largura">{console.log(objeto)}
       <div className="titulo">{objeto.titulo}</div>
         <div>
           <form className="formulario">
@@ -78,6 +94,11 @@ function CreateObject(props) {
                         value={campo.value}
                         onChange={changeHandler}
                       />
+                      { 
+                        (campo.name === "visitante" && objeto.nomeVisitante !== undefined && objeto.nomesConsultados?.length > 0)
+                          &&
+                        objeto.exibirNomes(objeto.nomesConsultados)
+                      }
                     </React.Fragment>
                   );
                 case "textarea":

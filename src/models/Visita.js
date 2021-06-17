@@ -4,6 +4,7 @@ import VisitanteService from "../services/VisitanteService";
 import VisitaService from "../services/VisitaService";
 import Functions from "../resources/Functions";
 import { LIMITE } from "../resources/Config";
+import MoradorService from "../services/MoradorService";
 
 /***********************************************************************/
 /*************************** FUNÇÕES COMUNS ****************************/
@@ -179,6 +180,7 @@ export const visitaModelForm = {
     } else {
       await VisitaService.getVisitaById(id)
         .then(res => {
+          //precisa alterar
           const { nome, telefone, documento, apartamentoVisitante, obs  } = res.data;
           valores = {
             nome,
@@ -186,6 +188,7 @@ export const visitaModelForm = {
             documento,
             apartamentoVisitante,
             obs,
+            nomeVisitante: "",
             titulo: "Alterar visitante"
           }
         })
@@ -195,6 +198,8 @@ export const visitaModelForm = {
     retorno = {
       titulo: valores.titulo,
       id,
+      nomeVisitante: valores.nomeVisitante,
+      nomesConsultados: [],
       campos: [
         { 
           titulo: "Data", 
@@ -209,8 +214,8 @@ export const visitaModelForm = {
         { 
           titulo: "Visitante", 
           cssTitulo: "formulario__label required", 
-          name: "telefone", 
-          value: valores.nomeVisitante, 
+          name: "visitante", 
+          value: valores.visitante, 
           cssInput: "formulario__input",
           placeholder: "Procurar nomes aqui",
           type: "text",
@@ -220,7 +225,7 @@ export const visitaModelForm = {
           titulo: "Apartamento", 
           cssTitulo: "formulario__label required", 
           name: "apartamento", 
-          value: valores.apartamentoVisitante, 
+          value: valores.apartamento, 
           cssInput: "formulario__input",
           placeholder: "",
           tipo: "select"
@@ -236,7 +241,7 @@ export const visitaModelForm = {
           tipo: "textarea"
         }
       ],
-      enderecoVoltar: "/visitantes",
+      enderecoVoltar: "/visitas",
       listaDeApartamentos: await listarApartamentos(),
 
       reestruturarObjeto: function(obj) {
@@ -262,6 +267,28 @@ export const visitaModelForm = {
         VisitanteService.updateVisitante(objeto, objeto.id)
           .then(() => window.location.href = this.enderecoVoltar)
           .catch(e => console.log(e));
+      },
+      consultarNomes: async function(nome) {
+        let resultados = [];
+        await VisitanteService.getVisitanteByNome(nome)
+          .then(res => resultados = res.data)
+          .catch(e => console.log(e));
+        return resultados;
+      },
+      exibirNomes: function(nomes) {
+        let retorno = [];
+        if (!nomes.length > 0) {
+          return;
+        }
+        nomes.map(item => retorno.push(
+          <li 
+            className="input__li"
+            key={item.id} 
+            onClick={() => { this.changeVisitanteHandler(item.id, item.nome) }}>
+                {item.nome}
+          </li>
+        ))
+        return retorno;
       }
     }
 

@@ -253,7 +253,7 @@ export const visitaModelForm = {
         const temp = {
           id,
           data: campos[0].value,
-          visitante: campos[1].value,
+          visitante: obj.visitante,
           apartamento: campos[2].value,
           obs: campos[3].value
         };

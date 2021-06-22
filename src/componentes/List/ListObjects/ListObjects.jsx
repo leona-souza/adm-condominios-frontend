@@ -10,15 +10,16 @@ import { moradorModelListagem } from "../../../models/Morador";
 import { veiculoModelListagem } from "../../../models/Veiculo";
 import { visitanteModelListagem } from "../../../models/Visitante";
 import { visitaModelListagem } from "../../../models/Visita";
-import PaginacaoContext from "../../../context/PaginacaoContext";
 import "./ListObjects.css";
 
 function ListObjects(props) {
   let modeloDeObjeto = null;
-  const [objeto, setObjeto] = useState({});
-  const [paginas, setPaginas] = useState({
-    pagina: 1,
-    limite: LIMITE,
+  const [objeto, setObjeto] = useState({
+    paginas: {
+      pagina: 1,
+      limite: 1,
+      total: 1
+    }
   });
 
   switch (props.type) {
@@ -41,7 +42,7 @@ function ListObjects(props) {
   }    
 
   useEffect(() => {
-    modeloDeObjeto.coletarDados(paginas.pagina)
+    modeloDeObjeto.coletarDados(objeto.paginas.pagina)
       .then(res => setObjeto(res))
       .catch(e => console.log('erro', e));
   }, []);
@@ -101,9 +102,9 @@ function ListObjects(props) {
         </table>
 
           <Paginator 
-            pagina={paginas.pagina} 
-            total={paginas.total}
-            limite={paginas.limite}
+            pagina={objeto.paginas.pagina} 
+            total={objeto.paginas.total}
+            limite={objeto.paginas.limite}
             onUpdate={objeto.coletarDados}
           />
 

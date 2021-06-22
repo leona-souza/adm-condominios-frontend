@@ -34,35 +34,36 @@ export const apartamentoModelListagem = {
   coletarDados: async function(paginaAtual) {
     let retorno = {};
     await ObjectService.getObjectsPaginados(paginaAtual, LIMITE, this.apiUrl)
-    .then(res => {
-      ObjectService.hasZeroResults(res.data.resultados.length);
-      //Functions.configurarPaginacao(paginaAtual, LIMITE, res.data.paginas.total);
-      res.data.resultados.forEach(obj => delete obj.obs);
-      
-      retorno = {
-        ...funcoesComuns,
+      .then(res => {
+        ObjectService.hasZeroResults(res.data.resultados.length);
+        const paginas = Functions.configurarPaginacao(paginaAtual, LIMITE, res.data.paginas.total);
+        res.data.resultados.forEach(obj => delete obj.obs);
+        
+        retorno = {
+          ...funcoesComuns,
+          paginas,
 
-        mensagemDeletar: function(objeto) {
-          return `Deseja realmente excluir o apartamento ${objeto.numero}-${objeto.torre}?`
-        },
+          mensagemDeletar: function(objeto) {
+            return `Deseja realmente excluir o apartamento ${objeto.numero}-${objeto.torre}?`
+          },
 
-        titulo: "Lista de Apartamentos",
-        adicionar: "Adicionar apartamento",
-        colunasDeListagem: [
-          "Apartamento",
-          "Torre",
-          "Vaga"
-        ],
+          titulo: "Lista de Apartamentos",
+          adicionar: "Adicionar apartamento",
+          colunasDeListagem: [
+            "Apartamento",
+            "Torre",
+            "Vaga"
+          ],
 
-        valores: res.data.resultados,
-        equivalencias: new Map([
-          ["numero", "Número"],
-          ["torre", "Torre"],
-          ["vaga", "Vaga"]
-        ])
-      };
-    })
-    .catch(e => console.log(e));
+          valores: res.data.resultados,
+          equivalencias: new Map([
+            ["numero", "Número"],
+            ["torre", "Torre"],
+            ["vaga", "Vaga"]
+          ])
+        };
+      })
+      .catch(e => console.log(e));
 
     return retorno;
   }

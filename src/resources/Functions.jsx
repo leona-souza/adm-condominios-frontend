@@ -1,3 +1,5 @@
+import { LIMITE } from "./Config";
+
 class Functions {
 
   dataFromDbToScreen(dataCrua) {
@@ -20,12 +22,13 @@ class Functions {
     return ano +"-"+ mes +"-"+ dia +"T"+ hora +":"+ minutos;
   }
 
-  configurarPaginacao = (paginaAtual, limite, totalResultados, setPaginas) => {
+  configurarPaginacao = (paginaAtual, limite, totalResultados) => {
     const total = Math.ceil(totalResultados / limite);
-      /* setPaginas({
+      return {
         pagina: paginaAtual,
+        limite: LIMITE,
         total
-      }) */
+      }
   }
 
        /*mapearObjetos = async (mapa, array) => {

@@ -42,9 +42,6 @@ function CreateObject(props) {
 
   const manageObjeto = () => {
     if (id === "novo") {
-      const { campos } = objeto;
-      const temp = campos.find(key => key.name === "nomeVisitante");
-      temp.value = objeto.visitante;
       objeto.criarObjeto(objeto);
     } else {
       objeto.alterarObjeto(objeto);

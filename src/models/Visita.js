@@ -252,7 +252,7 @@ export const visitaModelForm = {
         const { campos } = obj;
         const temp = {
           id,
-          data: campos[0].value,
+          data: new Date(campos[0].value),
           visitante: obj.visitante,
           apartamento: campos[2].value,
           obs: campos[3].value

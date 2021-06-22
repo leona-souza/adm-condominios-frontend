@@ -4,7 +4,6 @@ import VisitanteService from "../services/VisitanteService";
 import VisitaService from "../services/VisitaService";
 import Functions from "../resources/Functions";
 import { LIMITE } from "../resources/Config";
-import MoradorService from "../services/MoradorService";
 
 /***********************************************************************/
 /*************************** FUNÇÕES COMUNS ****************************/
@@ -171,25 +170,30 @@ export const visitaModelForm = {
       valores = {
         data: "",
         hora: "",
-        visitante: "",
+        nomeVisitante: "",
         apartamento: primeiroApartamento[0].id,
         obs: "",
-        nomeVisitante: "",
+        visitante: "",
         titulo: "Adicionar visita"
       }
     } else {
       await VisitaService.getVisitaById(id)
         .then(res => {
-          //precisa alterar
-          const { nome, telefone, documento, apartamentoVisitante, obs  } = res.data;
+          const { data, visitante, apartamento, obs  } = res.data;
           valores = {
-            nome,
-            telefone,
-            documento,
-            apartamentoVisitante,
+            data: Functions.dataToInput(data),
+            visitante,
+            apartamento,
             obs,
-            nomeVisitante: "",
             titulo: "Alterar visitante"
+          }
+        })
+        .catch(e => console.log(e));
+      await VisitanteService.getVisitanteById(valores.visitante)
+        .then(res => {
+          valores = {
+            ...valores,
+            nomeVisitante: res.data.nome
           }
         })
         .catch(e => console.log(e));
@@ -198,14 +202,14 @@ export const visitaModelForm = {
     retorno = {
       titulo: valores.titulo,
       id,
-      nomeVisitante: valores.nomeVisitante,
+      visitante: valores.visitante,
       nomesConsultados: [],
       campos: [
         { 
           titulo: "Data", 
           cssTitulo: "formulario__label required", 
-          name: "nome", 
-          value: valores.nome, 
+          name: "data", 
+          value: valores.data, 
           cssInput: "formulario__input",
           placeholder: "",
           type: "datetime-local",
@@ -214,8 +218,8 @@ export const visitaModelForm = {
         { 
           titulo: "Visitante", 
           cssTitulo: "formulario__label required", 
-          name: "visitante", 
-          value: valores.visitante, 
+          name: "nomeVisitante", 
+          value: valores.nomeVisitante, 
           cssInput: "formulario__input",
           placeholder: "Procurar nomes aqui",
           type: "text",
@@ -248,23 +252,22 @@ export const visitaModelForm = {
         const { campos } = obj;
         const temp = {
           id,
-          nome: campos[0].value,
-          telefone: campos[1].value,
-          documento: campos[2].value,
-          apartamentoVisitante: campos[3].value,
-          obs: campos[4].value
+          data: campos[0].value,
+          visitante: campos[1].value,
+          apartamento: campos[2].value,
+          obs: campos[3].value
         };
         return temp;
       },
       criarObjeto: function(obj) {
         const objeto = this.reestruturarObjeto(obj);
-        VisitanteService.createVisitante(objeto)
+        VisitaService.createVisita(objeto)
           .then(() => window.location.href = this.enderecoVoltar)
           .catch(e => console.log(e));
       },
       alterarObjeto: function(obj) {
         const objeto = this.reestruturarObjeto(obj);
-        VisitanteService.updateVisitante(objeto, objeto.id)
+        VisitaService.updateVisita(objeto, objeto.id)
           .then(() => window.location.href = this.enderecoVoltar)
           .catch(e => console.log(e));
       },
@@ -274,21 +277,6 @@ export const visitaModelForm = {
           .then(res => resultados = res.data)
           .catch(e => console.log(e));
         return resultados;
-      },
-      exibirNomes: function(nomes) {
-        let retorno = [];
-        if (!nomes.length > 0) {
-          return;
-        }
-        nomes.map(item => retorno.push(
-          <li 
-            className="input__li"
-            key={item.id} 
-            onClick={() => { this.changeVisitanteHandler(item.id, item.nome) }}>
-                {item.nome}
-          </li>
-        ))
-        return retorno;
       }
     }
 

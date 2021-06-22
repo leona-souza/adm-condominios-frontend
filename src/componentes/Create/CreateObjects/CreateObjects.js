@@ -13,8 +13,9 @@ function CreateObject(props) {
   const { id } = props.match.params;
   const [objeto, setObjeto] = useState({});
   const timerRef = useRef(null);
+  const { type } = props;
 
-  switch(props.type) {
+  switch(type) {
     case "apartamento":
       modeloDeObjeto = apartamentoModelForm;
       break;
@@ -41,40 +42,70 @@ function CreateObject(props) {
 
   const manageObjeto = () => {
     if (id === "novo") {
+      const { campos } = objeto;
+      const temp = campos.find(key => key.name === "nomeVisitante");
+      temp.value = objeto.visitante;
       objeto.criarObjeto(objeto);
     } else {
       objeto.alterarObjeto(objeto);
     }
   }
 
-  const buscarNomes = async (e) => {
-    if (
-      e.target.name === "visitante" && 
-      e.target.value.length > 0 && 
-      objeto.nomeVisitante !== undefined
-    ) {
-      clearTimeout(timerRef.current);
-      timerRef.current = setTimeout(async () => {
-        const nomesConsultados = await objeto.consultarNomes(e.target.value);
-        setObjeto({ ...objeto, nomesConsultados });
-      }, 1000)
-    }
+  const buscarNomes = async (nome) => {
+    clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(async () => {
+      const nomesConsultados = await objeto.consultarNomes(nome);
+      setObjeto(prevState => ({ ...prevState, nomesConsultados }));
+    }, 1000)
   }
 
-  const changeHandler = e => { 
+  const changeHandler = async (e) => { 
     const { campos } = objeto;
     const temp = campos.find(key => key.name === e.target.name);
     temp.value = e.target.value;
     setObjeto({ ...objeto, campos });
-    buscarNomes(e);
+
+    if (e.target.name === "nomeVisitante") {  
+      const valor = e.target.value.length > 0 ? e.target.value : null;
+      await buscarNomes(valor);
+    } 
   };
 
   const cancel = () => {
     window.location.href = objeto.enderecoVoltar;
   };
 
+  const changeVisitanteHandler = (id, nome) => {
+    const { campos } = objeto;
+    const novoNome = campos.find(key => key.name === "nomeVisitante");
+    novoNome.value = nome;
+
+    setObjeto({ 
+      ...objeto,
+      visitante: id,
+      nomesConsultados: [],
+      campos
+    });
+  }
+
+  const exibirNomes = (nomes) => {
+    let retorno = [];
+      if (nomes.length < 1) {
+        return;
+      }
+      nomes.map(item => retorno.push(
+        <li 
+          className="input__li"
+          key={item.id} 
+          onClick={() => { changeVisitanteHandler(item.id, item.nome) }}>
+            {item.nome}
+        </li>
+      ))
+      return retorno;
+  }
+
   return (
-    <div className="largura">{console.log(objeto)}
+    <div className="largura">
       <div className="titulo">{objeto.titulo}</div>
         <div>
           <form className="formulario">
@@ -94,10 +125,10 @@ function CreateObject(props) {
                         value={campo.value}
                         onChange={changeHandler}
                       />
-                      { 
-                        (campo.name === "visitante" && objeto.nomeVisitante !== undefined && objeto.nomesConsultados?.length > 0)
-                          &&
-                        objeto.exibirNomes(objeto.nomesConsultados)
+                      {
+                        (type === "visita" && campo.name === "nomeVisitante") 
+                          && 
+                        exibirNomes(objeto.nomesConsultados)
                       }
                     </React.Fragment>
                   );

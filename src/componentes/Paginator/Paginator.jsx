@@ -1,55 +1,53 @@
-import React, { PureComponent } from "react";
+import React from "react";
 import "./Paginator.css"
-const clicavel = "paginator__botao botao__clicavel";
-const naoClicavel = "paginator__botao ";
 
-class Paginator extends PureComponent {
-    renderBotoes = (texto, pagina, limiteOuValor, isNumber) => {
-      const selecionado = isNumber ? "botao__selecionado" : "";
+const Paginator = (props) => {
+  const clicavel = "paginator__botao botao__clicavel";
+  const naoClicavel = "paginator__botao ";
+  const atual = props.pagina;
+  const total = props.total;    
+  let paginas = [];
 
-      return (
-        <div 
-          key={texto}
-          className={(this.props.pagina !== limiteOuValor) ? clicavel : naoClicavel + selecionado} 
-          onClick={() => {
-            (this.props.pagina !== limiteOuValor) && this.props.onUpdate(pagina, this.props.limite)
-          }}
-        >
-          {texto}
-        </div>
-      );
+  for (let i=atual-2; i<=atual+2; i++) {
+    if (i > 0 && i<=total) {
+      paginas.push(i);
     }
+  }
 
-  render() {
-    const atual = this.props.pagina;
-    const total = this.props.total;    
-    let paginas = [];
-
-    for (let i=atual-2; i<=atual+2; i++) {
-      if (i > 0 && i<=total) {
-        paginas.push(i);
-      }
-    }
-
+  const renderBotoes = (texto, pagina, limiteOuValor) => {
+    const selecionado = (texto === pagina === limiteOuValor) ? "botao__selecionado" : "";
     return (
-      <div className="paginator__container">
-          {/* Botões iniciais */}
-          {this.renderBotoes("Início", 1, 1)}
-          {this.renderBotoes("<", atual-1, 1)}
-
-          {/* Botões numéricos */}
-          {paginas.map(valor => {
-            return (
-              this.renderBotoes(valor, valor, valor, true)
-            )}
-          )}
-
-          {/* Botões finais */}
-          {this.renderBotoes(">", atual+1, total)}
-          {this.renderBotoes("Fim", total, total)}
+      <div 
+        key={texto}
+        className={(props.pagina !== limiteOuValor) ? clicavel : naoClicavel + selecionado} 
+        onClick={() => {
+          (props.pagina !== limiteOuValor) && props.onUpdate(pagina)
+        }}
+      >
+        {texto}
       </div>
     );
   }
+
+  return (
+    <div className="paginator__container">
+      {[
+        /* Botões iniciais */
+        renderBotoes("Início", 1, 1),
+        renderBotoes("<", atual-1, 1),
+        
+        /* Botões numéricos */
+        paginas.map(valor => {
+          return (
+            renderBotoes(valor, valor, valor)
+          )}),
+
+        /* Botões finais */
+        renderBotoes(">", atual+1, total),
+        renderBotoes("Fim", total, total)
+      ]}
+    </div>
+  );
 }
 
 export default Paginator;

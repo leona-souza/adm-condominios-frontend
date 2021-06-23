@@ -6,15 +6,16 @@
 
 .input__ul {
   background-color: white;
-  /* width: 100%; */
+  width: 100%;
+  max-width: 500px;
   border: solid 1px black;
-  /* position: absolute; */
+  position: absolute;
   margin-block-start: 0;
   padding-inline-start: 10px;
 }
 
 .input__li {
-  /* position: relative; */
+  position: relative;
   list-style-type: none;
   cursor: pointer;
 }

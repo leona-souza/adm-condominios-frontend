@@ -98,7 +98,7 @@ function CreateObject(props) {
             {item.nome}
         </li>
       ))
-      return retorno;
+      return <ul className="input__ul">{retorno}</ul>;
   }
 
   return (

@@ -97,8 +97,13 @@ function CreateObject(props) {
           onClick={() => { changeVisitanteHandler(item.id, item.nome) }}>
             {item.nome}
         </li>
-      ))
-      return <div className="input__sugestoes"><ul className="input__ul">{retorno}</ul></div>;
+      ));
+
+      return (
+        <div className="input__sugestoes">
+          <ul className="input__ul">{retorno}</ul>
+        </div>
+      );
   }
 
   return (

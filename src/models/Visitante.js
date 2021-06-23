@@ -46,10 +46,27 @@ export const visitanteModelListagem = {
   },
 
   coletarDados: async function(paginaAtual) {
-    let retorno = {};
-    let paginas = {};
     let mapaAptos = new Map();
     let listaDeVisitantes = [];
+    let paginas = {
+      pagina: 1
+    };
+    let retorno = {
+      ...funcoesComuns,
+      titulo: "Lista de Visitantes",
+        adicionar: "Adicionar visitante",
+        colunasDeListagem: [
+          "Nome",
+          "Apartamento"
+        ],
+        mensagemDeletar: function(objeto) {
+          return `Deseja realmente excluir o visitante ${objeto.nome}?`
+        },
+        equivalencias: new Map([
+          ["nome", "Nome"],
+          ["apartamentoVisitante", "Apartamento"]
+        ])
+    };
     
     await ObjectService.getObjectsPaginados(paginaAtual, this.apiUrl)
     .then(res => {
@@ -68,25 +85,9 @@ export const visitanteModelListagem = {
     })
     .then(() => {
       retorno = {
-        ...funcoesComuns,
+        ...retorno,
         paginas,
-        
-        titulo: "Lista de Visitantes",
-        adicionar: "Adicionar visitante",
-        colunasDeListagem: [
-          "Nome",
-          "Apartamento"
-        ],
-
-        mensagemDeletar: function(objeto) {
-          return `Deseja realmente excluir o visitante ${objeto.nome}?`
-        },
-
         valores: listaDeVisitantes,
-        equivalencias: new Map([
-          ["nome", "Nome"],
-          ["apartamentoVisitante", "Apartamento"]
-        ])
       }
     })
     .catch(e => console.log(e));

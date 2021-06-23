@@ -29,37 +29,38 @@ export const apartamentoModelListagem = {
   apiUrl: ObjectService.API_URL+'/apartamentos',
 
   coletarDados: async function(paginaAtual) {
-    let retorno = {};
-    let paginas = {};
+    let paginas = {
+      pagina: 1
+    };
+    let retorno = {
+      ...funcoesComuns,
+      titulo: "Lista de Apartamentos",
+        adicionar: "Adicionar apartamento",
+        colunasDeListagem: [
+          "Apartamento",
+          "Torre",
+          "Vaga"
+        ],
+        mensagemDeletar: function(objeto) {
+          return `Deseja realmente excluir o apartamento ${objeto.numero}-${objeto.torre}?`
+        },
+        equivalencias: new Map([
+          ["numero", "Número"],
+          ["torre", "Torre"],
+          ["vaga", "Vaga"]
+        ])
+    };
     
     await ObjectService.getObjectsPaginados(paginaAtual, this.apiUrl)
       .then(res => {
-        ObjectService.hasZeroResults(res.data.resultados.length);
-        paginas = Functions.configurarPaginacao(paginaAtual, res.data.paginas.total);
-        res.data.resultados.forEach(obj => delete obj.obs);
-        
+        if (res.data.resultados.length > 0) {
+          paginas = Functions.configurarPaginacao(paginaAtual, res.data.paginas.total);
+          res.data.resultados.forEach(obj => delete obj.obs);
+        }
         retorno = {
-          ...funcoesComuns,
+          ...retorno,
           paginas,
-
-          mensagemDeletar: function(objeto) {
-            return `Deseja realmente excluir o apartamento ${objeto.numero}-${objeto.torre}?`
-          },
-
-          titulo: "Lista de Apartamentos",
-          adicionar: "Adicionar apartamento",
-          colunasDeListagem: [
-            "Apartamento",
-            "Torre",
-            "Vaga"
-          ],
-
           valores: res.data.resultados,
-          equivalencias: new Map([
-            ["numero", "Número"],
-            ["torre", "Torre"],
-            ["vaga", "Vaga"]
-          ])
         };
       })
       .catch(e => console.log(e));

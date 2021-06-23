@@ -63,18 +63,39 @@ export const visitaModelListagem = {
   },
 
   coletarDados: async function(paginaAtual) {
-    let retorno = [];
-    let paginas = {};
     let mapaAptos = new Map();
     let mapaNomes = new Map();
     let listaDeVisitas = [];
 
+    let paginas = {
+      pagina: 1
+    };
+    let retorno = {
+      ...funcoesComuns,
+      titulo: "Lista de Visitas",
+        adicionar: "Adicionar visita",
+        colunasDeListagem: [
+          "Data",
+          "Visitante",
+          "Apartamento"
+        ],
+        mensagemDeletar: function(objeto) {
+          return `Deseja realmente excluir a visita ${objeto.data}?`
+        },
+        equivalencias: new Map([
+          ["data", "Data"],
+          ["nome", "Nome"],
+          ["apartamentoVisitante", "Apartamento"]
+        ])
+    };
+
     await VisitaService.getVisitasPaginadas(paginaAtual)
     .then(res => {
-      ObjectService.hasZeroResults(res.data.resultados.length);
-      paginas = Functions.configurarPaginacao(paginaAtual, res.data.paginas.total);
-      res.data.resultados.forEach(obj => delete obj.obs);
-      listaDeVisitas = res.data.resultados;
+      if (res.data.resultados.length > 0) {
+        paginas = Functions.configurarPaginacao(paginaAtual, res.data.paginas.total);
+        res.data.resultados.forEach(obj => delete obj.obs);
+        listaDeVisitas = res.data.resultados;
+      }
     })
     .then(async () => {
       await this.mapearApartamentos(mapaAptos, listaDeVisitas);
@@ -87,27 +108,9 @@ export const visitaModelListagem = {
     })
     .then(() => {
       retorno = {
-        ...funcoesComuns,
+        ...retorno,
         paginas,
-
-        titulo: "Lista de Visitas",
-        adicionar: "Adicionar visita",
-        colunasDeListagem: [
-          "Data",
-          "Visitante",
-          "Apartamento"
-        ],
-
-        mensagemDeletar: function(objeto) {
-          return `Deseja realmente excluir a visita ${objeto.data}?`
-        },
-
-        valores: listaDeVisitas,
-        equivalencias: new Map([
-          ["data", "Data"],
-          ["nome", "Nome"],
-          ["apartamentoVisitante", "Apartamento"]
-        ])
+        valores: listaDeVisitas
       }
     })
     .catch(e => console.log(e));  

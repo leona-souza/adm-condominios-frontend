@@ -49,10 +49,33 @@ export const veiculoModelListagem = {
   },
 
   coletarDados: async function(paginaAtual) {
-    let retorno = [];
-    let paginas = {};
     let mapaAptos = new Map();
     let listaDeVeiculos = [];
+    let paginas = {
+      pagina: 1
+    };
+    let retorno = {
+      ...funcoesComuns,
+      titulo: "Lista de Veículos",
+        adicionar: "Adicionar veículo",
+        colunasDeListagem: [
+          "Modelo",
+          "Marca",
+          "Placa",
+          "Cor",
+          "Apartamento"
+        ],
+        mensagemDeletar: function(objeto) {
+          return `Deseja realmente excluir o veículo ${objeto.placa}?`
+        },
+        equivalencias: new Map([
+          ["modelo", "Modelo"],
+          ["marca", "Marca"],
+          ["placa", "Placa"],
+          ["cor", "Cor"],
+          ["apartamentoVeiculo", "Apartamento"]
+        ])
+    };
 
     await ObjectService.getObjectsPaginados(paginaAtual, this.apiUrl)
     .then(res => {
@@ -69,31 +92,9 @@ export const veiculoModelListagem = {
     })
     .then(() => {
       retorno = { 
-        ...funcoesComuns,
+        ...retorno,
         paginas,
-
-        titulo: "Lista de Veículos",
-        adicionar: "Adicionar veículo",
-        colunasDeListagem: [
-          "Modelo",
-          "Marca",
-          "Cor",
-          "Placa",
-          "Apartamento"
-        ],
-        
-        mensagemDeletar: function(objeto) {
-          return `Deseja realmente excluir o veículo ${objeto.placa}?`
-        },
-
-        valores: listaDeVeiculos,
-        equivalencias: new Map([
-          ["modelo", "Modelo"],
-          ["marca", "Marca"],
-          ["placa", "Placa"],
-          ["cor", "Cor"],
-          ["apartamentoVeiculo", "Apartamento"]
-        ])
+        valores: listaDeVeiculos
       };
     })
     .catch(e => console.log(e));

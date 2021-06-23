@@ -69,8 +69,6 @@ function ListObjects(props) {
         objeto.mensagemDeletar(objetoParaExcluir[0])
       )
     ) {
-      console.table(novaLista);
-      console.table(objetoParaExcluir)
       objeto.delete(id)
         .then(() => setObjeto({ ...objeto, valores: novaLista }))
         .catch(e => console.log(e));
@@ -78,7 +76,7 @@ function ListObjects(props) {
   };
 
     return (
-      <div className="largura">
+      <div className="largura">{console.log(objeto)}
         <div className="titulo">{objeto.titulo}</div>
         <div className="botao__cursor botao__novo" onClick={() => objeto.add()}><AddCircleOutlineIcon /> {objeto.adicionar}</div>
         <table className="tabela">
@@ -106,8 +104,8 @@ function ListObjects(props) {
           </tbody>
         </table>
           <Paginator 
-            pagina={objeto.paginas.pagina} 
-            total={objeto.paginas.total}
+            pagina={objeto.paginas?.pagina} 
+            total={objeto.paginas?.total}
             onUpdate={coletarDados}
           />
       </div>

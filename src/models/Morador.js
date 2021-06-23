@@ -46,20 +46,38 @@ export const moradorModelListagem = {
   },
 
   coletarDados: async function(paginaAtual) {
-    let retorno = [];
-    let paginas = {};
     let mapaAptos = new Map();
     let listaDeMoradores = [];
+    let paginas = {
+      pagina: 1
+    };
+    let retorno = {
+      ...funcoesComuns,
+      titulo: "Lista de Moradores",
+        adicionar: "Adicionar morador",
+        colunasDeListagem: [
+          "Nome",
+          "Apartamento"
+        ],
+        mensagemDeletar: function(objeto) {
+          return `Deseja realmente excluir o morador ${objeto.nome}?`
+        },
+        equivalencias: new Map([
+          ["nome", "Nome"],
+          ["documento", "Documento"],
+          ["apartamentoMorador", "Apartamento"]
+        ])
+    };
     
     await ObjectService.getObjectsPaginados(paginaAtual, this.apiUrl)
     .then(res => {
-      ObjectService.hasZeroResults(res.data.resultados.length);
-      paginas = Functions.configurarPaginacao(paginaAtual, res.data.paginas.total);
-      res.data.resultados.forEach(obj => {
-        const { id, nome, apartamentoMorador } = obj;
-        listaDeMoradores.push({ id, nome, apartamentoMorador });
-      })
-
+      if (res.data.resultados.length > 0) {
+        paginas = Functions.configurarPaginacao(paginaAtual, res.data.paginas.total);
+        res.data.resultados.forEach(obj => {
+          const { id, nome, apartamentoMorador } = obj;
+          listaDeMoradores.push({ id, nome, apartamentoMorador });
+        })
+      }
     })
     .then(async () => { 
        await this.mapearMoradores(mapaAptos, listaDeMoradores);
@@ -69,26 +87,9 @@ export const moradorModelListagem = {
     })
     .then(() => {
       retorno = {
-        ...funcoesComuns,
+        ...retorno,
         paginas,
-
-        titulo: "Lista de Moradores",
-        adicionar: "Adicionar morador",
-        colunasDeListagem: [
-          "Nome",
-          "Apartamento"
-        ],
-
-        mensagemDeletar: function(objeto) {
-          return `Deseja realmente excluir o morador ${objeto.nome}?`
-        },
-
-        valores: listaDeMoradores,
-        equivalencias: new Map([
-          ["nome", "Nome"],
-          ["documento", "Documento"],
-          ["apartamentoMorador", "Apartamento"]
-        ])
+        valores: listaDeMoradores
       };
     })
     .catch(e => console.log(e));

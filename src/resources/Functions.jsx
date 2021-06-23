@@ -22,33 +22,14 @@ class Functions {
     return ano +"-"+ mes +"-"+ dia +"T"+ hora +":"+ minutos;
   }
 
-  configurarPaginacao = (paginaAtual, limite, totalResultados) => {
-    const total = Math.ceil(totalResultados / limite);
+  configurarPaginacao = (paginaAtual, totalResultados) => {
+    const total = Math.ceil(totalResultados / LIMITE);
       return {
         pagina: paginaAtual,
         limite: LIMITE,
         total
       }
   }
-
-       /*mapearObjetos = async (mapa, array) => {
-        array.forEach(dado => {
-          mapa.set(dado.apartamentoVeiculo, "");
-        });
-        const arrayVeiculos = Array.from(mapa.keys());
-        await ApartamentoService.getApartamentosByList(arrayVeiculos)
-          .then(res => {
-            res.data.forEach(dado => {
-              mapa.set(dado.id, dado.numero +"-"+ dado.torre);
-            });    
-        });
-      }
-    
-      converterDados = (lista, mapa) => {
-        lista.forEach(
-          veiculo => veiculo.apartamentoVeiculo = mapa.get(veiculo.apartamentoVeiculo)
-        );
-      } */
 
 }
 

@@ -1,9 +1,6 @@
 import ObjectService from "../services/ObjectService";
 import Functions from "../resources/Functions";
-import { LIMITE } from "../resources/Config";
 import ApartamentoService from "../services/ApartamentoService";
-import { FeaturedPlayListOutlined } from "@material-ui/icons";
-import { getDefaultNormalizer } from "@testing-library/react";
 
 /***********************************************************************/
 /*************************** FUNÇÕES COMUNS ****************************/
@@ -33,10 +30,12 @@ export const apartamentoModelListagem = {
 
   coletarDados: async function(paginaAtual) {
     let retorno = {};
-    await ObjectService.getObjectsPaginados(paginaAtual, LIMITE, this.apiUrl)
+    let paginas = {};
+    
+    await ObjectService.getObjectsPaginados(paginaAtual, this.apiUrl)
       .then(res => {
         ObjectService.hasZeroResults(res.data.resultados.length);
-        const paginas = Functions.configurarPaginacao(paginaAtual, LIMITE, res.data.paginas.total);
+        paginas = Functions.configurarPaginacao(paginaAtual, res.data.paginas.total);
         res.data.resultados.forEach(obj => delete obj.obs);
         
         retorno = {

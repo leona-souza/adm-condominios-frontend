@@ -14,14 +14,14 @@ const Paginator = (props) => {
     }
   }
 
-  const renderBotoes = (texto, pagina, limiteOuValor, isNumber) => {
-    const selecionado = isNumber ? "botao__selecionado" : "";
+  const renderBotoes = (texto, pagina, limiteOuValor) => {
+    const selecionado = (texto === pagina === limiteOuValor) ? "botao__selecionado" : "";
     return (
       <div 
         key={texto}
         className={(props.pagina !== limiteOuValor) ? clicavel : naoClicavel + selecionado} 
         onClick={() => {
-          (props.pagina !== limiteOuValor) && props.onUpdate(pagina, props.limite)
+          (props.pagina !== limiteOuValor) && props.onUpdate(pagina)
         }}
       >
         {texto}
@@ -31,20 +31,21 @@ const Paginator = (props) => {
 
   return (
     <div className="paginator__container">
-        {/* Botões iniciais */}
-        {renderBotoes("Início", 1, 1)}
-        {renderBotoes("<", atual-1, 1)}
-
-        {/* Botões numéricos */}
-        {paginas.map(valor => {
+      {[
+        /* Botões iniciais */
+        renderBotoes("Início", 1, 1),
+        renderBotoes("<", atual-1, 1),
+        
+        /* Botões numéricos */
+        paginas.map(valor => {
           return (
-            renderBotoes(valor, valor, valor, true)
-          )}
-        )}
+            renderBotoes(valor, valor, valor)
+          )}),
 
-        {/* Botões finais */}
-        {renderBotoes(">", atual+1, total)}
-        {renderBotoes("Fim", total, total)}
+        /* Botões finais */
+        renderBotoes(">", atual+1, total),
+        renderBotoes("Fim", total, total)
+      ]}
     </div>
   );
 }

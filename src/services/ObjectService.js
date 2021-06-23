@@ -1,4 +1,5 @@
 import axios from "axios";
+import { LIMITE } from "../resources/Config";
 require("dotenv").config();
 
 const ObjectService = {
@@ -6,8 +7,8 @@ const ObjectService = {
   getObjects: function() {
     return axios.get(this.API_URL);
   },
-  getObjectsPaginados: function(pagina, limite, tipo) {
-    return axios.get(tipo + `?pagina=${pagina}&limite=${limite}`);
+  getObjectsPaginados: function(pagina, tipo) {
+    return axios.get(tipo + `?pagina=${pagina}&limite=${LIMITE}`);
   },
   createObject: function(objeto) {
     return axios.post(this.API_URL, objeto);

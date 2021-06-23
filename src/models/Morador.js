@@ -2,7 +2,6 @@ import ObjectService from "../services/ObjectService";
 import ApartamentoService from "../services/ApartamentoService";
 import MoradorService from "../services/MoradorService";
 import Functions from "../resources/Functions";
-import { LIMITE } from "../resources/Config";
 
 /***********************************************************************/
 /*************************** FUNÇÕES COMUNS ****************************/
@@ -48,13 +47,14 @@ export const moradorModelListagem = {
 
   coletarDados: async function(paginaAtual) {
     let retorno = [];
+    let paginas = {};
     let mapaAptos = new Map();
     let listaDeMoradores = [];
     
-    await ObjectService.getObjectsPaginados(paginaAtual, LIMITE, this.apiUrl)
+    await ObjectService.getObjectsPaginados(paginaAtual, this.apiUrl)
     .then(res => {
       ObjectService.hasZeroResults(res.data.resultados.length);
-      //Functions.configurarPaginacao(paginaAtual, LIMITE, res.data.paginas.total, thisPai);
+      paginas = Functions.configurarPaginacao(paginaAtual, res.data.paginas.total);
       res.data.resultados.forEach(obj => {
         const { id, nome, apartamentoMorador } = obj;
         listaDeMoradores.push({ id, nome, apartamentoMorador });
@@ -70,6 +70,8 @@ export const moradorModelListagem = {
     .then(() => {
       retorno = {
         ...funcoesComuns,
+        paginas,
+
         titulo: "Lista de Moradores",
         adicionar: "Adicionar morador",
         colunasDeListagem: [

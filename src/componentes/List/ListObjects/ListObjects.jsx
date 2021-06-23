@@ -4,7 +4,6 @@ import DescriptionIcon from '@material-ui/icons/Description';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Paginator from "../../Paginator/Paginator";
-import { LIMITE } from "../../../resources/Config";
 import { apartamentoModelListagem } from "../../../models/Apartamento";
 import { moradorModelListagem } from "../../../models/Morador";
 import { veiculoModelListagem } from "../../../models/Veiculo";
@@ -42,10 +41,14 @@ function ListObjects(props) {
   }    
 
   useEffect(() => {
-    modeloDeObjeto.coletarDados(objeto.paginas.pagina)
+    coletarDados(objeto.paginas.pagina);
+  }, []);
+
+  const coletarDados = (pagina) => {
+    modeloDeObjeto.coletarDados(pagina)
       .then(res => setObjeto(res))
       .catch(e => console.log('erro', e));
-  }, []);
+  }
 
   const percorrerCampos = (obj) => {
     let temp = [];
@@ -59,16 +62,18 @@ function ListObjects(props) {
 
   const deleteObject = (id) => {
     const objetoParaExcluir = objeto.valores.filter(obj => obj.id === id);
-    const novaLista = objeto.valores.filter(obj => obj.id !== id)
+    const novaLista = objeto.valores.filter(obj => obj.id !== id);
 
     if (
       window.confirm(
         objeto.mensagemDeletar(objetoParaExcluir[0])
       )
     ) {
+      console.table(novaLista);
+      console.table(objetoParaExcluir)
       objeto.delete(id)
         .then(() => setObjeto({ ...objeto, valores: novaLista }))
-        .catch(e => console.log(e))
+        .catch(e => console.log(e));
     }
   };
 
@@ -100,14 +105,11 @@ function ListObjects(props) {
             ))}
           </tbody>
         </table>
-
           <Paginator 
             pagina={objeto.paginas.pagina} 
             total={objeto.paginas.total}
-            limite={objeto.paginas.limite}
-            onUpdate={objeto.coletarDados}
+            onUpdate={coletarDados}
           />
-
       </div>
     );
   }

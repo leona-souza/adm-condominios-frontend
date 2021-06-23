@@ -3,7 +3,6 @@ import ApartamentoService from "../services/ApartamentoService";
 import VisitanteService from "../services/VisitanteService";
 import VisitaService from "../services/VisitaService";
 import Functions from "../resources/Functions";
-import { LIMITE } from "../resources/Config";
 
 /***********************************************************************/
 /*************************** FUNÇÕES COMUNS ****************************/
@@ -65,14 +64,15 @@ export const visitaModelListagem = {
 
   coletarDados: async function(paginaAtual) {
     let retorno = [];
+    let paginas = {};
     let mapaAptos = new Map();
     let mapaNomes = new Map();
     let listaDeVisitas = [];
 
-    await VisitaService.getVisitasPaginadas(paginaAtual, LIMITE)
+    await VisitaService.getVisitasPaginadas(paginaAtual)
     .then(res => {
       ObjectService.hasZeroResults(res.data.resultados.length);
-      //Functions.configurarPaginacao(paginaAtual, LIMITE, res.data.paginas.total, thisPai);
+      paginas = Functions.configurarPaginacao(paginaAtual, res.data.paginas.total);
       res.data.resultados.forEach(obj => delete obj.obs);
       listaDeVisitas = res.data.resultados;
     })
@@ -88,6 +88,8 @@ export const visitaModelListagem = {
     .then(() => {
       retorno = {
         ...funcoesComuns,
+        paginas,
+
         titulo: "Lista de Visitas",
         adicionar: "Adicionar visita",
         colunasDeListagem: [

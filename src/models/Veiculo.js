@@ -1,7 +1,6 @@
 import ObjectService from "../services/ObjectService";
 import ApartamentoService from "../services/ApartamentoService";
 import Functions from "../resources/Functions";
-import { LIMITE } from "../resources/Config";
 import VeiculoService from "../services/VeiculoService";
 
 /***********************************************************************/
@@ -16,7 +15,7 @@ const funcoesComuns = {
   },
   put: function(id) {
     window.location.href = `/gerenciar-veiculo/${id}`;
-  },//teste
+  },
   delete: async function(id) {
     await VeiculoService.deleteVeiculo(id)
       .then(res => console.log(res.status))
@@ -51,13 +50,14 @@ export const veiculoModelListagem = {
 
   coletarDados: async function(paginaAtual) {
     let retorno = [];
+    let paginas = {};
     let mapaAptos = new Map();
     let listaDeVeiculos = [];
 
-    await ObjectService.getObjectsPaginados(paginaAtual, LIMITE, this.apiUrl)
+    await ObjectService.getObjectsPaginados(paginaAtual, this.apiUrl)
     .then(res => {
       ObjectService.hasZeroResults(res.data.resultados.length);
-      //Functions.configurarPaginacao(paginaAtual, LIMITE, res.data.paginas.total, thisPai);
+      paginas = Functions.configurarPaginacao(paginaAtual, res.data.paginas.total);
       res.data.resultados.forEach(obj => delete obj.obs);
       listaDeVeiculos = res.data.resultados;
     })
@@ -70,6 +70,8 @@ export const veiculoModelListagem = {
     .then(() => {
       retorno = { 
         ...funcoesComuns,
+        paginas,
+
         titulo: "Lista de Veículos",
         adicionar: "Adicionar veículo",
         colunasDeListagem: [

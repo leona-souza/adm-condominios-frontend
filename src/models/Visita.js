@@ -45,12 +45,14 @@ export const visitaModelListagem = {
   mapearVisitantes: async function(mapa, array) {
     array.forEach(dado => mapa.set(dado.visitante, ""));
     const arrayVisitantes = Array.from(mapa.keys());
-    await VisitanteService.getVisitantesByList(arrayVisitantes)
-      .then(res => {
-        res.data.forEach(dado => {
-          mapa.set(dado.id, dado.nome);
-        });    
-    });
+    if (arrayVisitantes[0]) {
+      await VisitanteService.getVisitantesByList(arrayVisitantes)
+        .then(res => {
+          res.data.forEach(dado => {
+            mapa.set(dado.id, dado.nome);
+          });    
+      });
+    }
   },
   converterDados: function(array, mapaAptos, mapaNomes) {
     for (const key in array) {

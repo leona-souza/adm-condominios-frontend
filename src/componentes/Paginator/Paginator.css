@@ -11,7 +11,7 @@
 .paginator__botao {
     border: 1px solid grey;
     padding: 5px;
-    min-width: 20px;
+    min-width: 35px;
     text-align: center;
     display: block;
     background-color: var(--paginatorDisabled);

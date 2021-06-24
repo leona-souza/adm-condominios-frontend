@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
-import DescriptionIcon from '@material-ui/icons/Description';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Paginator from "../../Paginator/Paginator";

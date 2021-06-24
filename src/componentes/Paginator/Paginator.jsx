@@ -33,7 +33,7 @@ const Paginator = (props) => {
     <div className="paginator__container">
       {[
         /* Botões iniciais */
-        renderBotoes("Início", 1, 1),
+        renderBotoes("<<", 1, 1),
         renderBotoes("<", atual-1, 1),
         
         /* Botões numéricos */
@@ -44,7 +44,7 @@ const Paginator = (props) => {
 
         /* Botões finais */
         renderBotoes(">", atual+1, total),
-        renderBotoes("Fim", total, total)
+        renderBotoes(">>", total, total)
       ]}
     </div>
   );

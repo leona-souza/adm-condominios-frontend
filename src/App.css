@@ -82,10 +82,10 @@ a {
 
 .botao__novo {
   margin-bottom: 20px;
+  display: flex;
 }
 
 .botao__cursor {
-  display: flex;
   cursor: pointer;
 }
 

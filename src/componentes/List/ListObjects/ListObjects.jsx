@@ -90,7 +90,7 @@ function ListObjects(props) {
           </thead>
           <tbody>
             {objeto.valores?.map(obj => (
-              <tr key={obj.id} onClick={() => objeto.view(obj.id)}>
+              <tr className="botao__cursor" key={obj.id} onClick={() => objeto.view(obj.id)}>
                 {percorrerCampos(obj)}
                 <td className="acoes__borda">
                   <span className="tabela__acoes">

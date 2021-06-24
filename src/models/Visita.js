@@ -84,8 +84,8 @@ export const visitaModelListagem = {
       },
       equivalencias: new Map([
         ["data", "Data"],
-        ["nome", "Nome"],
-        ["apartamentoVisitante", "Apartamento"]
+        ["visitante", "Visitante"],
+        ["apartamento", "Apartamento"]
       ])
     };
 

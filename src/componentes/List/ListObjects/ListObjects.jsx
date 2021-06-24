@@ -55,7 +55,7 @@ function ListObjects(props) {
     let temp = [];
     for (const [key, valor] of Object.entries(obj)) {
       if (key !== "id") {
-        temp.push(<td key={valor} data-title={objeto.equivalencia?.get(key)}>{valor}</td>);
+        temp.push(<td key={valor} data-title={objeto.equivalencias?.get(key)}>{valor}</td>);
       }
     }
     return temp;    
@@ -91,11 +91,11 @@ function ListObjects(props) {
           </thead>
           <tbody>
             {objeto.valores?.map(obj => (
-              <tr key={obj.id}>
+              <tr key={obj.id} onClick={() => objeto.view(obj.id)}>
                 {percorrerCampos(obj)}
-                <td>
+                <td className="acoes__borda">
                   <span className="tabela__acoes">
-                    <DescriptionIcon className="tabela__icone" onClick={() => objeto.view(obj.id)} />
+                    {/* <DescriptionIcon className="tabela__icone" onClick={() => objeto.view(obj.id)}/> */}
                     <EditIcon className="tabela__icone" onClick={() => objeto.put(obj.id)} />
                     <DeleteIcon className="tabela__icone red" onClick={() => deleteObject(obj.id)} />
                   </span>

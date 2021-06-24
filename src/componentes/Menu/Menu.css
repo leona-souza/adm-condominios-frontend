@@ -20,3 +20,9 @@ a:hover {
 .menu__icone {
     margin-right: 5px;
 }
+
+.hamburguer__botao {
+    background: none;
+    border: none;
+    color: inherit;
+}

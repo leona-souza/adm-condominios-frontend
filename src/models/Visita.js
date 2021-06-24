@@ -73,23 +73,23 @@ export const visitaModelListagem = {
     let retorno = {
       ...funcoesComuns,
       titulo: "Lista de Visitas",
-        adicionar: "Adicionar visita",
-        colunasDeListagem: [
-          "Data",
-          "Visitante",
-          "Apartamento"
-        ],
-        mensagemDeletar: function(objeto) {
-          return `Deseja realmente excluir a visita ${objeto.data}?`
-        },
-        equivalencias: new Map([
-          ["data", "Data"],
-          ["nome", "Nome"],
-          ["apartamentoVisitante", "Apartamento"]
-        ])
+      adicionar: "Adicionar visita",
+      colunasDeListagem: [
+        "Data",
+        "Visitante",
+        "Apartamento"
+      ],
+      mensagemDeletar: function(objeto) {
+        return `Deseja realmente excluir a visita ${objeto.data}?`
+      },
+      equivalencias: new Map([
+        ["data", "Data"],
+        ["nome", "Nome"],
+        ["apartamentoVisitante", "Apartamento"]
+      ])
     };
 
-    await VisitaService.getVisitasPaginadas(paginaAtual)
+    await ObjectService.getObjectsPaginados(paginaAtual, this.apiUrl)
     .then(res => {
       if (res.data.resultados.length > 0) {
         paginas = Functions.configurarPaginacao(paginaAtual, res.data.paginas.total);
@@ -288,9 +288,3 @@ export const visitaModelForm = {
     return retorno;
   }
 }
-
-export default {
-  visitaModelListagem,
-  visitaModelDetalhes,
-  visitaModelForm
-};

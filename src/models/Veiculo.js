@@ -79,10 +79,11 @@ export const veiculoModelListagem = {
 
     await ObjectService.getObjectsPaginados(paginaAtual, this.apiUrl)
     .then(res => {
-      ObjectService.hasZeroResults(res.data.resultados.length);
-      paginas = Functions.configurarPaginacao(paginaAtual, res.data.paginas.total);
-      res.data.resultados.forEach(obj => delete obj.obs);
-      listaDeVeiculos = res.data.resultados;
+      if (res.data.resultados.length > 0) {
+        paginas = Functions.configurarPaginacao(paginaAtual, res.data.paginas.total);
+        res.data.resultados.forEach(obj => delete obj.obs);
+        listaDeVeiculos = res.data.resultados;
+      }
     })
     .then(async () => {
       await this.mapearVeiculos(mapaAptos, listaDeVeiculos);
@@ -278,8 +279,3 @@ export const veiculoModelForm = {
     return retorno;
   }
 }
-
-export default {
-  veiculoModelListagem,
-  veiculoModelDetalhes
-};

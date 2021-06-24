@@ -232,9 +232,3 @@ export const apartamentoModelForm = {
     return retorno;
   }
 }
-
-export default {
-  apartamentoModelListagem,
-  apartamentoModelDetalhes,
-  apartamentoModelForm
-}

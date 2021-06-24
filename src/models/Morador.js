@@ -258,9 +258,3 @@ export const moradorModelForm = {
     return retorno;
   }
 }
-
-export default {
-  moradorModelListagem,
-  moradorModelDetalhes,
-  moradorModelForm
-};

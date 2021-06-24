@@ -49,7 +49,7 @@ function ViewObjectsComponent(props) {
   useEffect(() => {
     modeloDeObjeto.coletarDados(props.match.params.id)
       .then(res => setObjeto(res))
-  }, []);
+  }, [modeloDeObjeto, props.match.params.id]);
 
   return (
     <div className="largura">

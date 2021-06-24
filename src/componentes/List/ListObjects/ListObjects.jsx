@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import DescriptionIcon from '@material-ui/icons/Description';
 import EditIcon from '@material-ui/icons/Edit';
@@ -40,15 +40,16 @@ function ListObjects(props) {
     default:
   }    
 
-  useEffect(() => {
-    coletarDados(objeto.paginas.pagina);
-  }, []);
-
-  const coletarDados = (pagina) => {
+  const coletarDados = useCallback((pagina) => {
     modeloDeObjeto.coletarDados(pagina)
       .then(res => setObjeto(res))
       .catch(e => console.log('erro', e));
-  }
+  }, [modeloDeObjeto]);
+
+  useEffect(() => {
+    coletarDados(objeto.paginas.pagina);
+  }, [coletarDados, objeto.paginas.pagina]);
+
 
   const percorrerCampos = (obj) => {
     let temp = [];
@@ -76,7 +77,7 @@ function ListObjects(props) {
   };
 
     return (
-      <div className="largura">{console.log(objeto)}
+      <div className="largura">
         <div className="titulo">{objeto.titulo}</div>
         <div className="botao__cursor botao__novo" onClick={() => objeto.add()}><AddCircleOutlineIcon /> {objeto.adicionar}</div>
         <table className="tabela">

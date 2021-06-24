@@ -38,7 +38,7 @@ function CreateObject(props) {
     modeloDeObjeto.coletarDados(id)
       .then(res => setObjeto(res))
       .catch(e => console.log(e));
-  }, []);
+  }, [modeloDeObjeto, id]);
 
   const manageObjeto = () => {
     if (id === "novo") {
@@ -171,6 +171,7 @@ function CreateObject(props) {
                     </React.Fragment>
                   )
                 default:
+                  return null;
               }
             })}
 

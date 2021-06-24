@@ -70,12 +70,13 @@ export const visitanteModelListagem = {
     
     await ObjectService.getObjectsPaginados(paginaAtual, this.apiUrl)
     .then(res => {
-      ObjectService.hasZeroResults(res.data.resultados.length);
-      paginas = Functions.configurarPaginacao(paginaAtual, res.data.paginas.total);
-      res.data.resultados.forEach(obj => {
-        const { id, nome, apartamentoVisitante } = obj;
-        listaDeVisitantes.push({ id, nome, apartamentoVisitante });
-      })
+      if (res.data.resultados.length > 0) {
+        paginas = Functions.configurarPaginacao(paginaAtual, res.data.paginas.total);
+        res.data.resultados.forEach(obj => {
+          const { id, nome, apartamentoVisitante } = obj;
+          listaDeVisitantes.push({ id, nome, apartamentoVisitante });
+        })
+      }
     })
     .then(async () => { 
        await this.mapearVisitantes(mapaAptos, listaDeVisitantes);
@@ -256,9 +257,3 @@ export const visitanteModelForm = {
     return retorno;
   }
 }
-
-export default {
-  visitanteModelListagem,
-  visitanteModelDetalhes,
-  visitanteModelForm
-};

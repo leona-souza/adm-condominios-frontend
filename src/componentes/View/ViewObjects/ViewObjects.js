@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { NavLink } from "react-router-dom";
 import { apartamentoModelDetalhes } from "../../../models/Apartamento";
 import { moradorModelDetalhes } from "../../../models/Morador";
 import { veiculoModelDetalhes } from "../../../models/Veiculo";
@@ -46,6 +47,8 @@ function ViewObjectsComponent(props) {
     window.location.href= objeto.listarTodos;
   }
 
+
+
   useEffect(() => {
     modeloDeObjeto.coletarDados(props.match.params.id)
       .then(res => setObjeto(res))
@@ -64,7 +67,21 @@ function ViewObjectsComponent(props) {
           {objeto.valores && objeto.valores.map(obj => (
             <div key={obj.nome} className="detalhes__linha">
               <div className="detalhes__titulo">{obj.nome}:</div>
-              <div className="detalhes__texto">{obj.valor}</div>
+              {
+                typeof obj.valor === "string" 
+                  ? 
+                <div className="detalhes__texto">{obj.valor}</div> 
+                  :
+                obj.valor.map(item => (
+                  <div className="detalhes__array">
+                    <NavLink 
+                      to={`/${obj.redirect}/${item.id}`}
+                      className="navLink">
+                        {item.string}
+                      </NavLink>
+                  </div>
+                ))
+              }
             </div>
           ))}
         </div>

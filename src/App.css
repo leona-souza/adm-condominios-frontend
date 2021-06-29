@@ -1,4 +1,6 @@
 :root {
+  --linkColor: #777;
+  --linkSelectedColor: #bbb;
   --borderInput: #ccc;
   --borderColor: #999;
   --bordaTitulo: #999;
@@ -21,6 +23,12 @@
 
 a {
   text-decoration: none;
+  color: var(--linkColor);
+}
+
+.navLink:hover {
+  text-decoration: none;
+  color: var(--linkSelectedColor) !important;
 }
 
 .principal {
@@ -183,6 +191,12 @@ a {
   margin: 5px;
 }
 
+.detalhes__array {
+  display: flex;
+  align-items: center;
+  padding-right: 5px;
+}
+
 .detalhes__botoes {
   display: flex;
   text-align: center;
@@ -291,16 +305,16 @@ MEDIA
   .tabela tbody tr td {
     position: relative;
     display: block;
-    text-align: right;
+    text-align: center;
     padding-right: 5px;
   }
-
+  
   .tabela tbody tr td:before {
     content: attr(data-title);
-    left: 0;
+    /* left: 10px; */
     position: absolute;
     display: block;
-    padding-left: 5px;
+    padding-left: 15px;
     font-style: italic;
     font-weight: 200;
   }

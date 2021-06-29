@@ -74,19 +74,22 @@ export const apartamentoModelListagem = {
 /***********************************************************************/
 export const apartamentoModelDetalhes = {
   listarMoradores: function(listaMoradores) {
-    return listaMoradores?.map(
-      (morador, index) => (index ? ", " : "") + morador.nome
-    )
+    return listaMoradores?.map((morador, index) => ({
+      id: morador.id,
+      string: morador.nome
+    }))
   },
   listarVeiculos: function(listaVeiculos) {
-    return listaVeiculos?.map(
-      (veiculo, index) => (index ? ", " : "") + veiculo.placa
-    )
+    return listaVeiculos?.map((veiculo, index) => ({
+      id: veiculo.id,
+      string: veiculo.placa
+    }))
   },
   listarVisitantes: function(listaVisitantes) {
-    return listaVisitantes?.map(
-      (visitante, index) => (index ? ", " : "") + visitante.nome
-    )
+    return listaVisitantes.map((visitante, index) => ({
+      id: visitante.id,
+      string: visitante.nome
+    }))
   },
 
   coletarDados: async function(id) {
@@ -117,10 +120,10 @@ export const apartamentoModelDetalhes = {
       listarTodos: "/apartamentos",
 
       valores: [
-        { nome: "Vaga", valor: apartamento.vaga },
-        { nome: "Moradores", valor: this.listarMoradores(moradores) },
-        { nome: "Veículos", valor: this.listarVeiculos(veiculos) },
-        { nome: "Visitantes", valor: this.listarVisitantes(visitantes) },
+        { nome: "Vaga", valor: apartamento.vaga,  },
+        { nome: "Moradores", valor: this.listarMoradores(moradores), redirect: "ver-morador" },
+        { nome: "Veículos", valor: this.listarVeiculos(veiculos), redirect: "ver-veiculo" },
+        { nome: "Visitantes", valor: this.listarVisitantes(visitantes), redirect: "ver-visitante" },
         { nome: "Obs", valor: apartamento.obs },
       ]
     };

@@ -186,9 +186,11 @@ a {
 }
 
 .detalhes__texto {
+  display: flex;
+  align-items: center;
   width: 70%;
   font-weight: 300;
-  margin: 5px;
+  padding: 0px;
 }
 
 .detalhes__array {
@@ -407,8 +409,18 @@ MEDIA
   }
 
   .detalhes__texto {
-    text-align: left;
+    font-size: 30px;
+    text-align: center;
+    justify-content: center;
     width: 100%;
+  }
+
+  .detalhes__array {
+    font-size: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-right: 5px;
   }
 
   .formulario {

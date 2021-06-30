@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useHistory, NavLink } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { apartamentoModelDetalhes } from "../../../models/Apartamento";
 import { moradorModelDetalhes } from "../../../models/Morador";
 import { veiculoModelDetalhes } from "../../../models/Veiculo";

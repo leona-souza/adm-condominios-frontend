@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { useHistory, NavLink } from "react-router-dom";
 import { apartamentoModelDetalhes } from "../../../models/Apartamento";
 import { moradorModelDetalhes } from "../../../models/Morador";
 import { veiculoModelDetalhes } from "../../../models/Veiculo";
 import { visitanteModelDetalhes } from "../../../models/Visitante";
 import { visitaModelDetalhes } from "../../../models/Visita";
+import ClickableData from "../../ClickableData/ClickableData";
 import ApartmentIcon from '@material-ui/icons/Apartment';
 import PersonIcon from '@material-ui/icons/Person';
 import DriveEtaIcon from '@material-ui/icons/DriveEta';
@@ -18,6 +19,7 @@ function ViewObjectsComponent(props) {
   let modeloDeObjeto;
   let icone = null;
   const [objeto, setObjeto] = useState({});
+  const history = useHistory();
 
   switch(props.type) {
     case "apartamento":
@@ -43,12 +45,6 @@ function ViewObjectsComponent(props) {
     default:
   }
 
-  const listarTodos = () => {
-    window.location.href= objeto.listarTodos;
-  }
-
-
-
   useEffect(() => {
     modeloDeObjeto.coletarDados(props.match.params.id)
       .then(res => setObjeto(res))
@@ -67,26 +63,12 @@ function ViewObjectsComponent(props) {
           {objeto.valores && objeto.valores.map(obj => (
             <div key={obj.nome} className="detalhes__linha">
               <div className="detalhes__titulo">{obj.nome}:</div>
-              {
-                typeof obj.valor === "string" 
-                  ? 
-                <div className="detalhes__texto">{obj.valor}</div> 
-                  :
-                obj.valor.map(item => (
-                  <div className="detalhes__array">
-                    <NavLink 
-                      to={`/${obj.redirect}/${item.id}`}
-                      className="navLink">
-                        {item.string}
-                      </NavLink>
-                  </div>
-                ))
-              }
+              <ClickableData objeto={obj} />
             </div>
           ))}
         </div>
       </div>
-      <div className="detalhes__botoes botao__cursor" onClick={listarTodos}>
+      <div className="detalhes__botoes botao__cursor" onClick={() => history.goBack()}>
         <ArrowBackIosIcon /> Voltar
       </div>
     </div>

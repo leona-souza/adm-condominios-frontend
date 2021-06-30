@@ -133,10 +133,16 @@ export const visitaModelDetalhes = {
       .then(res => visita = res.data)
       .catch(e => console.log(e));
     await VisitanteService.getVisitanteById(visita.visitante)
-      .then(res => visitante = res.data.nome)
+      .then(res => visitante = {
+        id: res.data.id,
+        nome: res.data.nome
+      })
       .catch(e => console.log(e));
     await ApartamentoService.getApartamentoById(visita.apartamento)
-      .then(res => apartamento = `${res.data.numero}-${res.data.torre}`)
+      .then(res => apartamento = {
+        id: res.data.id,
+        aptoFormatado: `${res.data.numero}-${res.data.torre}`
+      })
       .catch(e => console.log(e));
 
     return {
@@ -148,8 +154,8 @@ export const visitaModelDetalhes = {
       listarTodos:"/visitas",
       
       valores: [
-        { nome: "Visitante", valor: visitante },
-        { nome: "Apartamento", valor: apartamento },
+        { nome: "Visitante", valor: visitante.nome, redirect: `ver-visitante/${visitante.id}` },
+        { nome: "Apartamento", valor: apartamento.aptoFormatado, redirect: `ver-apartamento/${apartamento.id}` },
         { nome: "Obs", valor: visita.obs }
       ]
     }

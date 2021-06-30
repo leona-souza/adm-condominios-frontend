@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useHistory } from "react-router-dom";
 import { apartamentoModelForm } from "../../../models/Apartamento";
 import { moradorModelForm } from "../../../models/Morador";
 import { veiculoModelForm } from "../../../models/Veiculo";
@@ -14,6 +15,7 @@ function CreateObject(props) {
   const [objeto, setObjeto] = useState({});
   const timerRef = useRef(null);
   const { type } = props;
+  const history = useHistory();
 
   switch(type) {
     case "apartamento":
@@ -66,10 +68,6 @@ function CreateObject(props) {
       const valor = e.target.value.length > 0 ? e.target.value : null;
       await buscarNomes(valor);
     } 
-  };
-
-  const cancel = () => {
-    window.location.href = objeto.enderecoVoltar;
   };
 
   const changeVisitanteHandler = (id, nome) => {
@@ -177,7 +175,7 @@ function CreateObject(props) {
 
             <div className="formulario__botoes">
               <div onClick={manageObjeto} className="botao__cursor"><SaveIcon /> Salvar</div>
-              <div onClick={cancel} className="red botao__cursor"><CancelIcon /> Cancelar</div>
+              <div onClick={() => history.goBack()} className="red botao__cursor"><CancelIcon /> Cancelar</div>
             </div>
           </form>
         </div>

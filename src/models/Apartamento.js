@@ -98,18 +98,18 @@ export const apartamentoModelDetalhes = {
     let veiculos = [];
     let visitantes = [];
 
-    await ApartamentoService.getApartamentoById(id)
-      .then(res => apartamento = res.data)
-      .catch(e => console.log(e));
-    await ApartamentoService.getMoradorByApartamento(id)
-      .then(res => moradores = res.data)
-      .catch(e => console.log(e));
-    await ApartamentoService.getVeiculoByApartamento(id)
-      .then(res => veiculos = res.data)
-      .catch(e => console.log(e));
-    await ApartamentoService.getVisitanteByApartamento(id)
-      .then(res => visitantes = res.data)
-      .catch(e => console.log(e));
+    await Promise.all([
+      ApartamentoService.getApartamentoById(id),
+      ApartamentoService.getMoradorByApartamento(id),
+      ApartamentoService.getVeiculoByApartamento(id),
+      ApartamentoService.getVisitanteByApartamento(id)
+    ])
+    .then(res => {
+      apartamento = res[0].data;
+      moradores = res[1].data;
+      veiculos = res[2].data;
+      visitantes = res[3].data;
+    });
 
     return {
       ...funcoesComuns,
@@ -120,7 +120,7 @@ export const apartamentoModelDetalhes = {
       listarTodos: "/apartamentos",
 
       valores: [
-        { nome: "Vaga", valor: apartamento.vaga,  },
+        { nome: "Vaga", valor: apartamento.vaga },
         { nome: "Moradores", valor: this.listarMoradores(moradores), redirect: "ver-morador" },
         { nome: "Veículos", valor: this.listarVeiculos(veiculos), redirect: "ver-veiculo" },
         { nome: "Visitantes", valor: this.listarVisitantes(visitantes), redirect: "ver-visitante" },

@@ -116,7 +116,10 @@ export const veiculoModelDetalhes = {
       .then(res => veiculo = res.data)
       .catch(e => console.log(e));
     await ApartamentoService.getApartamentoById(veiculo.apartamentoVeiculo)
-      .then(res => apartamento = `${res.data.numero}-${res.data.torre}`)
+      .then(res => apartamento = {
+        id: res.data.id,
+        aptoFormatado: `${res.data.numero}-${res.data.torre}`
+      })
       .catch(e => console.log(e));
 
     return {
@@ -131,7 +134,7 @@ export const veiculoModelDetalhes = {
         { nome: "Marca", valor: veiculo.marca },
         { nome: "Modelo", valor: veiculo.modelo },
         { nome: "Cor", valor: veiculo.cor },
-        { nome: "Apartamento", valor: apartamento },
+        { nome: "Apartamento", valor: apartamento.aptoFormatado, redirect: `ver-apartamento/${apartamento.id}` },
         { nome: "Obs", valor: veiculo.obs }
       ]
     }
